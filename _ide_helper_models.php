@@ -1,12 +1,41 @@
 <?php
 
-namespace App\Models;
+// @formatter:off
+// phpcs:ignoreFile
+/**
+ * A helper file for your Eloquent Models
+ * Copy the phpDocs from this file to the correct Model,
+ * And remove them from this file, to prevent double declarations.
+ *
+ * @author Barry vd. Heuvel <barryvdh@gmail.com>
+ */
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
 
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int|null $parent_user_id
+ * @property int $parent_user
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, HierarchicalTree> $children
+ * @property-read int|null $children_count
+ * @property-read HierarchicalTree|null $parent
+ * @method static \Illuminate\Database\Eloquent\Builder|HierarchicalTree newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|HierarchicalTree newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|HierarchicalTree query()
+ * @method static \Illuminate\Database\Eloquent\Builder|HierarchicalTree whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|HierarchicalTree whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|HierarchicalTree whereParentUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|HierarchicalTree whereParentUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|HierarchicalTree whereUpdatedAt($value)
+ */
+	class HierarchicalTree extends \Eloquent {}
+}
+
+namespace App\Models{
 /**
  * 
  *
@@ -36,45 +65,7 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereTreeStructure($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereWhatsapp($value)
- * @mixin \Eloquent
  */
-class User extends Authenticatable
-{
-    use HasFactory, Notifiable;
-
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'avatar',
-        'whatsapp'
-    ];
-
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var array<int, string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-    ];
-
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+	class User extends \Eloquent {}
 }
+
