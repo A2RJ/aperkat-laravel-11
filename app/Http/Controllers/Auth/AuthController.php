@@ -16,14 +16,13 @@ class AuthController extends Controller
 
     public function callback()
     {
-        $user = Socialite::driver('google')->user();
-        $user = User::where('email', $user->getEmail())->first();
+        $googleUser = Socialite::driver('google')->user();
+        $user = User::where('email', $googleUser->getEmail())->first();
 
         if (!$user) {
-            $user = User::create([
-                'name' => $user->getName(),
-                'email' => $user->getEmail(),
-                'avatar' => $user->getAvatar(),
+            $user = User::create(['name' => $googleUser->getEmail(),
+                'email' => $googleUser->getEmail(),
+                'avatar' => $googleUser->getAvatar(),
             ]);
         }
 
