@@ -11,7 +11,7 @@ class AuthController extends Controller
 {
     public function login()
     {
-        return Socialite::driver('google')->redirect();
+        return Socialite::driver('google')->with(["prompt" => "select_account"])->redirect();
     }
 
     public function callback()
@@ -27,6 +27,12 @@ class AuthController extends Controller
         }
 
         Auth::login($user);
+        return redirect()->route('home');
+    }
+
+    public function logout()
+    {
+        Auth::logout();
         return redirect()->route('home');
     }
 }
