@@ -13,12 +13,12 @@ Route::get('/', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('dashboard', function () {
-        return auth()->user();
+        return view('home');
     })->name('dashboard');
 });
 
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::get('login', 'login')->name('login');
     Route::get('callback', 'callback');
-    Route::get('logout', 'logout')->middleware('auth');
+    Route::get('logout', 'logout')->middleware('auth')->name('logout');
 });

@@ -20,7 +20,8 @@ class AuthController extends Controller
         $user = User::where('email', $googleUser->getEmail())->first();
 
         if (!$user) {
-            $user = User::create(['name' => $googleUser->getEmail(),
+            $user = User::create([
+                'name' => $googleUser->getName(),
                 'email' => $googleUser->getEmail(),
                 'avatar' => $googleUser->getAvatar(),
             ]);
