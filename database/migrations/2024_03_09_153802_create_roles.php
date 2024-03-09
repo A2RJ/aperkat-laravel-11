@@ -11,13 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('hierarchical_trees', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('parent_user_id')
-                ->nullable()
-                ->references('id')
-                ->on('users');
-            $table->foreignId('parent_user')
+            $table->string('role');
+            $table->string('parent_id');
+            $table->foreignId('user_id')
                 ->references('id')
                 ->on('users');
             $table->timestamps();
@@ -29,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('hierarchical_trees');
+        Schema::dropIfExists('roles');
     }
 };

@@ -1,6 +1,7 @@
 Update major aperkat:
 [x] auth dengan laravel socialite
 [ ] manajemen struktur tree gunakan form dinamis
+    [ ] struktur berelasi dengan jabatan dan jabatan berelasi dengan status pengajuan dan jabatan berelasi dengan user
 	[ ] assign user approval tree (POV pengaju)
 	[ ] preview tree
 	[ ] delete
@@ -42,3 +43,4 @@ Update major aperkat:
 - Bagaimana jika table submission struktur tree disimpan ke table submisson?
 - Bagaimana jika table submission struktur tree history disimpan ke table submisson?
 - SOLUSI: BOLEH JUGA
+- Untuk structure tree hanya awal saja dan mulai dari dir.keuangan akan dan selanjutnya sudah tetap dan tidak berubah
