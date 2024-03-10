@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    {{-- https://laravel.com/docs/11.x/blade#extending-a-layout --}}
 
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -83,7 +84,7 @@
                     <span>Pengguna</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="tables.html">
+                <a class="nav-link" href="{{ route('role.index') }}">
                     <i class="fas fa-fw fa-user"></i>
                     <span>Jabatan</span></a>
             </li>
@@ -122,9 +123,9 @@
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }}</span>
-                                <img class="img-profile rounded-circle"
-                                    src="/sb-admin-2/img/undraw_profile.svg">
+                                <span
+                                    class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }}</span>
+                                <img class="img-profile rounded-circle" src="/sb-admin-2/img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -157,7 +158,7 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                   @yield('content')
+                    @yield('content')
 
                 </div>
                 <!-- /.container-fluid -->
@@ -169,7 +170,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span>Copyright &copy; Your Website 2020</span>
+                        <span>Copyright &copy; APERKAT {{ date('Y') }}</span>
                     </div>
                 </div>
             </footer>
@@ -194,8 +195,13 @@
     <script src="/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="/sb-admin-2/js/sb-admin-2.min.js"></script>
+    <script src="/sb-admin-2/js/sb-admin-2.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <script>
+        $('select').selectpicker()
+    </script>
 </body>
 
 </html>

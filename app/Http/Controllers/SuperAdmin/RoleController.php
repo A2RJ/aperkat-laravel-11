@@ -3,25 +3,24 @@
 namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Role\RoleRequest;
 use App\Models\Role;
-use Illuminate\Http\Request;
+use App\Models\User;
 
 class RoleController extends Controller
 {
     public function index()
     {
-        return view('role.index');
+        $roles = Role::query()->with(['user', 'children:parent_id,role', 'parent'])->paginate();
+        $users = User::query()->get(['id', 'name']);
+        $supervisors = Role::query()->get(['id', 'role']);
+        return view('role.index', compact('roles', 'users', 'supervisors'));
     }
 
-    public function create()
+    public function store(RoleRequest $request)
     {
-        return view('role.create');
-    }
-
-    public function store(Request $request)
-    {
-        $form = $request->all();
-        Role::create($form);
+        Role::create($request->safe()->only(['role', 'parent_id', 'user_id']));
+        return redirect()->route('role.index')->with('success', 'Success add role ' . $request->role);
     }
 
     public function show(Role $role)
@@ -29,21 +28,20 @@ class RoleController extends Controller
         return view('role.show', compact('role'));
     }
 
-    public function edit(Role $role)
+    public function update(RoleRequest $request, Role $role)
     {
-        return view('role.edit', compact('role'));
-    }
 
-    public function update(Request $request, Role $role)
-    {
-        $form = $request->all();
-        $role->update($form);
-        return redirect()->route('')->with('success', '');
+
+        $role->update($request->safe()->only(['role', 'parent_id', 'user_id']));
+        return redirect()->route('role.index')->with('success', 'Success edit role ' . $request->role);
     }
 
     public function destroy(Role $role)
     {
-        $role->delete();
-        return redirect()->route('')->with('success', '');
+        $role->update([
+            'parent_id' => NULL,
+            'user_id' =>  NULL
+        ]);
+        return redirect()->route('role.index')->with('success', 'Success delete role ' . $role->role);
     }
 }

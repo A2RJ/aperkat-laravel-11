@@ -1,4 +1,4 @@
-@extends('template.index')
+@extends('layout.index')
 
 @section('title', 'Home | APERKAT')
 
