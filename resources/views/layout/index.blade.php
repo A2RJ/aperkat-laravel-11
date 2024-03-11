@@ -55,7 +55,7 @@
                 Warek II
             </div>
             <li class="nav-item">
-                <a class="nav-link" href="tables.html">
+                <a class="nav-link" href="{{ route('ppuf.index') }}">
                     <i class="fas fa-fw fa-table"></i>
                     <span>PPUF</span></a>
             </li>

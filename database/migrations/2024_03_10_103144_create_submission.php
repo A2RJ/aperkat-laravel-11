@@ -13,10 +13,6 @@ return new class extends Migration
     {
         Schema::create('submissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
-                ->references('id')
-                ->on('users')
-                ->noActionOnDelete();
             $table->foreignId('ppuf_id')
                 ->references('id')
                 ->on('ppufs')

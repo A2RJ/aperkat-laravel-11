@@ -95,21 +95,23 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="{{ route('role.update', ['role' => $role->id]) }}" method="post">
-                                        @csrf
-                                        @method('PUT')
-                                        <div class="form-row">
-                                            <div class="col-12 mb-3">
-                                                <label for="role">Role</label>
-                                                <input type="text"
-                                                    class="form-control @error('role') is-invalid @enderror" id="role"
-                                                    name="role" required value="{{ $role->role }}">
-                                                @error('role')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
+<form action="{{ route('role.update', ['role' => $role->id]) }}" method="post">
+    @csrf
+    @method('PUT')
+    <div class="form-row">
+        <div class="col-12 mb-3">
+            <label for="role">Role</label>
+            <input type="text"
+                class="form-control @error('role') is-invalid @enderror" id="role"
+                name="role" required value="{{ $role->role }}">
+            @error('role')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+        </div>
+</form>
                                             <div class="col-12 mb-3 d-flex flex-column">
                                                 <label for="parent_id">Supervisor</label>
                                                 <select

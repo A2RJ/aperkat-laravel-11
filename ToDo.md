@@ -1,14 +1,14 @@
 Update major aperkat:
 [x] auth dengan laravel socialite
-[ ] manajemen struktur tree gunakan form dinamis
-    [ ] struktur berelasi dengan jabatan dan jabatan berelasi dengan status pengajuan dan jabatan berelasi dengan user
-	[ ] assign user approval tree (POV pengaju)
-	[ ] preview tree
-	[ ] delete
-[ ] crud hak akses
+[x] manajemen struktur tree gunakan form dinamis
+    [x] struktur berelasi dengan jabatan dan jabatan berelasi dengan status pengajuan dan jabatan berelasi dengan user
+	[x] assign user approval tree (POV pengaju)
+	[x] preview tree
+	[x] delete
+[x] crud hak akses
 	[ ] static middleware for all hak akses
-[ ] crud user
-	[ ] berkaitan dengan struktur tree, hak akses
+[x] crud user
+	[x] berkaitan dengan struktur tree, hak akses
 [ ] crud ppuf
 	[ ] import
 	[ ] add
