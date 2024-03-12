@@ -11,17 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('submissions', function (Blueprint $table) {
+        Schema::create('iku2', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('ppuf_id')
+            $table->string('iku');
+            $table->foreignId('parent_id')
                 ->nullable()
                 ->references('id')
-                ->on('ppufs')
+                ->on('iku1')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
-            $table->jsonb('tree_structure_status');
-            $table->jsonb('tree_structure_history');
-            $table->rememberToken();
             $table->timestamps();
         });
     }
@@ -31,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('submissions');
+        Schema::dropIfExists('iku2');
     }
 };

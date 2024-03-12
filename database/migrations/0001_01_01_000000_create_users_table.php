@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->string('avatar');
             $table->string('whatsapp')->unique()->nullable();
-            $table->jsonb('tree_structure')->default('[]');
             $table->rememberToken();
             $table->timestamps();
         });

@@ -13,9 +13,9 @@ class Ppuf extends Model
     protected $fillable = [
         'role_id',
         'ppuf_number',
-        'iku_1',
-        'iku_2',
-        'iku_3',
+        'iku1_id',
+        'iku2_id',
+        'iku3_id',
         'activity_type',
         'program_name',
         'description',
@@ -40,6 +40,6 @@ class Ppuf extends Model
 
     public function author()
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsTo(Role::class, 'role_id');
     }
 }

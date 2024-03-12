@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Ppuf\ImportRequest;
 use App\Http\Requests\Ppuf\PpufRequest;
 use App\Models\Ppuf;
-use App\Models\User;
+use App\Models\Role;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 use Rap2hpoutre\FastExcel\FastExcel;
 
@@ -14,7 +15,10 @@ class PpufController extends Controller
 {
     public function index()
     {
+        $keyword = request('keyword', NULL);
         $ppufs = Ppuf::query()
+            ->when($keyword, function (Builder $query) {
+                $query
             ->whereAny([
                 'ppuf_number',
                 'activity_type',
@@ -22,15 +26,15 @@ class PpufController extends Controller
                 'description',
                 'execution_location',
                 'execution_time',
-            ], 'LIKE', '%apa%')
-            ->with('author')
+                ], 'LIKE', '%apa%');
+        })
             ->paginate();
         return view('ppuf.index', compact('ppufs'));
     }
 
     public function create()
     {
-        $users = User::query()->get(['id', 'name']);
+        $users = Role::query()->get(['id', 'role as name']);
         $ikus = Ppuf::iku();
         $program_types = Ppuf::$program_types;
         $activity_dates = Ppuf::$activity_dates;
@@ -39,7 +43,22 @@ class PpufController extends Controller
 
     public function store(PpufRequest $request)
     {
-        return $request->all();
+        $form = $request->safe()->only([
+            'role_id',
+            'ppuf_number',
+            'iku1_id',
+            'iku2_id',
+            'iku3_id',
+            'activity_type',
+            'program_name',
+            'description',
+            'execution_location',
+            'execution_time',
+            'planned_expenditure',
+            'detail'
+        ]);
+        Ppuf::create($form);
+        return redirect()->route('ppuf.index')->with('success', 'Berhasil menambahkan PPUF');
     }
 
     public function show(Ppuf $ppuf)
@@ -49,17 +68,37 @@ class PpufController extends Controller
 
     public function edit(Ppuf $ppuf)
     {
-        //
+        $users = Role::query()->get(['id', 'role as name']);
+        $ikus = Ppuf::iku();
+        $program_types = Ppuf::$program_types;
+        $activity_dates = Ppuf::$activity_dates;
+        return view('ppuf.edit', compact('ppuf', 'users', 'ikus', 'program_types', 'activity_dates'));
     }
 
     public function update(PpufRequest $request, Ppuf $ppuf)
     {
-        //
+        $form = $request->safe()->only([
+            'role_id',
+            'ppuf_number',
+            'iku1_id',
+            'iku2_id',
+            'iku3_id',
+            'activity_type',
+            'program_name',
+            'description',
+            'execution_location',
+            'execution_time',
+            'planned_expenditure',
+            'detail'
+        ]);
+        $ppuf->update($form);
+        return redirect()->route('ppuf.index')->with('success', 'Berhasil mengubah PPUF');
     }
 
     public function destroy(Ppuf $ppuf)
     {
-        //
+        $ppuf->delete();
+        return redirect()->route('ppuf.index')->with('success', 'Berhasil hapus PPUF');
     }
 
     public function import(ImportRequest $request)

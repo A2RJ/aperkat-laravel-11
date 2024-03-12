@@ -232,8 +232,13 @@
             </div>
         </div>
     </div>
-    </div>
+@endsection
 
-
-
+@section('scriptjs')
+    <script src="/sb-admin-2/vendor/bootstrap-select/bootstrap-select.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(function() {
+            $('.selectpicker').selectpicker()
+        });
+    </script>
 @endsection

@@ -45,56 +45,56 @@
                                 @enderror
                             </div>
                             <div class="col-12 col-lg-4 mb-3">
-                                <label for="iku">IKU 1</label>
-                                <select class="custom-select w-100 border rounded @error('iku_1') is-invalid @enderror"
-                                    id="iku_1" name="iku_1" data-live-search="true" required>
+                                <label for="iku1_id">IKU 1</label>
+                                <select class="custom-select w-100 border rounded @error('iku1_id') is-invalid @enderror"
+                                    id="iku1_id" name="iku1_id" data-live-search="true" required>
                                     <option>Pilih IKU</option>
                                     @foreach ($ikus['iku1'] as $iku)
                                         <option value="{{ $iku->id }}"
-                                            {{ old('iku_1') == $iku->id ? 'selected' : '' }}>
+                                            {{ old('iku1_id') == $iku->id ? 'selected' : '' }}>
                                             {{ $iku->iku }}
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('iku_1')
+                                @error('iku1_id')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                 @enderror
                             </div>
                             <div class="col-12 col-lg-4 mb-3">
-                                <label for="iku">IKU 2</label>
-                                <select class="custom-select w-100 border rounded @error('iku_2') is-invalid @enderror"
-                                    id="iku_2" name="iku_2" data-live-search="true" required>
+                                <label for="iku2_id">IKU 2</label>
+                                <select class="custom-select w-100 border rounded @error('iku2_id') is-invalid @enderror"
+                                    id="iku2_id" name="iku2_id" data-live-search="true" required>
                                     <option>Pilih IKU</option>
                                     @foreach ($ikus['iku2'] as $iku)
                                         <option value="{{ $iku->id }}"
-                                            {{ old('iku_2') == $iku->id ? 'selected' : '' }}
+                                            {{ old('iku2_id') == $iku->id ? 'selected' : '' }}
                                             data-chained="{{ $iku->parent_id }}">
                                             {{ $iku->iku }}
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('iku_2')
+                                @error('iku2_id')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                 @enderror
                             </div>
                             <div class="col-12 col-lg-4 mb-3">
-                                <label for="iku">IKU 3</label>
-                                <select class="custom-select w-100 border rounded @error('iku_3') is-invalid @enderror"
-                                    id="iku_3" name="iku_3" data-live-search="true" required>
+                                <label for="iku3_id">IKU 3</label>
+                                <select class="custom-select w-100 border rounded @error('iku3_id') is-invalid @enderror"
+                                    id="iku3_id" name="iku3_id" data-live-search="true" required>
                                     <option>Pilih IKU</option>
                                     @foreach ($ikus['iku3'] as $iku)
                                         <option value="{{ $iku->id }}"
-                                            {{ old('iku_3') == $iku->id ? 'selected' : '' }}
+                                            {{ old('iku3_id') == $iku->id ? 'selected' : '' }}
                                             data-chained="{{ $iku->parent_id }}">
                                             {{ $iku->iku }}
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('iku_3')
+                                @error('iku3_id')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -112,7 +112,7 @@
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="description">Deskripsi</label>
-                                <textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description"
+                                <textarea rows="5" class="form-control @error('description') is-invalid @enderror" id="description" name="description"
                                     required>{{ old('description') }}</textarea>
                                 @error('description')
                                     <div class="invalid-feedback">
@@ -232,9 +232,8 @@
     <script type="text/javascript" charset="utf-8">
         $(function() {
             $('.selectpicker').selectpicker()
-            $("#iku_2").chained("#iku_1");
-            $("#iku_3").chained("#iku_2");
+            $("#iku2_id").chained("#iku1_id");
+            $("#iku3_id").chained("#iku2_id");
         });
     </script>
-
 @endsection

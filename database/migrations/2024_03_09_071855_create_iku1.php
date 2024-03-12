@@ -11,16 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('roles', function (Blueprint $table) {
+        Schema::create('iku1', function (Blueprint $table) {
             $table->id();
-            $table->string('role');
-            $table->string('parent_id');
-            $table->foreignId('user_id')
-                ->nullable()
-                ->references('id')
-                ->on('users')
-                ->cascadeOnUpdate()
-                ->nullOnDelete();
+            $table->string('iku');
             $table->timestamps();
         });
     }
@@ -30,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('roles');
+        Schema::dropIfExists('iku1');
     }
 };

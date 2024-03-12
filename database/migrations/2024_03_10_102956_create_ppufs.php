@@ -14,21 +14,37 @@ return new class extends Migration
         Schema::create('ppufs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('role_id')
+                ->nullable()
                 ->references('id')
                 ->on('roles')
                 ->cascadeOnUpdate()
-                ->cascadeOnDelete();
+                ->nullOnDelete();
             $table->string('ppuf_number');
-            $table->string('iku_1');
-            $table->string('iku_2');
-            $table->string('iku_3');
+            $table->foreignId('iku1_id')
+                ->nullable()
+                ->references('id')
+                ->on('iku1')
+                ->cascadeOnUpdate()
+                ->nullOnDelete();
+            $table->foreignId('iku2_id')
+                ->nullable()
+                ->references('id')
+                ->on('iku2')
+                ->cascadeOnUpdate()
+                ->nullOnDelete();
+            $table->foreignId('iku3_id')
+                ->nullable()
+                ->references('id')
+                ->on('iku3')
+                ->cascadeOnUpdate()
+                ->nullOnDelete();
             $table->string('activity_type');
             $table->string('program_name');
             $table->string('description');
             $table->string('execution_location');
             $table->string('execution_time');
             $table->string('planned_expenditure');
-            $table->string('detail');
+            $table->string('detail')->nullable();
             $table->timestamps();
         });
     }

@@ -48,7 +48,7 @@
                                 @foreach ($ppufs as $ppuf)
                                     <tr>
                                         <th scope="row">{{ $loop->iteration + $ppufs->firstItem() - 1 }}</th>
-                                        <td>{{ $ppuf->author->parent->role }}</td>
+                                        <td>{{ $ppuf->author->parent?->role }}</td>
                                         <td>{{ $ppuf->author->role }}</td>
                                         <td>{{ $ppuf->ppuf_number }}</td>
                                         <td>{{ $ppuf->activity_type }}</td>
