@@ -31,17 +31,15 @@ class PpufController extends Controller
     public function create()
     {
         $users = User::query()->get(['id', 'name']);
-        $iku1 = [];
-        $iku2 = [];
-        $iku3 = [];
-        $program_types = ['program', 'pengadaan', 'perawatan', 'pengembangan'];
-        $activity_dates = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'];
-        return view('ppuf.create', compact('users', 'iku1', 'iku2', 'iku3', 'program_types', 'activity_dates'));
+        $ikus = Ppuf::iku();
+        $program_types = Ppuf::$program_types;
+        $activity_dates = Ppuf::$activity_dates;
+        return view('ppuf.create', compact('users', 'ikus', 'program_types', 'activity_dates'));
     }
 
     public function store(PpufRequest $request)
     {
-        //
+        return $request->all();
     }
 
     public function show(Ppuf $ppuf)

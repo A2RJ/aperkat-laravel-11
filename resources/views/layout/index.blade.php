@@ -189,7 +189,8 @@
     </a>
 
     <!-- Bootstrap core JavaScript-->
-    <script src="/sb-admin-2/vendor/jquery/jquery.min.js"></script>
+    {{-- <script src="/sb-admin-2/vendor/jquery/jquery.min.js"></script> --}}
+    <script src="/sb-admin-2/vendor/jquery/jquery.v1.10.2.min.js"></script>
     <script src="/sb-admin-2/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- Core plugin JavaScript-->
@@ -198,13 +199,8 @@
     <!-- Custom scripts for all pages-->
     <script src="/sb-admin-2/js/sb-admin-2.min.js"></script>
 
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="/sb-admin-2/vendor/bootstrap-select/bootstrap-select.min.js"></script>
-    <script>
-        $('select').selectpicker()
-    </script>
-
     @yield('scriptjs')
+
 </body>
 
 </html>
