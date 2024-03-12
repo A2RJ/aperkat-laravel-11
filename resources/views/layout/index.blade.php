@@ -20,6 +20,7 @@
 
     <!-- Custom styles for this template-->
     <link href="/sb-admin-2/css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="/sb-admin-2/vendor/bootstrap-select/bootstrap-select.min.css" rel="stylesheet">
 
 </head>
 
@@ -195,13 +196,15 @@
     <script src="/sb-admin-2/vendor/jquery-easing/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
-    <script src="/sb-admin-2/js/sb-admin-2.min.js"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+    <script src="/sb-admin-2/js/sb-admin-2.min.js"></script>
 
-<!-- Latest compiled and minified JavaScript -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="/sb-admin-2/vendor/bootstrap-select/bootstrap-select.min.js"></script>
     <script>
         $('select').selectpicker()
     </script>
+
+    @yield('scriptjs')
 </body>
 
 </html>

@@ -95,145 +95,143 @@
                                     </button>
                                 </div>
                                 <div class="modal-body">
-<form action="{{ route('role.update', ['role' => $role->id]) }}" method="post">
-    @csrf
-    @method('PUT')
-    <div class="form-row">
-        <div class="col-12 mb-3">
-            <label for="role">Role</label>
-            <input type="text"
-                class="form-control @error('role') is-invalid @enderror" id="role"
-                name="role" required value="{{ $role->role }}">
-            @error('role')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-            @enderror
-        </div>
-        </div>
-</form>
-                                            <div class="col-12 mb-3 d-flex flex-column">
-                                                <label for="parent_id">Supervisor</label>
-                                                <select
-                                                    class="w-100 border rounded selectpicker @error('parent_id') is-invalid @enderror"
-                                                    id="parent_id" name="parent_id" data-live-search="true" required>
-                                                    <option>Choose Supervisor</option>
-                                                    @foreach ($supervisors as $supervisor)
-                                                        <option value="{{ $supervisor->id }}"
-                                                            {{ $role->role == $supervisor->role ? 'disabled' : '' }}
-                                                            {{ $role->parent?->role == $supervisor->role ? 'selected' : '' }}>
-                                                            {{ $supervisor->role }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
-                                                @error('parent_id')
+                                    <form action="{{ route('role.update', ['role' => $role->id]) }}" method="post">
+                                        @csrf
+                                        @method('PUT')
+                                        <div class="form-row">
+                                            <div class="col-12 mb-3">
+                                                <label for="role">Role</label>
+                                                <input type="text"
+                                                    class="form-control @error('role') is-invalid @enderror" id="role"
+                                                    name="role" required value="{{ $role->role }}">
+                                                @error('role')
                                                     <div class="invalid-feedback">
                                                         {{ $message }}
                                                     </div>
                                                 @enderror
                                             </div>
-                                            <div class="col-12 mb-3 d-flex flex-column">
-                                                <label for="user_id">User</label>
-                                                <select
-                                                    class="w-100 border rounded selectpicker @error('user_id') is-invalid @enderror"
-                                                    id="user_id" name="user_id" data-live-search="true" required>
-                                                    <option>Choose User</option>
-                                                    @foreach ($users as $user)
-                                                        <option value="{{ $user->id }}"
-                                                            {{ $role->user?->name == $user->name ? 'selected' : '' }}>
-                                                            {{ $user->name }}</option>
-                                                    @endforeach
-                                                </select>
-                                                @error('user_id')
-                                                    <div class="invalid-feedback">
-                                                        {{ $message }}
-                                                    </div>
-                                                @enderror
-                                            </div>
-                                        </div>
-                                        <div class="d-flex justify-content-between">
-                                            <button class="btn btn-secondary" type="button"
-                                                data-dismiss="modal">Cancel</button>
-                                            <button type="submit" class="btn btn-primary">Save</button>
                                         </div>
                                     </form>
+                                    <div class="col-12 mb-3 d-flex flex-column">
+                                        <label for="parent_id">Supervisor</label>
+                                        <select
+                                            class="w-100 border rounded selectpicker @error('parent_id') is-invalid @enderror"
+                                            id="parent_id" name="parent_id" data-live-search="true" required>
+                                            <option>Choose Supervisor</option>
+                                            @foreach ($supervisors as $supervisor)
+                                                <option value="{{ $supervisor->id }}"
+                                                    {{ $role->role == $supervisor->role ? 'disabled' : '' }}
+                                                    {{ $role->parent?->role == $supervisor->role ? 'selected' : '' }}>
+                                                    {{ $supervisor->role }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('parent_id')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                    <div class="col-12 mb-3 d-flex flex-column">
+                                        <label for="user_id">User</label>
+                                        <select
+                                            class="w-100 border rounded selectpicker @error('user_id') is-invalid @enderror"
+                                            id="user_id" name="user_id" data-live-search="true" required>
+                                            <option>Choose User</option>
+                                            @foreach ($users as $user)
+                                                <option value="{{ $user->id }}"
+                                                    {{ $role->user?->name == $user->name ? 'selected' : '' }}>
+                                                    {{ $user->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('user_id')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
                                 </div>
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                                </form>
                             </div>
                         </div>
                     </div>
-                @endforeach
+            </div>
+            @endforeach
 
-                <!-- Add Modal-->
-                <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel">Role Form</h5>
-                                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div class="modal-body">
-                                <form action="{{ route('role.store') }}" method="post">
-                                    @csrf
-                                    <div class="form-row">
-                                        <div class="col-12 mb-3">
-                                            <label for="role">Role</label>
-                                            <input type="text" class="form-control @error('role') is-invalid @enderror"
-                                                id="role" name="role" required>
-                                            @error('role')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-12 mb-3 d-flex flex-column">
-                                            <label for="parent_id">Supervisor</label>
-                                            <select
-                                                class="w-100 border rounded selectpicker @error('parent_id') is-invalid @enderror"
-                                                id="parent_id" name="parent_id" data-live-search="true" required>
-                                                <option>Choose Supervisor</option>
-                                                @foreach ($supervisors as $supervisor)
-                                                    <option value="{{ $supervisor->id }}">{{ $supervisor->role }}
-                                                    </option>
-                                                @endforeach
-                                            </select>
-                                            @error('parent_id')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </div>
-                                        <div class="col-12 mb-3 d-flex flex-column">
-                                            <label for="user_id">User</label>
-                                            <select
-                                                class="w-100 border rounded selectpicker @error('user_id') is-invalid @enderror"
-                                                id="user_id" name="user_id" data-live-search="true" required>
-                                                <option>Choose User</option>
-                                                @foreach ($users as $user)
-                                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                                @endforeach
-                                            </select>
-                                            @error('user_id')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
-                                            @enderror
-                                        </div>
+            <!-- Add Modal-->
+            <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Role Form</h5>
+                            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form action="{{ route('role.store') }}" method="post">
+                                @csrf
+                                <div class="form-row">
+                                    <div class="col-12 mb-3">
+                                        <label for="role">Role</label>
+                                        <input type="text" class="form-control @error('role') is-invalid @enderror"
+                                            id="role" name="role" required>
+                                        @error('role')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
-                                    <div class="d-flex justify-content-between">
-                                        <button class="btn btn-secondary" type="button"
-                                            data-dismiss="modal">Cancel</button>
-                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    <div class="col-12 mb-3 d-flex flex-column">
+                                        <label for="parent_id">Supervisor</label>
+                                        <select
+                                            class="w-100 border rounded selectpicker @error('parent_id') is-invalid @enderror"
+                                            id="parent_id" name="parent_id" data-live-search="true" required>
+                                            <option>Choose Supervisor</option>
+                                            @foreach ($supervisors as $supervisor)
+                                                <option value="{{ $supervisor->id }}">{{ $supervisor->role }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('parent_id')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
-                                </form>
-                            </div>
+                                    <div class="col-12 mb-3 d-flex flex-column">
+                                        <label for="user_id">User</label>
+                                        <select
+                                            class="w-100 border rounded selectpicker @error('user_id') is-invalid @enderror"
+                                            id="user_id" name="user_id" data-live-search="true" required>
+                                            <option>Choose User</option>
+                                            @foreach ($users as $user)
+                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('user_id')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
 
 

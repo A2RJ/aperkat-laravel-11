@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Ppuf\ImportRequest;
 use App\Http\Requests\Ppuf\PpufRequest;
 use App\Models\Ppuf;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Rap2hpoutre\FastExcel\FastExcel;
 
@@ -29,7 +30,13 @@ class PpufController extends Controller
 
     public function create()
     {
-        return view('ppuf.create');
+        $users = User::query()->get(['id', 'name']);
+        $iku1 = [];
+        $iku2 = [];
+        $iku3 = [];
+        $program_types = ['program', 'pengadaan', 'perawatan', 'pengembangan'];
+        $activity_dates = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'];
+        return view('ppuf.create', compact('users', 'iku1', 'iku2', 'iku3', 'program_types', 'activity_dates'));
     }
 
     public function store(PpufRequest $request)
