@@ -19,30 +19,13 @@ return new class extends Migration
                 ->on('roles')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
+            $table->string('iku');
             $table->string('ppuf_number');
-            $table->foreignId('iku1_id')
-                ->nullable()
-                ->references('id')
-                ->on('iku1')
-                ->cascadeOnUpdate()
-                ->nullOnDelete();
-            $table->foreignId('iku2_id')
-                ->nullable()
-                ->references('id')
-                ->on('iku2')
-                ->cascadeOnUpdate()
-                ->nullOnDelete();
-            $table->foreignId('iku3_id')
-                ->nullable()
-                ->references('id')
-                ->on('iku3')
-                ->cascadeOnUpdate()
-                ->nullOnDelete();
             $table->string('activity_type');
             $table->string('program_name');
             $table->string('description');
-            $table->string('execution_location');
-            $table->string('execution_time');
+            $table->string('location');
+            $table->string('date');
             $table->string('planned_expenditure');
             $table->string('detail')->nullable();
             $table->timestamps();

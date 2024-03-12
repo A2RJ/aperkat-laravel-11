@@ -12,9 +12,18 @@
                 </div>
 
                 <div class="card-body">
-                    <a class="btn btn-primary mb-4" href="{{ route('ppuf.create') }}">
-                        Add PPUF
-                    </a>
+                    <div class="mb-4">
+                        <a class="btn btn-sm btn-primary " href="{{ route('ppuf.create') }}">
+                            <i class="fas fa-plus fa-sm text-white-50"></i>
+                            Add PPUF
+                        </a>
+                        <a class="btn btn-sm btn-primary " href="{{ route('ppuf.import') }}">
+                            <i class="fas fa-upload fa-sm text-white-50"></i> Import PPUF
+                        </a>
+                        <a href="#" class="btn btn-sm btn-primary">
+                            <i class="fas fa-download fa-sm text-white-50"></i> Export PPUF
+                        </a>
+                    </div>
 
                     @if (session()->has('success'))
                         <div class="alert alert-success">
@@ -53,7 +62,7 @@
                                         <td>{{ $ppuf->ppuf_number }}</td>
                                         <td>{{ $ppuf->activity_type }}</td>
                                         <td>{{ $ppuf->program_name }}</td>
-                                        <td>{{ $ppuf->execution_location }}, {{ $ppuf->execution_time }}</td>
+                                        <td>{{ $ppuf->location }}, {{ $ppuf->date }}</td>
                                         <td>{{ $ppuf->planned_expenditure }}</td>
                                         <td>
                                             <div class="d-flex">

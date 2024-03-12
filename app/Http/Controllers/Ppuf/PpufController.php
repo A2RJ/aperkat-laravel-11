@@ -7,9 +7,10 @@ use App\Http\Requests\Ppuf\ImportRequest;
 use App\Http\Requests\Ppuf\PpufRequest;
 use App\Models\Ppuf;
 use App\Models\Role;
+use Exception;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Http\Request;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Validator;
 
 class PpufController extends Controller
 {
@@ -24,8 +25,8 @@ class PpufController extends Controller
                 'activity_type',
                 'program_name',
                 'description',
-                'execution_location',
-                'execution_time',
+                'location',
+                'date',
                 ], 'LIKE', '%apa%');
         })
             ->paginate();
@@ -34,11 +35,11 @@ class PpufController extends Controller
 
     public function create()
     {
-        $users = Role::query()->get(['id', 'role as name']);
+        $roles = Role::query()->get(['id', 'role as name']);
         $ikus = Ppuf::iku();
         $program_types = Ppuf::$program_types;
         $activity_dates = Ppuf::$activity_dates;
-        return view('ppuf.create', compact('users', 'ikus', 'program_types', 'activity_dates'));
+        return view('ppuf.create', compact('roles', 'ikus', 'program_types', 'activity_dates'));
     }
 
     public function store(PpufRequest $request)
@@ -46,14 +47,12 @@ class PpufController extends Controller
         $form = $request->safe()->only([
             'role_id',
             'ppuf_number',
-            'iku1_id',
-            'iku2_id',
-            'iku3_id',
+            'iku',
             'activity_type',
             'program_name',
             'description',
-            'execution_location',
-            'execution_time',
+            'location',
+            'date',
             'planned_expenditure',
             'detail'
         ]);
@@ -61,18 +60,13 @@ class PpufController extends Controller
         return redirect()->route('ppuf.index')->with('success', 'Berhasil menambahkan PPUF');
     }
 
-    public function show(Ppuf $ppuf)
-    {
-        //
-    }
-
     public function edit(Ppuf $ppuf)
     {
-        $users = Role::query()->get(['id', 'role as name']);
+        $roles = Role::query()->get(['id', 'role as name']);
         $ikus = Ppuf::iku();
         $program_types = Ppuf::$program_types;
         $activity_dates = Ppuf::$activity_dates;
-        return view('ppuf.edit', compact('ppuf', 'users', 'ikus', 'program_types', 'activity_dates'));
+        return view('ppuf.edit', compact('ppuf', 'roles', 'ikus', 'program_types', 'activity_dates'));
     }
 
     public function update(PpufRequest $request, Ppuf $ppuf)
@@ -80,14 +74,12 @@ class PpufController extends Controller
         $form = $request->safe()->only([
             'role_id',
             'ppuf_number',
-            'iku1_id',
-            'iku2_id',
-            'iku3_id',
+            'iku',
             'activity_type',
             'program_name',
             'description',
-            'execution_location',
-            'execution_time',
+            'location',
+            'date',
             'planned_expenditure',
             'detail'
         ]);
@@ -101,33 +93,71 @@ class PpufController extends Controller
         return redirect()->route('ppuf.index')->with('success', 'Berhasil hapus PPUF');
     }
 
-    public function import(ImportRequest $request)
+    public function importForm()
     {
+        $roles = Role::query()->get(['id', 'role as name']);
+        return view('ppuf.import', compact('roles'));
+    }
 
+    public function preview(ImportRequest $request)
+    {
+        //         'role_id' => 'required|exists:users,id',
+        //         'ppuf_number' => 'required',
+        //         'iku' => 'required|exists:iku1,id',
+        //         'activity_type' => 'required|in:program,pengadaan,perawatan,pengembangan',
+        //         'program_name' => 'required',
+        //         'description' => 'required',
+        //         'location' => 'required',
+        //         'date' => 'required|in:januari,februari,maret,april,mei,juni,juli,agustus,september,oktober,november,desember',
+        //         'planned_expenditure' => 'required',
+        //         'detail' => 'nullable',
         try {
-            $data = (new FastExcel())->import($request->file('file'))->map(function ($item) {
+            $data = (new FastExcel())->import($request->file('file'))->mapWithKeys(function ($item, $index) {
+                $ppuf_number = $item['Nomor PPUF'];
+                if (!$ppuf_number) {
+                    throw new Exception("Nomor PPUF tidak boleh kosong");
+                }
+                $validator = Validator::make($item, [
+                    'Nomor PPUF' => 'required',
+                    'Indikator Kinerja Utama' => 'required|exists:iku1,id',
+                    'Jenis Kegiatan' => 'required|in:program,pengadaan,perawatan,pengembangan',
+                    'Nama Program' => 'required',
+                    'Deskripsi' => 'required',
+                    'Tempat Pelaksanaan' => 'required',
+                    'Waktu Pelaksanaan' => 'required|in:januari,februari,maret,april,mei,juni,juli,agustus,september,oktober,november,desember',
+                    'RAB' => 'required',
+                    'Keterangan (Opsional)' => 'nullable',
+                ], []);
+                if ($validator->fails()) {
+                    $messages = $validator->errors()->all();
+                    throw new Exception(implode(', ', $messages) . implode($item) . " pada baris ke" . $index);
+                }
                 return [
-                    'unit_kerja' => $item['Unit Kerja'],
-                    'unit_pengaju' => $item['Unit Pengaju'],
-                    'nomor_ppuf' => $item['Nomor PPUF'],
-                    'indikator_kinerja_utama' => $item['Indikator Kinerja Utama'],
-                    'jenis_kegiatan' => $item['Jenis Kegiatan'],
-                    'nama_program' => $item['Nama Program'],
-                    'deskripsi' => $item['Deskripsi'],
-                    'tempat_pelaksanaan' => $item['Tempat Pelaksanaan'],
-                    'waktu_pelaksanaan' => $item['Waktu Pelaksanaan'],
-                    'rab' => $item['RAB'],
-                    'keterangan' => $item['Keterangan (Opsional)'],
+                    'role_id' => $item['Unit Pengaju'],
+                    'ppuf_number' => $ppuf_number,
+                    'iku' => $item['Indikator Kinerja Utama'],
+                    'activity_type' => $item['Jenis Kegiatan'],
+                    'program_name' => $item['Nama Program'],
+                    'description' => $item['Deskripsi'],
+                    'location' => $item['Tempat Pelaksanaan'],
+                    'date' => $item['Waktu Pelaksanaan'],
+                    'planned_expenditure' => $item['RAB'],
+                    'detail' => $item['Keterangan (Opsional)'],
                 ];
             });
 
+
+
             return response()->json(['data' => $data]);
-        } catch (\Exception $th) {
-            throw $th;
+        } catch (Exception $th) {
+            return redirect()->back()->with('failed', $th->getMessage());
         }
     }
 
-    public function deleteSelected(Request $request)
+    public function import()
+    {
+    }
+    public function export()
     {
     }
 }

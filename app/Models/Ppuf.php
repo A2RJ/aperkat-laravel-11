@@ -13,14 +13,12 @@ class Ppuf extends Model
     protected $fillable = [
         'role_id',
         'ppuf_number',
-        'iku1_id',
-        'iku2_id',
-        'iku3_id',
+        'iku',
         'activity_type',
         'program_name',
         'description',
-        'execution_location',
-        'execution_time',
+        'location',
+        'date',
         'planned_expenditure',
         'detail',
     ];

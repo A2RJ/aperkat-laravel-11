@@ -22,5 +22,11 @@ Route::middleware('auth')->group(function () {
     Route::resource('user', UserController::class)->only('index');
     Route::resource('role', RoleController::class)->except(['create',  'edit']);
 
+    Route::prefix('ppuf')->controller(PpufController::class)->group(function () {
+        Route::get('import', 'importForm')->name('ppuf.import');
+        Route::post('preview', 'preview')->name('ppuf.preview');
+        Route::post('import', 'import')->name('ppuf.post-import');
+        Route::get('export', 'export')->name('ppuf.export');
+    });
     Route::resource('ppuf', PpufController::class)->except('show');
 });

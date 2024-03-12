@@ -22,6 +22,7 @@ class ImportRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'role_id' => 'required|exists:roles,id',
             'file' => 'required|file|mimes:xlsx'
         ];
     }

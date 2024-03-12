@@ -15,15 +15,16 @@
                     <form action="{{ route('ppuf.store') }}" method="post">
                         @csrf
                         <div class="form-row">
-                            <div class="col-12 col-lg-4 mb-3">
+                            <div class="col-12 col-lg-8 mb-3">
                                 <label for="role_id">Unit Pengaju</label>
-                                <select class="w-100 border rounded selectpicker @error('role_id') is-invalid @enderror"
+                                <select
+                                    class="w-100 border rounded selectpicker @error('role_id') is-invalid @enderror"
                                     id="role_id" name="role_id" data-live-search="true" required>
                                     <option>Pilih Unit Pengaju</option>
-                                    @foreach ($roles as $role)
-                                        <option value="{{ $role->id }}"
-                                            {{ old('role_id') == $role->id ? 'selected' : '' }}>
-                                            {{ $role->name }}
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}"
+                                            {{ old('role_id') == $user->id ? 'selected' : '' }}>
+                                            {{ $user->name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -44,18 +45,56 @@
                                 @enderror
                             </div>
                             <div class="col-12 col-lg-4 mb-3">
-                                <label for="iku">Indikator Kinerja Utama</label>
-                                <select class="w-100 border selectpicker rounded @error('iku') is-invalid @enderror"
-                                    id="iku" name="iku" data-live-search="true" required>
+                                <label for="iku1_id">IKU 1</label>
+                                <select class="custom-select w-100 border rounded @error('iku1_id') is-invalid @enderror"
+                                    id="iku1_id" name="iku1_id" data-live-search="true" required>
                                     <option>Pilih IKU</option>
                                     @foreach ($ikus['iku1'] as $iku)
                                         <option value="{{ $iku->id }}"
-                                            {{ old('iku') == $iku->id ? 'selected' : '' }}>
+                                            {{ old('iku1_id') == $iku->id ? 'selected' : '' }}>
                                             {{ $iku->iku }}
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('iku')
+                                @error('iku1_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="col-12 col-lg-4 mb-3">
+                                <label for="iku2_id">IKU 2</label>
+                                <select class="custom-select w-100 border rounded @error('iku2_id') is-invalid @enderror"
+                                    id="iku2_id" name="iku2_id" data-live-search="true" required>
+                                    <option>Pilih IKU</option>
+                                    @foreach ($ikus['iku2'] as $iku)
+                                        <option value="{{ $iku->id }}"
+                                            {{ old('iku2_id') == $iku->id ? 'selected' : '' }}
+                                            data-chained="{{ $iku->parent_id }}">
+                                            {{ $iku->iku }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('iku2_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="col-12 col-lg-4 mb-3">
+                                <label for="iku3_id">IKU 3</label>
+                                <select class="custom-select w-100 border rounded @error('iku3_id') is-invalid @enderror"
+                                    id="iku3_id" name="iku3_id" data-live-search="true" required>
+                                    <option>Pilih IKU</option>
+                                    @foreach ($ikus['iku3'] as $iku)
+                                        <option value="{{ $iku->id }}"
+                                            {{ old('iku3_id') == $iku->id ? 'selected' : '' }}
+                                            data-chained="{{ $iku->parent_id }}">
+                                            {{ $iku->iku }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('iku3_id')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -63,8 +102,8 @@
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="program_name">Nama Program</label>
-                               <textarea class="form-control @error('program_name') is-invalid @enderror" id="program_name" name="program_name"
-                                    required>{{ old('program_name') }}</textarea>
+                                <input type="text" class="form-control @error('program_name') is-invalid @enderror"
+                                    id="program_name" name="program_name" required value="{{ old('program_name') }}">
                                 @error('program_name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -73,8 +112,8 @@
                             </div>
                             <div class="col-12 mb-3">
                                 <label for="description">Deskripsi</label>
-                                <textarea rows="5" class="form-control @error('description') is-invalid @enderror" id="description"
-                                    name="description" required>{{ old('description') }}</textarea>
+                                <textarea rows="5" class="form-control @error('description') is-invalid @enderror" id="description" name="description"
+                                    required>{{ old('description') }}</textarea>
                                 @error('description')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -82,8 +121,28 @@
                                 @enderror
                             </div>
                             <div class="col-12 col-lg-4 mb-3">
+                                <label for="activity_type">Jenis Program</label>
+                                <select
+                                    class="w-100 border rounded selectpicker @error('activity_type') is-invalid @enderror"
+                                    id="activity_type" name="activity_type" data-live-search="true" required>
+                                    <option>Pilih Jenis Program</option>
+                                    @foreach ($program_types as $program_type)
+                                        <option value="{{ $program_type }}"
+                                            {{ old('activity_type') == $program_type ? 'selected' : '' }}>
+                                            {{ ucfirst($program_type) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('activity_type')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="col-12 col-lg-4 mb-3">
                                 <label for="location">Tempat Pelaksanaan</label>
-                                <input type="text" class="form-control @error('location') is-invalid @enderror"
+                                <input type="text"
+                                    class="form-control @error('location') is-invalid @enderror"
                                     id="location" name="location" required
                                     value="{{ old('location') }}">
                                 @error('location')
@@ -111,27 +170,8 @@
                                     </div>
                                 @enderror
                             </div>
-                            <div class="col-12 col-lg-4 mb-3">
-                                <label for="activity_type">Jenis Program</label>
-                                <select
-                                    class="w-100 border rounded selectpicker @error('activity_type') is-invalid @enderror"
-                                    id="activity_type" name="activity_type" data-live-search="true" required>
-                                    <option>Pilih Jenis Program</option>
-                                    @foreach ($program_types as $program_type)
-                                        <option value="{{ $program_type }}"
-                                            {{ old('activity_type') == $program_type ? 'selected' : '' }}>
-                                            {{ ucfirst($program_type) }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('activity_type')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
                             <div class="col-12 mb-3">
-                                <label for="detail">Keterangan Tambahan (Optional)</label>
+                                <label for="detail">Detail (Optional)</label>
                                 <textarea rows="4" class="form-control @error('detail') is-invalid @enderror" id="detail" name="detail">{{ old('detail') }}</textarea>
                                 @error('detail')
                                     <div class="invalid-feedback">
@@ -187,10 +227,13 @@
 
 @section('scriptjs')
     <script src="/sb-admin-2/vendor/bootstrap-select/bootstrap-select.min.js"></script>
+    <script src="/sb-admin-2/vendor/jquery-select-chained/jquery.chained.js" type="text/javascript" charset="utf-8">
     </script>
     <script type="text/javascript" charset="utf-8">
         $(function() {
             $('.selectpicker').selectpicker()
+            $("#iku2_id").chained("#iku1_id");
+            $("#iku3_id").chained("#iku2_id");
         });
     </script>
 @endsection
