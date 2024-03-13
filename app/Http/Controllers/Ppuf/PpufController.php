@@ -7,10 +7,14 @@ use App\Http\Requests\Ppuf\ImportRequest;
 use App\Http\Requests\Ppuf\PpufRequest;
 use App\Models\Ppuf;
 use App\Models\Role;
+use Crypt;
 use Exception;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Rap2hpoutre\FastExcel\FastExcel;
-use Validator;
+use Request;
 
 class PpufController extends Controller
 {
@@ -102,8 +106,15 @@ class PpufController extends Controller
     public function preview(ImportRequest $request)
     {
         try {
-            $data = (new FastExcel())->import($request->file('file'))->map(function ($item, $index) {
+            $ppufs = (new FastExcel())->import($request->file('file'))->map(function ($item, $index) {
                 $index = $index + 1;
+
+                $role_id = $item['Unit Pengaju'];
+                $role = Role::query()->where('role', $role_id)->first();
+                if (!$role) {
+                    throw new Exception("Unit Pengaju pada baris ke " . $index . " tidak terdaftar pada sistem, pastikan nama unit sama dengan nama unit pada profil unit terkait");
+                }
+
                 $ppuf_number = $item['Nomor PPUF'];
                 if (!$ppuf_number) {
                     throw new Exception("Nomor PPUF tidak boleh kosong pada baris ke " . $index);
@@ -144,7 +155,7 @@ class PpufController extends Controller
                 }
 
                 return [
-                    'role_id' => $item['Unit Pengaju'],
+                    'role_id' => $role->id,
                     'ppuf_number' => $ppuf_number,
                     'iku' => $iku,
                     'activity_type' => $activity_type,
@@ -157,7 +168,9 @@ class PpufController extends Controller
                 ];
             });
 
-            return response()->json($data);
+            $ppufs = collect($ppufs)->uniqueStrict('ppuf_number');
+            $token = Crypt::encrypt($ppufs);
+            return view('ppuf.preview', compact('ppufs', 'token'));
         } catch (Exception $th) {
             return redirect()->back()->with('failed', $th->getMessage());
         }
@@ -165,6 +178,14 @@ class PpufController extends Controller
 
     public function import()
     {
+        try {
+            $token = request('token', NULL);
+            $form = Crypt::decrypt($token);
+            Ppuf::query()->insert(collect($form)->toArray());
+            return redirect()->route('ppuf.index')->with('success', 'Berhasil menambahkan PPUF');
+        } catch (DecryptException $e) {
+            throw $e;
+        };
     }
     public function export()
     {
