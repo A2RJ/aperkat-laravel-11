@@ -101,54 +101,63 @@ class PpufController extends Controller
 
     public function preview(ImportRequest $request)
     {
-        //         'role_id' => 'required|exists:users,id',
-        //         'ppuf_number' => 'required',
-        //         'iku' => 'required|exists:iku1,id',
-        //         'activity_type' => 'required|in:program,pengadaan,perawatan,pengembangan',
-        //         'program_name' => 'required',
-        //         'description' => 'required',
-        //         'location' => 'required',
-        //         'date' => 'required|in:januari,februari,maret,april,mei,juni,juli,agustus,september,oktober,november,desember',
-        //         'planned_expenditure' => 'required',
-        //         'detail' => 'nullable',
         try {
-            $data = (new FastExcel())->import($request->file('file'))->mapWithKeys(function ($item, $index) {
+            $data = (new FastExcel())->import($request->file('file'))->map(function ($item, $index) {
+                $index = $index + 1;
                 $ppuf_number = $item['Nomor PPUF'];
                 if (!$ppuf_number) {
-                    throw new Exception("Nomor PPUF tidak boleh kosong");
+                    throw new Exception("Nomor PPUF tidak boleh kosong pada baris ke " . $index);
                 }
-                $validator = Validator::make($item, [
-                    'Nomor PPUF' => 'required',
-                    'Indikator Kinerja Utama' => 'required|exists:iku1,id',
-                    'Jenis Kegiatan' => 'required|in:program,pengadaan,perawatan,pengembangan',
-                    'Nama Program' => 'required',
-                    'Deskripsi' => 'required',
-                    'Tempat Pelaksanaan' => 'required',
-                    'Waktu Pelaksanaan' => 'required|in:januari,februari,maret,april,mei,juni,juli,agustus,september,oktober,november,desember',
-                    'RAB' => 'required',
-                    'Keterangan (Opsional)' => 'nullable',
-                ], []);
-                if ($validator->fails()) {
-                    $messages = $validator->errors()->all();
-                    throw new Exception(implode(', ', $messages) . implode($item) . " pada baris ke" . $index);
+                $iku = $item['Indikator Kinerja Utama'];
+                if (!$iku) {
+                    throw new Exception("Indikator Kinerja Utama tidak boleh kosong pada baris ke " . $index);
                 }
+                $activity_type = $item['Jenis Kegiatan'];
+                if (!$activity_type) {
+                    throw new Exception("Jenis Kegiatan tidak boleh kosong pada baris ke " . $index);
+                }
+                if (!in_array(strtolower($activity_type), ['program', 'pengadaan', 'pemeliharaan', 'pengembangan'])) {
+                    throw new Exception("Jenis Kegiatan tidak valid pada baris ke " . $index);
+                }
+                $program_name = $item['Nama Program'];
+                if (!$program_name) {
+                    throw new Exception("Nama Program tidak boleh kosong pada baris ke " . $index);
+                }
+                $deskripsi = $item['Deskripsi'];
+                if (!$deskripsi) {
+                    throw new Exception("Deskripsi tidak boleh kosong pada baris ke " . $index);
+                }
+                $location = $item['Tempat Pelaksanaan'];
+                if (!$location) {
+                    throw new Exception("Tempat Pelaksanaan tidak boleh kosong pada baris ke " . $index);
+                }
+                $date = $item['Waktu Pelaksanaan'];
+                if (!$date) {
+                    throw new Exception("Waktu Pelaksanaan tidak boleh kosong pada baris ke " . $index);
+                }
+                if (!in_array(strtolower($date), ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'])) {
+                    throw new Exception("Waktu Pelaksanaan tidak valid pada baris ke " . $index);
+                }
+                $rab = $item['RAB'];
+                if (!$rab) {
+                    throw new Exception("RAB tidak boleh kosong pada baris ke " . $index);
+                }
+
                 return [
                     'role_id' => $item['Unit Pengaju'],
                     'ppuf_number' => $ppuf_number,
-                    'iku' => $item['Indikator Kinerja Utama'],
-                    'activity_type' => $item['Jenis Kegiatan'],
-                    'program_name' => $item['Nama Program'],
-                    'description' => $item['Deskripsi'],
-                    'location' => $item['Tempat Pelaksanaan'],
-                    'date' => $item['Waktu Pelaksanaan'],
-                    'planned_expenditure' => $item['RAB'],
+                    'iku' => $iku,
+                    'activity_type' => $activity_type,
+                    'program_name' => $program_name,
+                    'description' => $deskripsi,
+                    'location' => $location,
+                    'date' => $date,
+                    'planned_expenditure' => $rab,
                     'detail' => $item['Keterangan (Opsional)'],
                 ];
             });
 
-
-
-            return response()->json(['data' => $data]);
+            return response()->json($data);
         } catch (Exception $th) {
             return redirect()->back()->with('failed', $th->getMessage());
         }
