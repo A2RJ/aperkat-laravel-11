@@ -11,10 +11,7 @@ use Crypt;
 use Exception;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Rap2hpoutre\FastExcel\FastExcel;
-use Request;
 
 class PpufController extends Controller
 {
@@ -106,14 +103,10 @@ class PpufController extends Controller
     public function preview(ImportRequest $request)
     {
         try {
-            $ppufs = (new FastExcel())->import($request->file('file'))->map(function ($item, $index) {
+            $role_id = $request->role_id;
+            $role = Role::query()->find($role_id);
+            $ppufs = (new FastExcel())->import($request->file('file'))->map(function ($item, $index) use ($role_id) {
                 $index = $index + 1;
-
-                $role_id = $item['Unit Pengaju'];
-                $role = Role::query()->where('role', $role_id)->first();
-                if (!$role) {
-                    throw new Exception("Unit Pengaju pada baris ke " . $index . " tidak terdaftar pada sistem, pastikan nama unit sama dengan nama unit pada profil unit terkait");
-                }
 
                 $ppuf_number = $item['Nomor PPUF'];
                 if (!$ppuf_number) {
@@ -155,7 +148,7 @@ class PpufController extends Controller
                 }
 
                 return [
-                    'role_id' => $role->id,
+                    'role_id' => $role_id,
                     'ppuf_number' => $ppuf_number,
                     'iku' => $iku,
                     'activity_type' => $activity_type,
@@ -170,9 +163,15 @@ class PpufController extends Controller
 
             $ppufs = collect($ppufs)->uniqueStrict('ppuf_number');
             $token = Crypt::encrypt($ppufs);
+            $ppufs = $ppufs->map(function ($item) use ($role) {
+                return array_merge($item, [
+                    'role' => $role->parent?->role,
+                    'parent' => $role->role,
+                ]);
+            });
             return view('ppuf.preview', compact('ppufs', 'token'));
         } catch (Exception $th) {
-            return redirect()->back()->with('failed', $th->getMessage());
+            return redirect()->back()->with('failed', $th->getMessage())->withInput();
         }
     }
 

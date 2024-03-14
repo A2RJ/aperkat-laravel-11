@@ -15,7 +15,7 @@
                     <form action="{{ route('ppuf.store') }}" method="post">
                         @csrf
                         <div class="form-row">
-                            <div class="col-12 col-lg-4 mb-3">
+                            <div class="col-12 col-lg-6 mb-3">
                                 <label for="role_id">Unit Pengaju</label>
                                 <select class="w-100 border rounded selectpicker @error('role_id') is-invalid @enderror"
                                     id="role_id" name="role_id" data-live-search="true" required>
@@ -33,7 +33,7 @@
                                     </div>
                                 @enderror
                             </div>
-                            <div class="col-12 col-lg-4 mb-3">
+                            <div class="col-12 col-lg-6 mb-3">
                                 <label for="ppuf_number">Nomor PPUF</label>
                                 <input type="number" class="form-control @error('ppuf_number') is-invalid @enderror"
                                     id="ppuf_number" name="ppuf_number" required value="{{ old('ppuf_number') }}">
@@ -43,29 +43,21 @@
                                     </div>
                                 @enderror
                             </div>
-                            <div class="col-12 col-lg-4 mb-3">
-                                <label for="iku">Indikator Kinerja Utama</label>
-                                <select class="w-100 border selectpicker rounded @error('iku') is-invalid @enderror"
-                                    id="iku" name="iku" data-live-search="true" required>
-                                    <option>Pilih IKU</option>
-                                    @foreach ($ikus['iku1'] as $iku)
-                                        <option value="{{ $iku->id }}"
-                                            {{ old('iku') == $iku->id ? 'selected' : '' }}>
-                                            {{ $iku->iku }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('iku')
+                            <div class="col-12 col-lg-6 mb-3">
+                                <label for="program_name">Nama Program</label>
+                               <textarea class="form-control @error('program_name') is-invalid @enderror" id="program_name" name="program_name"
+                                    required>{{ old('program_name') }}</textarea>
+                                @error('program_name')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                 @enderror
                             </div>
-                            <div class="col-12 mb-3">
-                                <label for="program_name">Nama Program</label>
-                               <textarea class="form-control @error('program_name') is-invalid @enderror" id="program_name" name="program_name"
-                                    required>{{ old('program_name') }}</textarea>
-                                @error('program_name')
+                            <div class="col-12 col-lg-6 mb-3">
+                                <label for="iku">Indikator Kinerja Utama</label>
+                               <textarea class="form-control @error('iku') is-invalid @enderror" id="iku" name="iku"
+                                    required>{{ old('iku') }}</textarea>
+                                @error('iku')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>

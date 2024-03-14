@@ -38,8 +38,8 @@
                                 @foreach ($ppufs as $ppuf)
                                     <tr>
                                         <th scope="row">{{ $loop->iteration }}</th>
-                                        <td>{{ $ppuf['ppuf_number'] }}</td>
-                                        <td>{{ $ppuf['ppuf_number'] }}</td>
+                                        <td>{{ $ppuf['role'] }}</td>
+                                        <td>{{ $ppuf['parent'] }}</td>
                                         <td>{{ $ppuf['ppuf_number'] }}</td>
                                         <td>{{ $ppuf['activity_type'] }}</td>
                                         <td>{{ $ppuf['program_name'] }}</td>

@@ -32,9 +32,22 @@ class Ppuf extends Model
         ];
     }
 
-    static $program_types = ['program', 'pengadaan', 'pemeliharaan', 'pengembangan'];
+    static $program_types = ['Program', 'Pengadaan', 'Pemeliharaan', 'Pengembangan'];
 
-    static $activity_dates = ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'];
+    static $activity_dates = [
+        'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'November',
+        'Desember'
+    ];
 
     public function author()
     {
