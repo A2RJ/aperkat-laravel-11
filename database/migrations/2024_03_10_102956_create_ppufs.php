@@ -21,12 +21,12 @@ return new class extends Migration
                 ->nullOnDelete();
             $table->string('iku');
             $table->string('ppuf_number');
-            $table->string('activity_type');
+            $table->enum('activity_type', ['program', 'pengadaan', 'pemeliharaan', 'pengembangan']);
             $table->string('program_name');
             $table->string('description');
-            $table->string('location');
+            $table->string('place');
             $table->string('date');
-            $table->string('planned_expenditure');
+            $table->string('budget');
             $table->string('detail')->nullable();
             $table->timestamps();
             $table->softDeletesTz('deleted_at', precision: 0);

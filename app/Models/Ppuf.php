@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use DB;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -18,11 +19,18 @@ class Ppuf extends Model
         'activity_type',
         'program_name',
         'description',
-        'location',
+        'place',
         'date',
-        'planned_expenditure',
+        'budget',
         'detail',
     ];
+
+    protected function budget(): Attribute
+    {
+        return Attribute::make(
+            get: fn (string $value) => money($value, 'IDR', true),
+        );
+    }
 
     public static function iku()
     {
@@ -53,5 +61,10 @@ class Ppuf extends Model
     public function author()
     {
         return $this->belongsTo(Role::class, 'role_id');
+    }
+
+    public function submissions()
+    {
+        return $this->hasMany(Submission::class);
     }
 }

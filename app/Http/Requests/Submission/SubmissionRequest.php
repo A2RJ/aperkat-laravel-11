@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Ppuf;
+namespace App\Http\Requests\Submission;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PpufRequest extends FormRequest
+class SubmissionRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,16 +22,15 @@ class PpufRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'role_id' => 'required|exists:users,id',
-            'ppuf_number' => 'required',
-            'iku' => 'required|exists:iku1,id',
-            'activity_type' => 'required|in:program,pengadaan,pemeliharaan,pengembangan',
-            'program_name' => 'required',
-            'description' => 'required',
+            'ppuf_id' => 'required|exists:ppufs,id',
+            'background' => 'required',
+            'participant' => 'required',
             'place' => 'required',
-            'date' => 'required|in:januari,februari,maret,april,mei,juni,juli,agustus,september,oktober,november,desember',
+            'date' => 'required',
+            'speaker' => 'required',
+            'rundown' => 'required',
             'budget' => 'required',
-            'detail' => 'nullable',
+            'vendor' => 'required'
         ];
     }
 }

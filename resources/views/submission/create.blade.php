@@ -1,6 +1,6 @@
 @extends('layout.index')
 
-@section('title', 'Form PPUF | APERKAT')
+@section('title', 'Form Pengajuan PPUF | APERKAT')
 
 @section('content')
     <div class="row">
@@ -8,37 +8,83 @@
             <div class="card shadow">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Form PPUF</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Form Pengajuan PPUF</h6>
                 </div>
 
                 <div class="card-body p-4">
                     <form action="{{ route('ppuf.store') }}" method="post">
                         @csrf
                         <div class="form-row">
-                            <div class="col-12 col-lg-8 mb-3">
-                                <label for="role_id">Unit Pengaju</label>
-                                <select
-                                    class="w-100 border rounded selectpicker @error('role_id') is-invalid @enderror"
-                                    id="role_id" name="role_id" data-live-search="true" required>
-                                    <option>Pilih Unit Pengaju</option>
-                                    @foreach ($users as $user)
-                                        <option value="{{ $user->id }}"
-                                            {{ old('role_id') == $user->id ? 'selected' : '' }}>
-                                            {{ $user->name }}
+                            <div class="col-12 col-lg-3 mb-3">
+                                <label for="ppuf_id">Nomor PPUF</label>
+                                <select class="w-100 border rounded selectpicker @error('ppuf_id') is-invalid @enderror"
+                                    id="ppuf_id" name="ppuf_id" data-live-search="true" required>
+                                    <option>Pilih Nomor PPUF</option>
+                                    @foreach ($ppufs as $ppuf)
+                                        <option value="{{ $ppuf->id }}"
+                                            {{ old('ppuf_id') == $ppuf->id ? 'selected' : '' }}>
+                                            {{ $ppuf->ppuf_number }}
                                         </option>
                                     @endforeach
                                 </select>
-                                @error('role_id')
+                                @error('ppuf_id')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                 @enderror
                             </div>
-                            <div class="col-12 col-lg-4 mb-3">
-                                <label for="ppuf_number">Nomor PPUF</label>
-                                <input type="number" class="form-control @error('ppuf_number') is-invalid @enderror"
-                                    id="ppuf_number" name="ppuf_number" required value="{{ old('ppuf_number') }}">
-                                @error('ppuf_number')
+                            <div class="col-12 col-lg-6 mb-3">
+                                <label for="ppuf_name">Nama Kegiatan</label>
+                                <select class="w-100 border rounded custom-select" id="ppuf_name" name="ppuf_name">
+                                    @foreach ($ppufs as $ppuf)
+                                        <option value="{{ $ppuf->id }}" selected data-chained="{{ $ppuf->id }}">
+                                            {{ $ppuf->budget }} - {{ $ppuf->program_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-12 col-lg-3 mb-3">
+                                <label for="activity_type">Jenis Kegiatan</label>
+                                <select class="w-100 border rounded custom-select" id="activity_type" name="activity_type">
+                                    @foreach ($ppufs as $ppuf)
+                                        <option value="{{ $ppuf->id }}" selected data-chained="{{ $ppuf->id }}">
+                                            {{ $ppuf->activity_type }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-12 mb-3">
+                                <label for="background">Latar Belakang</label>
+                                <textarea rows="4" class="form-control @error('background') is-invalid @enderror" id="background"
+                                    name="background" required>{{ old('background') }}</textarea>
+                                @error('background')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="col-12 col-lg-4  mb-3">
+                                <label for="speaker">Pemateri</label>
+                                <textarea class="form-control @error('speaker') is-invalid @enderror" id="speaker" name="speaker" required>{{ old('speaker') }}</textarea>
+                                @error('speaker')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="col-12 col-lg-4  mb-3">
+                                <label for="participant">Peserta</label>
+                                <textarea class="form-control @error('participant') is-invalid @enderror" id="participant" name="participant" required>{{ old('participant') }}</textarea>
+                                @error('participant')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="col-12 col-lg-4  mb-3">
+                                <label for="rundown">Rundown</label>
+                                <textarea class="form-control @error('rundown') is-invalid @enderror" id="rundown" name="rundown" required>{{ old('rundown') }}</textarea>
+                                @error('rundown')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -100,52 +146,21 @@
                                     </div>
                                 @enderror
                             </div>
-                            <div class="col-12 mb-3">
-                                <label for="program_name">Nama Program</label>
-                                <input type="text" class="form-control @error('program_name') is-invalid @enderror"
-                                    id="program_name" name="program_name" required value="{{ old('program_name') }}">
-                                @error('program_name')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                            <div class="col-12 mb-3">
-                                <label for="description">Deskripsi</label>
-                                <textarea rows="5" class="form-control @error('description') is-invalid @enderror" id="description" name="description"
-                                    required>{{ old('description') }}</textarea>
-                                @error('description')
+                            <div class="col-12 col-lg-4 mb-3">
+                                <label for="vendor">Vendor</label>
+                                <input type="text" class="form-control @error('vendor') is-invalid @enderror"
+                                    id="vendor" name="vendor" required value="{{ old('vendor') }}">
+                                @error('vendor')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                 @enderror
                             </div>
                             <div class="col-12 col-lg-4 mb-3">
-                                <label for="activity_type">Jenis Program</label>
-                                <select
-                                    class="w-100 border rounded selectpicker @error('activity_type') is-invalid @enderror"
-                                    id="activity_type" name="activity_type" data-live-search="true" required>
-                                    <option>Pilih Jenis Program</option>
-                                    @foreach ($program_types as $program_type)
-                                        <option value="{{ $program_type }}"
-                                            {{ old('activity_type') == $program_type ? 'selected' : '' }}>
-                                            {{ ucfirst($program_type) }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('activity_type')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                            <div class="col-12 col-lg-4 mb-3">
-                                <label for="location">Tempat Pelaksanaan</label>
-                                <input type="text"
-                                    class="form-control @error('location') is-invalid @enderror"
-                                    id="location" name="location" required
-                                    value="{{ old('location') }}">
-                                @error('location')
+                                <label for="place">Tempat Pelaksanaan</label>
+                                <input type="text" class="form-control @error('place') is-invalid @enderror"
+                                    id="place" name="place" required value="{{ old('place') }}">
+                                @error('place')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -153,8 +168,7 @@
                             </div>
                             <div class="col-12 col-lg-4 mb-3">
                                 <label for="date">Waktu Pelaksanaan</label>
-                                <select
-                                    class="w-100 border rounded selectpicker @error('date') is-invalid @enderror"
+                                <select class="w-100 border rounded selectpicker @error('date') is-invalid @enderror"
                                     id="date" name="date" data-live-search="true" required>
                                     <option>Pilih Waktu</option>
                                     @foreach ($activity_dates as $activity_date)
@@ -170,26 +184,23 @@
                                     </div>
                                 @enderror
                             </div>
-                            <div class="col-12 mb-3">
-                                <label for="detail">Detail (Optional)</label>
-                                <textarea rows="4" class="form-control @error('detail') is-invalid @enderror" id="detail" name="detail">{{ old('detail') }}</textarea>
-                                @error('detail')
+                            <div class="col-12 col-lg-4 mb-3">
+                                <label for="budget">RAB</label>
+                                <input type="text" class="form-control @error('budget') is-invalid @enderror"
+                                    id="budget" name="budget" required value="{{ old('budget') }}">
+                                @error('budget')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
                                 @enderror
                             </div>
-                            <div class="col-12 mb-3">
-                                <label for="planned_expenditure">RAB</label>
-                                <input type="text"
-                                    class="form-control @error('planned_expenditure') is-invalid @enderror"
-                                    id="planned_expenditure" name="planned_expenditure" required
-                                    value="{{ old('planned_expenditure') }}">
-                                @error('planned_expenditure')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
+                            <div class="col-12 col-lg-4 mb-3">
+                                <label for="budget">Upload File RAB (.XLSX)</label>
+                                <input type="file" class="form-control" id="budget" name="budget">
+                                <small class="success-feedback">
+                                    Tidak perlu mengisi RAB jika meng-upload file RAB dan juga sebaliknya <br>
+                                    <a href="#">Klik untuk donwload template</a>.
+                                </small>
                             </div>
                         </div>
                         <div>
@@ -202,7 +213,7 @@
     </div>
 
     <script type="text/javascript">
-        var rupiah = document.getElementById('planned_expenditure');
+        var rupiah = document.getElementById('budget');
         rupiah.addEventListener('keyup', function(e) {
             rupiah.value = formatRupiah(this.value, 'Rp. ');
         });
@@ -234,6 +245,8 @@
             $('.selectpicker').selectpicker()
             $("#iku2_id").chained("#iku1_id");
             $("#iku3_id").chained("#iku2_id");
+            $("#ppuf_name").chained("#ppuf_id");
+            $("#activity_type").chained("#ppuf_id");
         });
     </script>
 @endsection

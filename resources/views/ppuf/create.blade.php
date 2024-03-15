@@ -74,11 +74,11 @@
                                 @enderror
                             </div>
                             <div class="col-12 col-lg-4 mb-3">
-                                <label for="location">Tempat Pelaksanaan</label>
-                                <input type="text" class="form-control @error('location') is-invalid @enderror"
-                                    id="location" name="location" required
-                                    value="{{ old('location') }}">
-                                @error('location')
+                                <label for="place">Tempat Pelaksanaan</label>
+                                <input type="text" class="form-control @error('place') is-invalid @enderror"
+                                    id="place" name="place" required
+                                    value="{{ old('place') }}">
+                                @error('place')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -132,12 +132,12 @@
                                 @enderror
                             </div>
                             <div class="col-12 mb-3">
-                                <label for="planned_expenditure">RAB</label>
+                                <label for="budget">RAB</label>
                                 <input type="text"
-                                    class="form-control @error('planned_expenditure') is-invalid @enderror"
-                                    id="planned_expenditure" name="planned_expenditure" required
-                                    value="{{ old('planned_expenditure') }}">
-                                @error('planned_expenditure')
+                                    class="form-control @error('budget') is-invalid @enderror"
+                                    id="budget" name="budget" required
+                                    value="{{ old('budget') }}">
+                                @error('budget')
                                     <div class="invalid-feedback">
                                         {{ $message }}
                                     </div>
@@ -154,7 +154,7 @@
     </div>
 
     <script type="text/javascript">
-        var rupiah = document.getElementById('planned_expenditure');
+        var rupiah = document.getElementById('budget');
         rupiah.addEventListener('keyup', function(e) {
             rupiah.value = formatRupiah(this.value, 'Rp. ');
         });

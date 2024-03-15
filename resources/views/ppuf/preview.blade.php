@@ -43,8 +43,8 @@
                                         <td>{{ $ppuf['ppuf_number'] }}</td>
                                         <td>{{ $ppuf['activity_type'] }}</td>
                                         <td>{{ $ppuf['program_name'] }}</td>
-                                        <td>{{ $ppuf['location'] }}, {{ $ppuf['date'] }}</td>
-                                        <td>{{ $ppuf['planned_expenditure'] }}</td>
+                                        <td>{{ $ppuf['place'] }}, {{ $ppuf['date'] }}</td>
+                                        <td>{{ money($ppuf['budget'], 'IDR', true) }}</td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -62,8 +62,8 @@
                                         <td>{{ $ppuf->ppuf_number }}</td>
                                         <td>{{ $ppuf->activity_type }}</td>
                                         <td>{{ $ppuf->program_name }}</td>
-                                        <td>{{ $ppuf->location }}, {{ $ppuf->date }}</td>
-                                        <td>{{ $ppuf->planned_expenditure }}</td>
+                                        <td>{{ $ppuf->place }}, {{ $ppuf->date }}</td>
+                                        <td>{{ $ppuf->budget }}</td>
                                         <td>
                                             <div class="d-flex">
                                                 <a class="btn btn-success mr-1 mb-1"

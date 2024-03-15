@@ -19,9 +19,14 @@ return new class extends Migration
                 ->on('ppufs')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
-            $table->jsonb('tree_structure_status');
-            $table->jsonb('tree_structure_history');
-            $table->rememberToken();
+            $table->string('background',);
+            $table->string('participant',);
+            $table->string('place',);
+            $table->string('date',);
+            $table->string('speaker',);
+            $table->string('rundown',);
+            $table->string('budget',);
+            $table->string('vendor',);
             $table->timestamps();
             $table->softDeletesTz('deleted_at', precision: 0);
         });

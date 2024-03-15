@@ -46,7 +46,7 @@
                                     <tr>
                                         <th scope="row">{{ $loop->iteration + $roles->firstItem() - 1 }}</th>
                                         <td>{{ $role->role }}</td>
-                                        <td>{{ $role->user?->name }}</td>
+                                        <td>{{ $role->user?->name }} <br> ({{ $role->user?->email }})</td>
                                         <td>{{ $role->parent?->role }}</td>
                                         <td>
                                             <ul>

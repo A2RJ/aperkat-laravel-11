@@ -26,7 +26,7 @@ class PpufController extends Controller
                 'activity_type',
                 'program_name',
                 'description',
-                'location',
+                'place',
                 'date',
                 ], 'LIKE', '%apa%');
         })
@@ -52,9 +52,9 @@ class PpufController extends Controller
             'activity_type',
             'program_name',
             'description',
-            'location',
+            'place',
             'date',
-            'planned_expenditure',
+            'budget',
             'detail'
         ]);
         Ppuf::create($form);
@@ -79,9 +79,9 @@ class PpufController extends Controller
             'activity_type',
             'program_name',
             'description',
-            'location',
+            'place',
             'date',
-            'planned_expenditure',
+            'budget',
             'detail'
         ]);
         $ppuf->update($form);
@@ -131,8 +131,8 @@ class PpufController extends Controller
                 if (!$deskripsi) {
                     throw new Exception("Deskripsi tidak boleh kosong pada baris ke " . $index);
                 }
-                $location = $item['Tempat Pelaksanaan'];
-                if (!$location) {
+                $place = $item['Tempat Pelaksanaan'];
+                if (!$place) {
                     throw new Exception("Tempat Pelaksanaan tidak boleh kosong pada baris ke " . $index);
                 }
                 $date = $item['Waktu Pelaksanaan'];
@@ -154,9 +154,9 @@ class PpufController extends Controller
                     'activity_type' => $activity_type,
                     'program_name' => $program_name,
                     'description' => $deskripsi,
-                    'location' => $location,
+                    'place' => $place,
                     'date' => $date,
-                    'planned_expenditure' => $rab,
+                    'budget' => $rab,
                     'detail' => $item['Keterangan (Opsional)'],
                 ];
             });
