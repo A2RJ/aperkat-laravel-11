@@ -23,6 +23,7 @@ return new class extends Migration
             $table->jsonb('tree_structure_history');
             $table->rememberToken();
             $table->timestamps();
+            $table->softDeletesTz('deleted_at', precision: 0);
         });
     }
 

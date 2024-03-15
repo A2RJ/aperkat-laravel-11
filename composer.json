@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.2",
         "laravel/framework": "^11.0",
+        "laravel/pulse": "^1.0@beta",
         "laravel/socialite": "^5.12",
         "laravel/tinker": "^2.9",
         "rap2hpoutre/fast-excel": "^5.4"

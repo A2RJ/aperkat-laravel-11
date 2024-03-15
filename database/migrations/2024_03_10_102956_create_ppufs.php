@@ -29,6 +29,7 @@ return new class extends Migration
             $table->string('planned_expenditure');
             $table->string('detail')->nullable();
             $table->timestamps();
+            $table->softDeletesTz('deleted_at', precision: 0);
         });
     }
 
