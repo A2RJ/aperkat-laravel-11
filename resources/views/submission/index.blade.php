@@ -66,7 +66,7 @@
                                                 </a>
                                                 <a class="btn btn-success mr-1 mb-1"
                                                     href="{{ route('submission.show', $submission->id) }}">
-                                                    <i class="fas fa-fw fa-detail"></i>
+                                                    <i class="fas fa-fw fa-info"></i>
                                                 </a>
 
                                                 <form action="{{ route('submission.destroy', $submission->id) }}"

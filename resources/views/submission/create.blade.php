@@ -12,10 +12,10 @@
                 </div>
 
                 <div class="card-body p-4">
-                    <form action="{{ route('ppuf.store') }}" method="post">
+                    <form action="{{ route('submission.store') }}" method="post">
                         @csrf
                         <div class="form-row">
-                            <div class="col-12 col-lg-3 mb-3">
+                            <div class="col-12 col-lg-2 mb-3">
                                 <label for="ppuf_id">Nomor PPUF</label>
                                 <select class="w-100 border rounded selectpicker @error('ppuf_id') is-invalid @enderror"
                                     id="ppuf_id" name="ppuf_id" data-live-search="true" required>
@@ -33,12 +33,22 @@
                                     </div>
                                 @enderror
                             </div>
-                            <div class="col-12 col-lg-6 mb-3">
+                            <div class="col-12 col-lg-4 mb-3">
                                 <label for="ppuf_name">Nama Kegiatan</label>
                                 <select class="w-100 border rounded custom-select" id="ppuf_name" name="ppuf_name">
                                     @foreach ($ppufs as $ppuf)
                                         <option value="{{ $ppuf->id }}" selected data-chained="{{ $ppuf->id }}">
-                                            {{ $ppuf->budget }} - {{ $ppuf->program_name }}
+                                            {{ $ppuf->program_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-12 col-lg-3 mb-3">
+                                <label for="rab">RAB Kegiatan</label>
+                                <select class="w-100 border rounded custom-select" id="rab" name="rab">
+                                    @foreach ($ppufs as $ppuf)
+                                        <option value="{{ $ppuf->id }}" selected data-chained="{{ $ppuf->id }}">
+                                            {{ $ppuf->budget }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -48,7 +58,7 @@
                                 <select class="w-100 border rounded custom-select" id="activity_type" name="activity_type">
                                     @foreach ($ppufs as $ppuf)
                                         <option value="{{ $ppuf->id }}" selected data-chained="{{ $ppuf->id }}">
-                                            {{ $ppuf->activity_type }}
+                                            {{ ucfirst($ppuf->activity_type) }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -195,8 +205,8 @@
                                 @enderror
                             </div>
                             <div class="col-12 col-lg-4 mb-3">
-                                <label for="budget">Upload File RAB (.XLSX)</label>
-                                <input type="file" class="form-control" id="budget" name="budget">
+                                <label for="file">Upload File RAB (.XLSX)</label>
+                                <input type="file" class="form-control" id="file" name="file">
                                 <small class="success-feedback">
                                     Tidak perlu mengisi RAB jika meng-upload file RAB dan juga sebaliknya <br>
                                     <a href="#">Klik untuk donwload template</a>.
@@ -246,7 +256,19 @@
             $("#iku2_id").chained("#iku1_id");
             $("#iku3_id").chained("#iku2_id");
             $("#ppuf_name").chained("#ppuf_id");
+            $("#rab").chained("#ppuf_id");
             $("#activity_type").chained("#ppuf_id");
+
+            function checkDisable(selectId, inputId, selectedValue) {
+                var selectValue = document.getElementById(selectId).value;
+                var inputToDisable = document.getElementById(inputId);
+
+                if (selectValue === selectedValue) {
+                    inputToDisable.disabled = true;
+                } else {
+                    inputToDisable.disabled = false;
+                }
+            }
         });
     </script>
 @endsection

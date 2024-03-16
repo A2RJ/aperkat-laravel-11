@@ -22,9 +22,9 @@ class PpufRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'role_id' => 'required|exists:users,id',
+            'role_id' => 'required|exists:roles,id',
             'ppuf_number' => 'required',
-            'iku' => 'required|exists:iku1,id',
+            'iku' => 'required',
             'activity_type' => 'required|in:program,pengadaan,pemeliharaan,pengembangan',
             'program_name' => 'required',
             'description' => 'required',
@@ -32,6 +32,16 @@ class PpufRequest extends FormRequest
             'date' => 'required|in:januari,februari,maret,april,mei,juni,juli,agustus,september,oktober,november,desember',
             'budget' => 'required',
             'detail' => 'nullable',
+        ];
+    }
+
+    /**
+     * @return array|string[]
+     */
+    public function messages(): array
+    {
+        return [
+            'role_id' => 'Role is invalid',
         ];
     }
 }

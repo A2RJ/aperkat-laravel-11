@@ -19,14 +19,32 @@ return new class extends Migration
                 ->on('ppufs')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
-            $table->string('background',);
-            $table->string('participant',);
-            $table->string('place',);
-            $table->string('date',);
-            $table->string('speaker',);
-            $table->string('rundown',);
-            $table->string('budget',);
-            $table->string('vendor',);
+            $table->foreignId('iku1_id')
+                ->nullable()
+                ->references('id')
+                ->on('iku1')
+                ->cascadeOnUpdate()
+                ->nullOnDelete();
+            $table->foreignId('iku2_id')
+                ->nullable()
+                ->references('id')
+                ->on('iku2')
+                ->cascadeOnUpdate()
+                ->nullOnDelete();
+            $table->foreignId('iku3_id')
+                ->nullable()
+                ->references('id')
+                ->on('iku3')
+                ->cascadeOnUpdate()
+                ->nullOnDelete();
+            $table->string('background');
+            $table->string('speaker');
+            $table->string('participant');
+            $table->string('place');
+            $table->string('date');
+            $table->string('rundown');
+            $table->string('budget');
+            $table->string('vendor');
             $table->timestamps();
             $table->softDeletesTz('deleted_at', precision: 0);
         });

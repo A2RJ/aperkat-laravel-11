@@ -12,14 +12,17 @@ class Submission extends Model
 
     protected $fillable = [
         'ppuf_id',
+        'iku1_id',
+        'iku2_id',
+        'iku3_id',
         'background',
         'speaker',
         'participant',
+        'rundown',
         'place',
         'date',
-        'rundown',
+        'budget',
         'vendor',
-        'budget'
     ];
 
     public function ppuf()

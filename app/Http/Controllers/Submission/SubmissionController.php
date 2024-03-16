@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Submission;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Submission\SubmissionRequest;
 use App\Models\Ppuf;
 use App\Models\Submission;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Http\Request;
 
 class SubmissionController extends Controller
 {
@@ -32,9 +32,22 @@ class SubmissionController extends Controller
         return view('submission.create', compact('ppufs', 'ikus', 'activity_dates'));
     }
 
-    public function store(Request $request)
+    public function store(SubmissionRequest $request)
     {
-        $form = $request->safe()->only(['']);
+        $form = $request->safe()->only([
+            'ppuf_id',
+            'iku1_id',
+            'iku2_id',
+            'iku3_id',
+            'background',
+            'speaker',
+            'participant',
+            'rundown',
+            'place',
+            'date',
+            'budget',
+            'vendor',
+        ]);
         Submission::create($form);
         return redirect()->route('submission.index')->with('success', 'Berhasil menambahkan pengajuan');
     }
@@ -46,13 +59,28 @@ class SubmissionController extends Controller
 
     public function edit(Submission $submission)
     {
-        $ppufs = Ppuf::query()->get(['id', 'program_name']);
-        return view('submission.edit', compact('submission', 'ppufs'));
+        $ppufs = Ppuf::query()->get(['id', 'program_name', 'ppuf_number', 'budget', 'activity_type']);
+        $ikus = Ppuf::iku();
+        $activity_dates = Ppuf::$activity_dates;
+        return view('submission.edit', compact('submission', 'ppufs', 'ikus', 'activity_dates'));
     }
 
-    public function update(Request $request, Submission $submission)
+    public function update(SubmissionRequest $request, Submission $submission)
     {
-        $form = $request->safe()->only([]);
+        $form = $request->safe()->only([
+            'ppuf_id',
+            'iku1_id',
+            'iku2_id',
+            'iku3_id',
+            'background',
+            'speaker',
+            'participant',
+            'rundown',
+            'place',
+            'date',
+            'budget',
+            'vendor',
+        ]);
         $submission->update($form);
         return redirect()->route('submission.index')->with('success', 'Berhasil mengubah pengajuan');
     }

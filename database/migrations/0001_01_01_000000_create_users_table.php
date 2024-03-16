@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('password')->nullable();
             $table->string('avatar');
             $table->string('whatsapp')->unique()->nullable();
+            $table->string('bank_name')->nullable();
+            $table->string('bank_account_number')->nullable();
+            $table->string('bank_account_name')->nullable();
             $table->rememberToken();
             $table->timestamps();
             $table->softDeletesTz('deleted_at', precision: 0);

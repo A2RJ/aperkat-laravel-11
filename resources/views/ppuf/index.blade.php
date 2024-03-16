@@ -60,7 +60,7 @@
                                         <td>{{ $ppuf->author->parent?->role }}</td>
                                         <td>{{ $ppuf->author->role }}</td>
                                         <td>{{ $ppuf->ppuf_number }}</td>
-                                        <td>{{ $ppuf->activity_type }}</td>
+                                        <td>{{ ucfirst($ppuf->activity_type) }}</td>
                                         <td>{{ $ppuf->program_name }}</td>
                                         <td>{{ $ppuf->place }}, {{ $ppuf->date }}</td>
                                         <td>{{ $ppuf->budget }}</td>

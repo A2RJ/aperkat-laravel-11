@@ -145,6 +145,7 @@
                             </div>
                         </div>
                         <div>
+                            <a href="{{ route('ppuf.index') }}" class="btn btn-dark ">Cancel</a>
                             <button type="submit" class="btn btn-primary float-right ">Save</button>
                         </div>
                     </form>

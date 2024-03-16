@@ -12,14 +12,6 @@
                 </div>
 
                 <div class="card-body p-4">
-                    <div class="mb-4 d-flex justify-content-end">
-                        <form action="{{ route('ppuf.import') }}" method="post">
-                            @csrf
-                            <input type="hidden" name="token" value="{{ $token }}">
-                            <button class="btn btn-primary" type="submit">Simpan Data</button>
-                        </form>
-                    </div>
-
                     <div class="table-responsive ">
                         <table class="table table-bordered">
                             <thead class="thead-light">
@@ -49,6 +41,15 @@
                                 @endforeach
                             </tbody>
                         </table>
+                    </div>
+
+                    <div class="mb-4 d-flex justify-content-between ">
+                            <a href="{{ route('ppuf.import') }}" class="btn btn-dark ">Cancel</a>
+                        <form action="{{ route('ppuf.import') }}" method="post">
+                            @csrf
+                            <input type="hidden" name="token" value="{{ $token }}">
+                            <button class="btn btn-primary" type="submit">Save PPUF</button>
+                        </form>
                     </div>
                 </div>
             </div>

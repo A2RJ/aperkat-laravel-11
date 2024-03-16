@@ -26,4 +26,14 @@ class ImportRequest extends FormRequest
             'file' => 'required|file|mimes:xlsx'
         ];
     }
+
+    /**
+     * @return array|string[]
+     */
+    public function messages(): array
+    {
+        return [
+            'role_id' => 'Role is invalid',
+        ];
+    }
 }
