@@ -20,7 +20,7 @@ class Role extends Model
 
     public function parent()
     {
-        return $this->belongsTo(Role::class, 'parent_id');
+        return $this->hasMany(Role::class, 'id', 'parent_id');
     }
 
 
@@ -36,7 +36,7 @@ class Role extends Model
 
     public function ancestors()
     {
-        return $this->parent()->with('ancestors');
+        return $this->parent()->with('ancestors', 'user:id,name');
     }
 
     public static function flattenAllChildren(Closure $queryCallback = null)
@@ -53,7 +53,7 @@ class Role extends Model
         $query = self::query();
         $queryCallback($query);
 
-        $data = $query->with(['ancestors'])->get();
+        $data = $query->with('ancestors', 'user:id,name')->get();
         return self::flattenRecursiveArray($data, 'ancestors');
     }
 
