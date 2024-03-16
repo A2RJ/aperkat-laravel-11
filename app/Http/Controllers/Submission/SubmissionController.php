@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Submission;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Submission\SubmissionRequest;
 use App\Models\Ppuf;
+use App\Models\Role;
 use App\Models\Submission;
-use Illuminate\Database\Query\Builder;
+use App\Models\SubmissionStatus;
+use Illuminate\Database\Eloquent\Builder;
 
 class SubmissionController extends Controller
 {
@@ -54,6 +56,21 @@ class SubmissionController extends Controller
 
     public function show(Submission $submission)
     {
+        $role_id = $submission->ppuf->role_id;
+        $statuses = $submission->status;
+        $status = Role::flattenAllChildren(function (Builder $builder) use ($role_id) {
+            $builder->where('id', $role_id)->get();
+        });
+
+        $result = collect($status)->map(function ($status) use ($statuses) {
+            $item = collect($statuses)->filter(function ($item) use ($status) {
+                return $item['role_id'] == $status['id'];
+            })->last();
+            $status['status'] = $item;
+            return $status;
+        });
+
+        return $result;
         return view('submission.detail', compact('submission'));
     }
 

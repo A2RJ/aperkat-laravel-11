@@ -29,4 +29,9 @@ class Submission extends Model
     {
         return $this->belongsTo(Ppuf::class);
     }
+
+    public function status()
+    {
+        return $this->hasMany(SubmissionStatus::class);
+    }
 }

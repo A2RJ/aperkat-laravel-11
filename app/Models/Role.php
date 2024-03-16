@@ -31,7 +31,7 @@ class Role extends Model
 
     public function descendants()
     {
-        return $this->children()->with('descendants');
+        return $this->children()->with('descendants', 'user:id,name');
     }
 
     public function ancestors()
@@ -44,7 +44,7 @@ class Role extends Model
         $query = self::query();
         $queryCallback($query);
 
-        $data = $query->with('descendants')->get();
+        $data = $query->with('descendants', 'user:id,name')->get();
         return self::flattenRecursiveArray($data, 'descendants');
     }
 
