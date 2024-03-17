@@ -25,6 +25,7 @@ class Submission extends Model
         'vendor',
         'budget',
         'approved_budget',
+        'report_file',
         'is_disbursement_complete',
         'is_done'
     ];

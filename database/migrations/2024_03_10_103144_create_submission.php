@@ -52,6 +52,7 @@ return new class extends Migration
             $table->string('vendor');
             $table->string('budget');
             $table->string('approved_budget')->nullable()->default(0);
+            $table->string('report_file')->nullable();
             $table->boolean('is_disbursement_complete')->default(false);
             $table->boolean('is_done')->default(false);
             $table->timestamps();

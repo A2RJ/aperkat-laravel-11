@@ -48,69 +48,20 @@
                 </a>
             </li>
 
+            {{--
+            - Wr 2
+            - dir keuangan tambah periode
+            - dir keuangan upload pencairan
+            - dir keuangan lpj
+            - user
+            - super admin tambah menu login as spefisik user
+            --}}
+
             <!-- Divider -->
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-            <div class="sidebar-heading">
-                Warek II
-            </div>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('ppuf.index') }}">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>PPUF</span></a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('submission.index') }}">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Pengajuan</span></a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('sub-division.on-proccess') }}">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pengajuan Sub Divisi</span></a>
-            </li>
-            {{-- <li class="nav-item active">
-                <a class="nav-link" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pengajuan Sub Divisi</span>
-                </a>
-                <div id="collapsePages" class="collapse show" aria-labelledby="headingPages"
-                    data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <a class="collapse-item" href="login.html">Menunggu Persetujuan</a>
-                        <a class="collapse-item" href="{{ route('sub-division.on-proccess') }}">Sedang Diproses</a>
-                        <a class="collapse-item" href="forgot-password.html">Selesai</a>
-                    </div>
-                </div>
-            </li> --}}
-
-            {{-- <li class="nav-item">
-                <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-folder-open"></i>
-                    <span>Ringkasan Pengajuan</span></a>
-            </li> --}}
-            <!-- Divider -->
-            <hr class="sidebar-divider">
-
-            <!-- Heading -->
-            <div class="sidebar-heading">
-                Super Admin
-            </div>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('user.index') }}">
-                    <i class="fas fa-fw fa-users"></i>
-                    <span>Pengguna</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ route('role.index') }}">
-                    <i class="fas fa-fw fa-user"></i>
-                    <span>Jabatan</span></a>
-            </li>
-
+           @include('layout.super-admin')
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
