@@ -12,6 +12,7 @@ class Submission extends Model
 
     protected $fillable = [
         'ppuf_id',
+        'role_id',
         'iku1_id',
         'iku2_id',
         'iku3_id',
@@ -21,9 +22,11 @@ class Submission extends Model
         'rundown',
         'place',
         'date',
+        'vendor',
         'budget',
         'approved_budget',
-        'vendor',
+        'is_disbursement_complete',
+        'is_done'
     ];
 
     public function ppuf()

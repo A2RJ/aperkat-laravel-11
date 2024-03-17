@@ -70,7 +70,7 @@ class Role extends Model
         return $result;
     }
 
-    public static function flattenAllAncestors(Closure $queryCallback)
+    public static function flattenAllParents(Closure $queryCallback)
     {
         $query = self::query();
         $queryCallback($query);

@@ -19,6 +19,12 @@ return new class extends Migration
                 ->on('ppufs')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
+            $table->foreignId('role_id')
+                ->nullable()
+                ->references('id')
+                ->on('roles')
+                ->cascadeOnUpdate()
+                ->nullOnDelete();
             $table->foreignId('iku1_id')
                 ->nullable()
                 ->references('id')
@@ -43,9 +49,11 @@ return new class extends Migration
             $table->string('place');
             $table->string('date');
             $table->string('rundown');
+            $table->string('vendor');
             $table->string('budget');
             $table->string('approved_budget')->nullable()->default(0);
-            $table->string('vendor');
+            $table->boolean('is_disbursement_complete')->default(false);
+            $table->boolean('is_done')->default(false);
             $table->timestamps();
             $table->softDeletesTz('deleted_at', precision: 0);
         });

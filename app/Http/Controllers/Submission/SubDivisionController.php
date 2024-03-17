@@ -18,24 +18,22 @@ class SubDivisionController extends Controller
             $builder->whereIn('id', $role_id)->get();
         });
         $subdivisionIds = collect($subdivision)->pluck('id')->unique();
+
+        $status = request('status', NULL);
         $submissions = Submission::with('ppuf')
             ->whereHas('ppuf', function ($query) use ($subdivisionIds) {
                 $query->whereIn('role_id', $subdivisionIds);
             })
+            ->when($status == 'done', function (Builder $query) {
+                $query->where('is_done', 1);
+            })
+            ->when($status == 'progress', function (Builder $query) {
+                $query->where('is_done', 0);
+            })
+            ->when($status == 'need approve', function (Builder $query) use ($role_id) {
+                $query->whereIn('role_id', $role_id);
+            })
             ->paginate();
         return view('submission.sub-divison.index', compact('submissions'));
     }
-
-    public function filter()
-    {
-    }
-
-    // filter by done, on proccess, waiting for approve
-    // bisa dengan cara check semua status pada statuses
-    // upload lpj
-    // upload pencairan
-    // terima lpj
-    // terima banyak data pada wr 2
-    // memasukkan nominal yang disetujui oleh wr 2
-    // memasukkan pengajuan ke periode pencairan
 }

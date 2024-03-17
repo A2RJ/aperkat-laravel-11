@@ -24,7 +24,7 @@ return new class extends Migration
                 ->references('id')
                 ->on('submissions')
                 ->cascadeOnUpdate()
-                ->nullOnDelete();
+                ->cascadeOnDelete();
             $table->boolean('status')->default(false);
             $table->text('message');
             $table->timestamps();

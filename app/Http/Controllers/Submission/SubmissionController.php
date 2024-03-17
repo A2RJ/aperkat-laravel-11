@@ -7,7 +7,7 @@ use App\Http\Requests\Submission\SubmissionRequest;
 use App\Models\Ppuf;
 use App\Models\Role;
 use App\Models\Submission;
-use App\Models\SubmissionStatus;
+use Auth;
 use Illuminate\Database\Eloquent\Builder;
 
 class SubmissionController extends Controller
@@ -28,6 +28,11 @@ class SubmissionController extends Controller
 
     public function create()
     {
+        $role_id = Auth::id();
+        $status = Role::query()->where('user_id', $role_id)->whereHas('parent')->first();
+        if (!$status) {
+            return redirect()->route('submission.index')->with('failed', 'Anda tidak memiliki struktur organisasi, segera hubungi admin.');
+        }
         $ppufs = Ppuf::query()->get(['id', 'program_name', 'ppuf_number', 'budget', 'activity_type']);
         $ikus = Ppuf::iku();
         $activity_dates = Ppuf::$activity_dates;
@@ -50,12 +55,13 @@ class SubmissionController extends Controller
             'budget',
             'vendor',
         ]);
-        $submission = Submission::create($form);
         $ppuf = Ppuf::query()->find($request->ppuf_id)->first();
+        $form = array_merge($form, ['role_id' => $ppuf->author->parent->id]);
+        $submission = Submission::create($form);
         $submission->status()->create([
             'role_id' => $ppuf->role_id,
             'status' => true,
-            'message' => 'Telah diajukan'
+            'message' => 'Telah diajukan',
         ]);
         return redirect()->route('submission.index')->with('success', 'Berhasil menambahkan pengajuan');
     }
@@ -64,7 +70,7 @@ class SubmissionController extends Controller
     {
         $role_id = $submission->ppuf->role_id;
         $statuses = $submission->status;
-        $status = Role::flattenAllAncestors(function (Builder $builder) use ($role_id) {
+        $status = Role::flattenAllParents(function (Builder $builder) use ($role_id) {
             $builder->where('id', $role_id)->get();
         });
         $statuses = collect($status)->map(function ($status) use ($statuses) {

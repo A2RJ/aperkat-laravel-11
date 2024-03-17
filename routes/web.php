@@ -11,9 +11,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::get('login', 'login')->name('login');
-    Route::get('app-health', fn () => view('vendor.pulse.dashboard'))->name('app.health');
     Route::get('callback', 'callback');
     Route::get('logout', 'logout')->middleware('auth')->name('logout');
+    Route::get('app-health', fn () => view('vendor.pulse.dashboard'))->name('app.health');
 });
 
 Route::middleware('auth')->group(function () {
