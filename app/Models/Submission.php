@@ -34,4 +34,19 @@ class Submission extends Model
     {
         return $this->hasMany(SubmissionStatus::class);
     }
+
+    public function iku1()
+    {
+        return $this->belongsTo(Iku1::class);
+    }
+
+    public function iku2()
+    {
+        return $this->belongsTo(Iku2::class);
+    }
+
+    public function iku3()
+    {
+        return $this->belongsTo(Iku3::class);
+    }
 }

@@ -50,7 +50,13 @@ class SubmissionController extends Controller
             'budget',
             'vendor',
         ]);
-        Submission::create($form);
+        $submission = Submission::create($form);
+        $ppuf = Ppuf::query()->find($request->ppuf_id)->first();
+        $submission->status()->create([
+            'role_id' => $ppuf->role_id,
+            'status' => true,
+            'message' => 'Telah diajukan'
+        ]);
         return redirect()->route('submission.index')->with('success', 'Berhasil menambahkan pengajuan');
     }
 

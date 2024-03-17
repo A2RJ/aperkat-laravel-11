@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Log;
 
 class Role extends Model
 {
@@ -20,7 +21,7 @@ class Role extends Model
 
     public function parent()
     {
-        return $this->hasMany(Role::class, 'id', 'parent_id');
+        return $this->hasOne(Role::class, 'id', 'parent_id');
     }
 
 
@@ -45,19 +46,10 @@ class Role extends Model
         $queryCallback($query);
 
         $data = $query->with('descendants', 'user:id,name')->get();
-        return self::flattenRecursiveArray($data, 'descendants');
+        return self::flattenRecursiveDescendants($data, 'descendants');
     }
 
-    public static function flattenAllAncestors(Closure $queryCallback)
-    {
-        $query = self::query();
-        $queryCallback($query);
-
-        $data = $query->with('ancestors', 'user:id,name')->get();
-        return self::flattenRecursiveArray($data, 'ancestors');
-    }
-
-    static function flattenRecursiveArray($array, $key)
+    static function flattenRecursiveDescendants($array, $key)
     {
         $result = [];
 
@@ -69,6 +61,30 @@ class Role extends Model
             if (!empty($children)) {
                 $result = array_merge($result, self::flattenRecursiveArray($children, $key));
             }
+        }
+
+        return $result;
+    }
+
+    public static function flattenAllAncestors(Closure $queryCallback)
+    {
+        $query = self::query();
+        $queryCallback($query);
+
+        $data = $query->with('ancestors', 'user:id,name')->get();
+        return self::flattenRecursiveAncestor($data->toArray()[0], 'ancestors');
+    }
+
+    static function flattenRecursiveAncestor($item, $key)
+    {
+        $result = [];
+
+        $children = $item[$key] ?? [];
+        data_forget($item, $key);
+
+        $result[] = $item;
+        if ($children) {
+            $result = array_merge($result, self::flattenRecursiveAncestor($children, $key));
         }
 
         return $result;
