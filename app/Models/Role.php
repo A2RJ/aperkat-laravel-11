@@ -6,13 +6,17 @@ use Closure;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Log;
 
 class Role extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = ['role', 'parent_id', 'user_id'];
+
+    public function ppuf()
+    {
+        return $this->hasMany(Ppuf::class);
+    }
 
     public function user()
     {
@@ -59,7 +63,7 @@ class Role extends Model
 
             $result[] = $item;
             if (!empty($children)) {
-                $result = array_merge($result, self::flattenRecursiveArray($children, $key));
+                $result = array_merge($result, self::flattenRecursiveDescendants($children, $key));
             }
         }
 

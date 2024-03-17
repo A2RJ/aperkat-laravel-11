@@ -3,7 +3,7 @@
 @section('title', 'Detail Pengajuan PPUF | APERKAT')
 
 @section('content')
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-12">
             <div class="card shadow">
                 <!-- Card Header - Dropdown -->
@@ -11,16 +11,15 @@
                     <h6 class="m-0 font-weight-bold text-primary">Status Pengajuan</h6>
                 </div>
 
-                {{-- <script src="https://cdn.tailwindcss.com"></script> --}}
-                <div class="card-body p-4 flex justify-center">
-                    <ol class="items-center sm:flex">
+                <div class="card-body tw-p-4 tw-flex tw-justify-center">
+                    <ol class="tw-items-center sm:tw-flex">
                         @foreach ($statuses as $status)
-                            <li class="relative mb-6 sm:mb-0">
-                                <div class="flex items-center">
+                            <li class="tw-relative tw-mb-6 sm:tw-mb-0">
+                                <div class="tw-flex tw-items-center">
                                     <div
-                                        class="z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 ring-0 ring-white sm:ring-8 dark:bg-blue-900 dark:ring-gray-900">
+                                        class="tw-z-10 tw-flex tw-h-6 tw-w-6 tw-shrink-0 tw-items-center tw-justify-center tw-rounded-full tw-bg-blue-100 tw-ring-0 tw-ring-white sm:tw-ring-8 dark:tw-bg-blue-900 dark:tw-ring-gray-900">
                                         @if ($status['status'] && $status['status']['status'])
-                                            <svg class="h-10 w-10 text-green-800 dark:text-green-300"
+                                            <svg class="tw-h-10 tw-w-10 tw-text-green-800 dark:tw-text-green-300"
                                                 xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                                                 viewBox="0 0 24 24">
                                                 <path fill="currentColor" fill-rule="evenodd"
@@ -28,7 +27,7 @@
                                                     clip-rule="evenodd" />
                                             </svg>
                                         @else
-                                            <svg class="h-10 w-10 text-blue-800 dark:text-blue-300"
+                                            <svg class="tw-h-10 tw-w-10 tw-text-blue-800 dark:tw-text-blue-300"
                                                 xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                                                 viewBox="0 0 24 24">
                                                 <path fill="currentColor"
@@ -43,14 +42,17 @@
                                         @endif
                                     </div>
                                     @if (!$loop->last)
-                                        <div class="hidden h-0.5 w-full bg-gray-200 sm:flex dark:bg-gray-700"></div>
+                                        <div
+                                            class="tw-hidden tw-h-0.5 tw-w-full tw-bg-gray-200 sm:tw-flex dark:tw-bg-gray-700">
+                                        </div>
                                     @endif
                                 </div>
-                                <div class="mt-3 sm:pe-8">
-                                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                <div class="tw-mt-3 sm:tw-pe-8">
+                                    <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white">
                                         {{ $status['role'] }}
                                     </h3>
-                                    <p class="mb-2 block text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                                    <p
+                                        class="tw-mb-2 tw-block tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 dark:tw-text-gray-500">
                                         @if ($loop->first)
                                             Telah Diajukan
                                         @elseif ($status['status'] && $status['status']['status'])
@@ -115,7 +117,7 @@
                             <label for="iku2_id">IKU 2</label>
                             <textarea rows="3" class="form-control" value="">{{ $submission->iku2->iku }}</textarea>
                         </div>
-                        <div class="col-12 col-lg-3 mb-3">
+                        <div class="col-12 col-lg-4 mb-3">
                             <label for="iku3_id">IKU 3</label>
                             <textarea rows="3" class="form-control" value="">{{ $submission->iku3->iku }}</textarea>
                         </div>
@@ -181,17 +183,18 @@
                         </div>
 
                         <div class="card-body p-4">
-                            <ol class="relative border-s border-gray-200 dark:border-gray-700">
+                            <ol class="tw-relative tw-border-s tw-border-gray-200 dark:tw-border-gray-700">
                                 @foreach ($submission->status as $status)
-                                    <li class="mb-10 ms-4">
+                                    <li class="tw-mb-10 tw-ms-4">
                                         <div
-                                            class="absolute w-3 h-3 bg-gray-200 rounded-full mt-1.5 -start-1.5 border border-white dark:border-gray-900 dark:bg-gray-700">
+                                            class="tw-absolute tw-w-3 tw-h-3 tw-bg-gray-200 tw-rounded-full tw-mt-1.5 tw--start-1.5 tw-border tw-border-white dark:tw-border-gray-900 dark:tw-bg-gray-700">
                                         </div>
                                         <time
-                                            class="mb-1 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">{{ $status->created_at }}</time>
-                                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                            class="tw-mb-1 tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 dark:tw-text-gray-500">{{ $status->created_at }}</time>
+                                        <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white">
                                             {{ $status->role->role }}</h3>
-                                        <p class="mb-4 text-base font-normal text-gray-500 dark:text-gray-400">
+                                        <p
+                                            class="tw-mb-4 tw-text-base tw-font-normal tw-text-gray-500 dark:tw-text-gray-400">
                                             {{ $status->message }}.</p>
                                     </li>
                                 @endforeach

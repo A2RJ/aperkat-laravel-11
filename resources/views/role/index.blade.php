@@ -57,7 +57,7 @@
                                         </td>
                                         <td>
                                             <div class="d-flex">
-                                                <a class="btn btn-success mr-1 mb-1" href="#" data-toggle="modal"
+                                                <a class="btn btn-sm btn-success mr-1 mb-1" href="#" data-toggle="modal"
                                                     data-target="#editModal{{ $role->id }}">
                                                     <i class="fas fa-fw fa-edit"></i>
                                                 </a>
@@ -65,7 +65,7 @@
                                                 <form action="{{ route('role.destroy', $role->id) }}" method="POST">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger"
+                                                    <button type="submit" class="btn btn-sm btn-danger bg-danger "
                                                         onclick="return confirm('Are you sure you want to delete this item?')">
                                                         <i class="fas fa-fw fa-trash"></i>
                                                     </button>

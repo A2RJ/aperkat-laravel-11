@@ -22,6 +22,7 @@ class Submission extends Model
         'place',
         'date',
         'budget',
+        'approved_budget',
         'vendor',
     ];
 

@@ -44,6 +44,7 @@ return new class extends Migration
             $table->string('date');
             $table->string('rundown');
             $table->string('budget');
+            $table->string('approved_budget')->nullable()->default(0);
             $table->string('vendor');
             $table->timestamps();
             $table->softDeletesTz('deleted_at', precision: 0);

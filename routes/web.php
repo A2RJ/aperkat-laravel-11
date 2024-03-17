@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Ppuf\PpufController;
+use App\Http\Controllers\Submission\SubDivisionController;
 use App\Http\Controllers\Submission\SubmissionController;
 use App\Http\Controllers\SuperAdmin\RoleController;
 use App\Http\Controllers\SuperAdmin\UserController;
@@ -33,4 +34,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('ppuf', PpufController::class)->except('show');
 
     Route::resource('submission', SubmissionController::class);
+
+    Route::prefix('sub-division')->controller(SubDivisionController::class)->group(function () {
+        Route::get('', 'index')->name('sub-division.on-proccess');
+    });
 });
