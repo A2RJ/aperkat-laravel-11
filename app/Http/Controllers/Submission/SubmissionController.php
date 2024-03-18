@@ -97,19 +97,61 @@ class SubmissionController extends Controller
         });
 
         $approve = false;
+        // $user = Auth::user();
+        // $filtered = $statuses->filter(function ($item) use ($user) {
+        //     return isset($item['user_id']) && $item['user_id'] === $user->id;
+        // });
+        // $filtered = $filtered->keys()->first();
+        // if ($filtered && count([$user->strictRole]) && count($user->strictRole->children)) {
+        //     if (
+        //         !$user->dirKeuangan() &&
+        //         !$user->wr2() &&
+        //         !$user->dirKeuanganLpj() &&
+        //         !$user->dirKeuanganPencairan() && $statuses[$filtered - 1]['status'] && $statuses[$filtered - 1]['status']['status']
+        //     ) {
+        //         $approve = true;
+        //     }
+        // }
+
         $user = Auth::user();
-        $filtered = $statuses->filter(function ($item) use ($user) {
-            return isset($item['user_id']) && $item['user_id'] === $user->id;
-        });
-        $filtered = $filtered->keys()->first();
-        if ($filtered && count([$user->strictRole]) && count($user->strictRole->children)) {
-            if (
-                !$user->dirKeuangan() &&
-                !$user->wr2() &&
-                !$user->dirKeuanganLpj() &&
-                !$user->dirKeuanganPencairan() && $statuses[$filtered - 1]['status'] && $statuses[$filtered - 1]['status']['status']
-            ) {
-                $approve = true;
+        $statusesCount = count($statuses);
+
+        // Mengecek apakah user ada dan statuses tidak kosong
+        if ($user && $statusesCount > 0) {
+            // Mendapatkan indeks status yang sesuai dengan user saat ini
+            $filteredIndex = $statuses->search(function ($item) use ($user) {
+                return isset($item['user_id']) && $item['user_id'] === $user->id;
+            });
+
+            // Mengecek apakah status yang sesuai dengan user ditemukan
+            if ($filteredIndex !== false) {
+                // Mengecek apakah status saat ini ada dan jika ada, pastikan status.status adalah false
+                $currentStatusExists = $filteredIndex >= 0 && isset($statuses[$filteredIndex]['status']);
+                $currentStatusFalse = !$currentStatusExists || !$statuses[$filteredIndex]['status']['status'];
+
+                if ($currentStatusFalse) {
+                    // Mengecek apakah user memiliki strictRole dan memiliki children
+                    if ($user->strictRole && $user->strictRole->children->isNotEmpty()) {
+                        // Mendapatkan status sebelumnya jika ada
+                        $previousStatusIndex = $filteredIndex - 1;
+
+                        // Mengecek apakah status sebelumnya ada dan status.status adalah true
+                        $previousStatusValid = $previousStatusIndex >= 0 &&
+                            isset($statuses[$previousStatusIndex]['status']['status']) &&
+                            $statuses[$previousStatusIndex]['status']['status'];
+
+                        // Mengecek apakah user memenuhi syarat untuk menyetujui
+                        if (
+                            !$user->dirKeuangan() &&
+                            !$user->wr2() &&
+                            !$user->dirKeuanganLpj() &&
+                            !$user->dirKeuanganPencairan() &&
+                            $previousStatusValid
+                        ) {
+                            $approve = true;
+                        }
+                    }
+                }
             }
         }
 

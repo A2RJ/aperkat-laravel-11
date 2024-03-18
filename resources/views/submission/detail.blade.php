@@ -114,15 +114,20 @@
                     </div>
 
                     <div class="card-body p-4">
-                        <div class="form-row">
-                            <div class="col-12 col-lg-2 mb-3">
-                                <textarea class="form-control" placeholder="Tambahkan catatan untuk pengajuan ini"></textarea>
+                        <form id="submissionForm" action="{{ route('submission.action', ['submission' => $submission->id]) }}" method="post">
+                            @csrf
+                            <div class="form-row">
+                                <div class="col-12 col-lg-2 mb-3">
+                                    <textarea id="noteInput" name="note" class="form-control" required placeholder="Tambahkan catatan untuk pengajuan ini"></textarea>
+                                </div>
+                                <div class="col-12 d-flex justify-content-end">
+                                    <input id="actionInput" type="hidden" name="action" value="">
+                                    <button id="revisiButton" type="button"
+                                        class="btn btn-sm bg-danger btn-danger mr-2">Revisi</button>
+                                    <button id="terimaButton" type="button"
+                                        class="btn btn-sm bg-primary btn-primary">Terima Pengajuan</button>
+                                </div>
                             </div>
-                            <div class="col-12 d-flex justify-content-end">
-                                <button type="submit" class="btn btn-sm bg-danger btn-danger mr-2">Revisi</button>
-                                <button type="submit" class="btn btn-sm bg-primary btn-primary">Terima Pengajuan</button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -264,4 +269,25 @@
             </div>
         </div>
     </div>
+
+    <script>
+        // Menunggu dokumen selesai dimuat
+        document.addEventListener('DOMContentLoaded', function() {
+            // Menangani klik tombol "Revisi"
+            document.getElementById('revisiButton').addEventListener('click', function() {
+                // Mengatur nilai input tersembunyi "action" menjadi "revisi"
+                document.getElementById('actionInput').value = 'revisi';
+                // Menyerahkan formulir
+                document.getElementById('submissionForm').submit();
+            });
+
+            // Menangani klik tombol "Terima Pengajuan"
+            document.getElementById('terimaButton').addEventListener('click', function() {
+                // Mengatur nilai input tersembunyi "action" menjadi "terima"
+                document.getElementById('actionInput').value = 'terima';
+                // Menyerahkan formulir
+                document.getElementById('submissionForm').submit();
+            });
+        });
+    </script>
 @endsection

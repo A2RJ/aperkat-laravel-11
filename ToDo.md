@@ -14,12 +14,12 @@
     - tambah ke periode -> nominal rab disetujui dan pilih periode
 [ ] Wr II
     - pengajuan semua sub divisi - untuk need approval menjadi list pencairan berdasarkan role_id dan disbursement_period_id != null
-    - [ ] pilih periode lalu terima semua
+    - pilih periode lalu terima semua
 [ ] Rektor 
     - pengajuan semua sub divisi
 [ ] Pencairan
     - pengajuan semua sub divisi
-    - upload pencairan bertahap
+    - [ ] upload pencairan bertahap
 [ ] Periksa LPJ
     - pengajuan semua sub divisi
     - terima dan revisi lpj

@@ -9,6 +9,7 @@ use App\Models\Submission;
 use Auth;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
 
 class SubDivisionController extends Controller
 {
@@ -130,6 +131,36 @@ class SubDivisionController extends Controller
             return redirect()->route('submission.wr2')->with('success', 'Berhasil menerima pengajuan dengan periode ' . $period->period);
         } catch (\Throwable $th) {
             throw $th;
+        }
+    }
+
+    public function action(Request $request, Submission $submission)
+    {
+        $note = $request->note;
+        $action = $request->action;
+
+        $role = Auth::user()->strictRole;
+        if ($action == 'revisi') {
+            DB::transaction(function () use ($submission, $role, $note) {
+                $submission->status()->create([
+                    'role_id' => $role->id,
+                    'status' => false,
+                    'message' => 'Mohon direvisi: ' . $note,
+                ]);
+            });
+            return back()->with('failed', "Berhasil $action pengajuan");
+        } elseif ($action == 'terima') {
+            DB::transaction(function () use ($submission, $role, $note) {
+                $submission->update([
+                    'role_id' => $role->parent->id,
+                ]);
+                $submission->status()->create([
+                    'role_id' => $role->id,
+                    'status' => true,
+                    'message' => 'Telah disetujui: ' . $note,
+                ]);
+            });
+            return back()->with('success', "Berhasil $action pengajuan");
         }
     }
 }
