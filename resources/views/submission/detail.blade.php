@@ -50,8 +50,7 @@
                                     <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 ">
                                         {{ $status['role'] }}
                                     </h3>
-                                    <p
-                                        class="tw-mb-2 tw-block tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 ">
+                                    <p class="tw-mb-2 tw-block tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 ">
                                         @if ($loop->first)
                                             Telah Diajukan
                                         @elseif ($status['status'] && $status['status']['status'])
@@ -68,17 +67,15 @@
                                 <div
                                     class="tw-z-10 tw-flex tw-h-6 tw-w-6 tw-shrink-0 tw-items-center tw-justify-center tw-rounded-full tw-bg-blue-100 tw-ring-0 tw-ring-white sm:tw-ring-8">
                                     @if ($submission->is_done)
-                                        <svg class="tw-h-10 tw-w-10 tw-text-green-800"
-                                            xmlns="http://www.w3.org/2000/svg" width="32" height="32"
-                                            viewBox="0 0 24 24">
+                                        <svg class="tw-h-10 tw-w-10 tw-text-green-800" xmlns="http://www.w3.org/2000/svg"
+                                            width="32" height="32" viewBox="0 0 24 24">
                                             <path fill="currentColor" fill-rule="evenodd"
                                                 d="M12 21a9 9 0 0 0 7.51-13.961l-7.155 7.95a2 2 0 0 1-2.687.262L6.4 12.8a1 1 0 0 1 1.2-1.6l3.268 2.451l7.346-8.161A9 9 0 1 0 12 21"
                                                 clip-rule="evenodd" />
                                         </svg>
                                     @else
-                                        <svg class="tw-h-10 tw-w-10 tw-text-blue-800 "
-                                            xmlns="http://www.w3.org/2000/svg" width="32" height="32"
-                                            viewBox="0 0 24 24">
+                                        <svg class="tw-h-10 tw-w-10 tw-text-blue-800 " xmlns="http://www.w3.org/2000/svg"
+                                            width="32" height="32" viewBox="0 0 24 24">
                                             <path fill="currentColor"
                                                 d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z"
                                                 opacity=".5" />
@@ -94,8 +91,7 @@
                                 <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 ">
                                     Selesai
                                 </h3>
-                                <p
-                                    class="tw-mb-2 tw-block tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 ">
+                                <p class="tw-mb-2 tw-block tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 ">
                                     @if ($submission->is_done)
                                         Selesai
                                     @else
@@ -108,6 +104,30 @@
                 </div>
             </div>
         </div>
+
+        @if ($approve)
+            <div class="col-12 mt-4">
+                <div class="card shadow">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Aksi</h6>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <div class="form-row">
+                            <div class="col-12 col-lg-2 mb-3">
+                                <textarea class="form-control" placeholder="Tambahkan catatan untuk pengajuan ini"></textarea>
+                            </div>
+                            <div class="col-12 d-flex justify-content-end">
+                                <button type="submit" class="btn btn-sm bg-danger btn-danger mr-2">Revisi</button>
+                                <button type="submit" class="btn btn-sm bg-primary btn-primary">Terima Pengajuan</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
         <div class="col-12 col-lg-8 mt-4 ">
             <div class="card shadow">
                 <!-- Card Header - Dropdown -->
@@ -116,6 +136,18 @@
                 </div>
 
                 <div class="card-body p-4">
+                    @if (session()->has('success'))
+                        <div class="alert alert-success">
+                            {{ session()->get('success') }}.
+                        </div>
+                    @endif
+
+                    @if (session()->has('failed'))
+                        <div class="alert alert-danger">
+                            {{ session()->get('failed') }}.
+                        </div>
+                    @endif
+
                     <div class="form-row">
                         <div class="col-12 col-lg-2 mb-3">
                             <label for="ppuf_id">Nomor PPUF</label>
@@ -200,18 +232,6 @@
                                     <i class="fas fa-download fa-sm text-white-50"></i> Template laporan keuangan
                                 </a>
                             </div>
-
-                            @if (session()->has('success'))
-                                <div class="alert alert-success">
-                                    {{ session()->get('success') }}.
-                                </div>
-                            @endif
-
-                            @if (session()->has('failed'))
-                                <div class="alert alert-danger">
-                                    {{ session()->get('failed') }}.
-                                </div>
-                            @endif
                         </div>
                     </div>
                 </div>
@@ -233,8 +253,7 @@
                                             class="tw-mb-1 tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 ">{{ $status->created_at }}</time>
                                         <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 ">
                                             {{ $status->role->role }}</h3>
-                                        <p
-                                            class="tw-mb-4 tw-text-base tw-font-normal tw-text-gray-500">
+                                        <p class="tw-mb-4 tw-text-base tw-font-normal tw-text-gray-500">
                                             {{ $status->message }}.</p>
                                     </li>
                                 @endforeach

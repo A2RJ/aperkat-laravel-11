@@ -3,6 +3,7 @@
     - ppuf
     - pengajuan
     - upload RAB
+    - tambah detail rab yang disetujui di table dan form
 [ ] Atasan
     - ppuf semua sub divisi
     - pengajuan semua sub divisi

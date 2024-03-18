@@ -21,6 +21,7 @@ class PpufController extends Controller
         $keyword = request('keyword', NULL);
         $user = Auth::user();
         $childrenIds = collect($user->hasSubDivision(false))->pluck('id')->toArray();
+
         $ppufs = Ppuf::query()
             ->when(
                 $keyword,
@@ -36,13 +37,13 @@ class PpufController extends Controller
                 }
             )
             ->when(
-                $user->user(),
+            !isset($user->strictRole->children),
                 function (Builder $query) use ($user) {
-                    $query->whereIn('role_id', $user->allRoleId());
+                $query->where('role_id', $user->strictRole->id);
                 }
             )
             ->when(
-                $user->user() == false && isset($childrenIds),
+            isset($user->strictRole->children),
                 function (Builder $query) use ($childrenIds) {
                     $query->whereIn('role_id', $childrenIds);
                 }

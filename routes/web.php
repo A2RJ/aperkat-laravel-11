@@ -38,6 +38,7 @@ Route::middleware('auth')->group(function () {
         Route::get('direktur-keuangan', 'dirKeuangan')->name('submission.dir-keuangan');
         Route::post('period/{submission}', 'period')->name('submission.period');
         Route::get('warek-2', 'wr2')->name('submission.wr2');
+        Route::post('warek-2-approve/{period}', 'wr2Approve')->name('submission.wr2.approve');
     });
     Route::resource('submission', SubmissionController::class);
     // Route::resource('submission-period', DisbursementPeriodController::class)->only('inedx');

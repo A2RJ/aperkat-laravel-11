@@ -8,6 +8,7 @@ use App\Models\Ppuf;
 use App\Models\Role;
 use App\Models\Submission;
 use Auth;
+use DB;
 use Illuminate\Database\Eloquent\Builder;
 
 class SubmissionController extends Controller
@@ -15,7 +16,7 @@ class SubmissionController extends Controller
     public function index()
     {
         $keyword = request('keyword', NULL);
-        $roleId = Auth::user()->allRoleId();
+        $roleId = Auth::user()->strictRole->id;
         $submissions = Submission::query()
             ->when($keyword, function (Builder $builder) {
                 $builder->whereAny(
@@ -24,7 +25,7 @@ class SubmissionController extends Controller
                 );
             })
             ->whereHas('ppuf', function ($query) use ($roleId) {
-                $query->whereIn('role_id', $roleId);
+            $query->where('role_id', $roleId);
             })
             ->paginate();
         return view('submission.index', compact('submissions'));
@@ -32,14 +33,14 @@ class SubmissionController extends Controller
 
     public function create()
     {
-        $status = Role::query()->where('user_id', Auth::id())->whereHas('parent')->first();
-        if (!$status) {
+        $user = Auth::user()->strictRole;
+        if (!$user->parent) {
             return redirect()
                 ->route('submission.index')
                 ->with('failed', 'Anda tidak memiliki struktur organisasi, segera hubungi admin');
         }
         $ppufs = Ppuf::query()
-            ->whereIn('role_id', Auth::user()->allRoleId())
+            ->where('role_id', $user->id)
             ->select(['id', 'program_name', 'ppuf_number', 'budget', 'activity_type'])
             ->get();
         $ikus = Ppuf::iku();
@@ -49,29 +50,35 @@ class SubmissionController extends Controller
 
     public function store(SubmissionRequest $request)
     {
-        $form = $request->safe()->only([
-            'ppuf_id',
-            'iku1_id',
-            'iku2_id',
-            'iku3_id',
-            'background',
-            'speaker',
-            'participant',
-            'rundown',
-            'place',
-            'date',
-            'budget',
-            'vendor',
-        ]);
-        $ppuf = Ppuf::query()->where('id', $request->ppuf_id)->first();
-        $form = array_merge($form, ['role_id' => $ppuf->author->parent->id]);
-        $submission = Submission::create($form);
-        $submission->status()->create([
-            'role_id' => $ppuf->role_id,
-            'status' => true,
-            'message' => 'Telah diajukan',
-        ]);
-        return redirect()->route('submission.index')->with('success', 'Berhasil menambahkan pengajuan');
+        try {
+            $form = $request->safe()->only([
+                'ppuf_id',
+                'iku1_id',
+                'iku2_id',
+                'iku3_id',
+                'background',
+                'speaker',
+                'participant',
+                'rundown',
+                'place',
+                'date',
+                'budget',
+                'vendor',
+            ]);
+            $ppuf = Ppuf::query()->where('id', $request->ppuf_id)->first();
+            $form = array_merge($form, ['role_id' => $ppuf->author->parent->id]);
+            DB::transaction(function () use ($form, $ppuf) {
+                $submission = Submission::create($form);
+                $submission->status()->create([
+                    'role_id' => $ppuf->role_id,
+                    'status' => true,
+                    'message' => 'Telah diajukan',
+                ]);
+            });
+            return redirect()->route('submission.index')->with('success', 'Berhasil menambahkan pengajuan');
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 
     public function show(Submission $submission)
@@ -88,7 +95,25 @@ class SubmissionController extends Controller
             $status['status'] = $item;
             return $status;
         });
-        return view('submission.detail', compact('submission', 'statuses'));
+
+        $approve = false;
+        $user = Auth::user();
+        $filtered = $statuses->filter(function ($item) use ($user) {
+            return isset($item['user_id']) && $item['user_id'] === $user->id;
+        });
+        $filtered = $filtered->keys()->first();
+        if ($filtered && count([$user->strictRole]) && count($user->strictRole->children)) {
+            if (
+                !$user->dirKeuangan() &&
+                !$user->wr2() &&
+                !$user->dirKeuanganLpj() &&
+                !$user->dirKeuanganPencairan() && $statuses[$filtered - 1]['status'] && $statuses[$filtered - 1]['status']['status']
+            ) {
+                $approve = true;
+            }
+        }
+
+        return view('submission.detail', compact('submission', 'statuses', 'approve'));
     }
 
     public function edit(Submission $submission)

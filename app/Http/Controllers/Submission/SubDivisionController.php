@@ -41,9 +41,9 @@ class SubDivisionController extends Controller
         $status = request('status', NULL);
         // return [$status == 'need approve', $status];
         $submissions = Submission::with('ppuf')
-        ->when($status == 'done', function (Builder $query) {
-            $query->where('is_done', 1);
-        })
+            ->when($status == 'done', function (Builder $query) {
+                $query->where('is_done', 1);
+            })
             ->when($status == 'progress', function (Builder $query) {
                 $query->where('is_done', 0);
             })
@@ -78,7 +78,7 @@ class SubDivisionController extends Controller
                 $submission->status()->create([
                     'role_id' => 6,
                     'status' => true,
-                    'message' => 'Telah masukkan ke periode ' . $period->period,
+                    'message' => 'Telah disetujui untuk pencairan ' . $period->period,
                 ]);
             });
             return redirect()->route('submission.dir-keuangan')->with('success', 'Berhasil menambahkan pengajuan ke periode tersebut');
@@ -91,10 +91,11 @@ class SubDivisionController extends Controller
     {
         $roleId = Auth::user()->allRoleId();
         $status = request('status', NULL);
+        $period = request('period', NULL);
         $submissions = Submission::with('ppuf')
-        ->when($status == 'done', function (Builder $query) {
-            $query->where('is_done', 1);
-        })
+            ->when($status == 'done', function (Builder $query) {
+                $query->where('is_done', 1);
+            })
             ->when($status == 'progress', function (Builder $query) {
                 $query->where('is_done', 0);
             })
@@ -102,8 +103,33 @@ class SubDivisionController extends Controller
                 $query->whereIn('role_id', $roleId)
                     ->whereNotNull('disbursement_period_id');
             })
+            ->when($period, function (Builder $query) use ($period) {
+                $query->where('disbursement_period_id', $period);
+            })
             ->paginate();
         $periods = DisbursementPeriod::query()->get(['id', 'period']);
         return view('submission.wr2.index', compact('submissions', 'periods'));
+    }
+
+    public function wr2Approve(DisbursementPeriod $period)
+    {
+        try {
+            $role = Auth::user()->strictRole;
+            DB::transaction(function () use ($period, $role) {
+                $period->submissions()->each(function ($submission) use ($period, $role) {
+                    $submission->update([
+                        'role_id' => $role->parent->id,
+                    ]);
+                    $submission->status()->create([
+                        'role_id' => $role->id,
+                        'status' => true,
+                        'message' => 'Telah disetujui untuk pencairan ' . $period->period,
+                    ]);
+                });
+            });
+            return redirect()->route('submission.wr2')->with('success', 'Berhasil menerima pengajuan dengan periode ' . $period->period);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
     }
 }

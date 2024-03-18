@@ -100,9 +100,14 @@ class User extends Authenticatable
         return $this->hasMany(Role::class);
     }
 
+    public function strictRole()
+    {
+        return $this->hasOne(Role::class);
+    }
+
     public function allRoleId()
     {
-        return auth()->user()->role->pluck('id')->toArray();
+        return auth()->user()->strictRole->pluck('id')->toArray();
     }
 
     public function roles()

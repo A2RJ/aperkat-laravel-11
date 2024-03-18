@@ -12,6 +12,8 @@
                 </div>
 
                 <div class="card-body p-4">
+                    <a href="{{ route('submission.create') }}" class="btn btn-sm bg-primary btn-primary mb-4 ">Tambah Pengajuan</a>
+
                     @if (session()->has('success'))
                         <div class="alert alert-success">
                             {{ session()->get('success') }}.
