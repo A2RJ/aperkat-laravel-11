@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Submission;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Submission\PeriodRequest;
+use App\Http\Requests\Submission\UploadLpjRequest;
 use App\Models\DisbursementPeriod;
 use App\Models\Submission;
 use Auth;
@@ -15,7 +16,7 @@ class SubDivisionController extends Controller
 {
     public function index()
     {
-        $roleId = Auth::user()->allRoleId();
+        $roleId = Auth::user()->strictRole->id;
         $user = Auth::user();
         $subdivisionIds = collect($user->hasSubDivision())->pluck('id')->toArray();
         $status = request('status', NULL);
@@ -30,7 +31,7 @@ class SubDivisionController extends Controller
                 $query->where('is_done', 0);
             })
             ->when($status == 'need approve', function (Builder $query) use ($roleId) {
-                $query->whereIn('role_id', $roleId);
+            $query->where('role_id', $roleId);
             })
             ->paginate();
         return view('submission.sub-divison.index', compact('submissions'));
@@ -162,5 +163,59 @@ class SubDivisionController extends Controller
             });
             return back()->with('success', "Berhasil $action pengajuan");
         }
+    }
+
+    public function uploadLpj(UploadLpjRequest $request, Submission $submission)
+    {
+        try {
+            $name = now()->timestamp . "." . $request->file->getClientOriginalName();
+            $path = $request->file('file')->storeAs('lpj', $name, 'public');
+            $role = Auth::user()->strictRole;
+
+            DB::transaction(function () use ($submission, $path, $role) {
+                $submission->update([
+                    'role_id' => 2,
+                    'report_file' => $path,
+                ]);
+
+                $submission->status()->create([
+                    'role_id' => $role->id,
+                    'status' => true,
+                    'message' => 'LPJ Kegiatan telah diupload',
+                ]);
+            });
+
+            return redirect()->back()->with('success', 'Berhasil upload pencairan');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('failed', 'Gagal upload LPJ kegiatan file');
+        }
+    }
+
+    public function actionLpj(Submission $submission)
+    {
+        try {
+            $role = Auth::user()->strictRole;
+            DB::transaction(function () use ($submission,  $role) {
+                $submission->update([
+                    'role_id' => $role->parent->id,
+                    'is_done' => true,
+                ]);
+
+                $submission->status()->create([
+                    'role_id' => $role->id,
+                    'status' => true,
+                    'message' => 'LPJ Kegiatan telah disetujui',
+                ]);
+            });
+
+            return redirect()->back()->with('success', 'Berhasil terima LPJ kegiatan');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('failed', 'Gagal terima LPJ kegiatan');
+        }
+    }
+
+    public function downloadLpj(Submission $submission)
+    {
+        return response()->download(storage_path('app/public/' . $submission->report_file));
     }
 }

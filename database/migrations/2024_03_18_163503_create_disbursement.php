@@ -11,14 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('submissions', function (Blueprint $table) {
-            $table->foreignId('disbursement_period_id')
+        Schema::create('disbursements', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('submission_id')
                 ->nullable()
                 ->references('id')
-                ->on('disbursement_periods')
+                ->on('submissions')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
-            $table->boolean('disbursement_status')->default(NULL);
+            $table->string('budget');
+            $table->string('filename');
+            $table->timestamps();
         });
     }
 
@@ -27,9 +30,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('submissions', function (Blueprint $table) {
-            $table->dropColumn('disbursement_period_id');
-            $table->dropColumn('disbursement_status');
-        });
+        Schema::dropIfExists('disbursements');
     }
 };

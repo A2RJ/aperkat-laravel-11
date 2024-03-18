@@ -106,7 +106,7 @@
         </div>
 
         @if ($approve)
-            <div class="col-12 mt-4">
+            <div class="col-12 mt-4 d-block  d-lg-none">
                 <div class="card shadow">
                     <!-- Card Header - Dropdown -->
                     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -114,11 +114,13 @@
                     </div>
 
                     <div class="card-body p-4">
-                        <form id="submissionForm" action="{{ route('submission.action', ['submission' => $submission->id]) }}" method="post">
+                        <form id="submissionForm"
+                            action="{{ route('submission.action', ['submission' => $submission->id]) }}" method="post">
                             @csrf
                             <div class="form-row">
-                                <div class="col-12 col-lg-2 mb-3">
-                                    <textarea id="noteInput" name="note" class="form-control" required placeholder="Tambahkan catatan untuk pengajuan ini"></textarea>
+                                <div class="col-12 mb-3">
+                                    <textarea id="note" name="note" class="form-control" required
+                                        placeholder="Tambahkan catatan untuk pengajuan ini"></textarea>
                                 </div>
                                 <div class="col-12 d-flex justify-content-end">
                                     <input id="actionInput" type="hidden" name="action" value="">
@@ -128,6 +130,33 @@
                                         class="btn btn-sm bg-primary btn-primary">Terima Pengajuan</button>
                                 </div>
                             </div>
+                    </div>
+                </div>
+            </div>
+        @endif
+
+        @if ($submission->is_disbursement_complete && !$submission->is_done && $author)
+            <div class="col-12 mt-4 d-block  d-lg-none ">
+                <div class="card shadow">
+                    <!-- Card Header - Dropdown -->
+                    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                        <h6 class="m-0 font-weight-bold text-primary">Aksi</h6>
+                    </div>
+
+                    <div class="card-body p-4">
+                        <form action="{{ route('submission.upload-lpj', ['submission' => $submission->id]) }}"
+                            method="post" enctype="multipart/form-data">
+                            @csrf
+                            <div class="form-row">
+                                <div class="col-12 mb-3">
+                                    <input type="file" id="file" name="file" class="form-control" required />
+                                </div>
+                                <div class="col-12 d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-sm bg-primary btn-primary">Upload LPJ
+                                        Kegiatan</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -150,6 +179,16 @@
                     @if (session()->has('failed'))
                         <div class="alert alert-danger">
                             {{ session()->get('failed') }}.
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
                         </div>
                     @endif
 
@@ -221,6 +260,63 @@
 
         <div class="col-12 col-lg-4 mt-4 ">
             <div class="row">
+                @if ($approve)
+                    <div class="col-12 mt-4 d-none d-lg-block">
+                        <div class="card shadow">
+                            <!-- Card Header - Dropdown -->
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Aksi</h6>
+                            </div>
+
+                            <div class="card-body p-4">
+                                <form id="submissionForm"
+                                    action="{{ route('submission.action', ['submission' => $submission->id]) }}"
+                                    method="post">
+                                    @csrf
+                                    <div class="form-row">
+                                        <div class="col-12 mb-3">
+                                            <textarea id="note" name="note" class="form-control" required
+                                                placeholder="Tambahkan catatan untuk pengajuan ini"></textarea>
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-end">
+                                            <input id="actionInput" type="hidden" name="action" value="">
+                                            <button id="revisiButton" type="button"
+                                                class="btn btn-sm bg-danger btn-danger mr-2">Revisi</button>
+                                            <button id="terimaButton" type="button"
+                                                class="btn btn-sm bg-primary btn-primary">Terima Pengajuan</button>
+                                        </div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+                @if ($submission->is_disbursement_complete && !$submission->is_done && $author)
+                    <div class="col-12 mb-4 d-none d-lg-block ">
+                        <div class="card shadow">
+                            <!-- Card Header - Dropdown -->
+                            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">Aksi</h6>
+                            </div>
+
+                            <div class="card-body p-4">
+                                <form action="{{ route('submission.upload-lpj', ['submission' => $submission->id]) }}"
+                                    method="post" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="form-row">
+                                        <div class="col-12 mb-3">
+                                            <input type="file" id="file" name="file" class="form-control"
+                                                required />
+                                        </div>
+                                        <div class="col-12 d-flex justify-content-end">
+                                            <button type="submit" class="btn btn-sm bg-primary btn-primary">Upload LPJ
+                                                Kegiatan</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                @endif
                 <div class="col-12 ">
                     <div class="card shadow">
                         <!-- Card Header - Dropdown -->
@@ -236,6 +332,26 @@
                                 <a href="#" class="btn btn-sm btn-primary">
                                     <i class="fas fa-download fa-sm text-white-50"></i> Template laporan keuangan
                                 </a>
+                                @if ($submission->report_file)
+                                    <a href="{{ route('submission.download-lpj', $submission->id) }}" class="btn btn-sm btn-primary">
+                                        <i class="fas fa-download fa-sm text-white-50"></i> LPJ Kegiatan
+                                    </a>
+                                @endif
+                            </div>
+                            <div>
+                                <h3>Pencairan:</h3>
+                                <ul class="tw-list-disc ml-3 ">
+                                    @foreach ($submission->disbursements as $disbursement)
+                                        <li>
+                                            <u>
+                                                <a href="{{ route('pencairan.show', $disbursement->id) }}"
+                                                    target="_blank" class="text-primary">
+                                                    {{ $disbursement->budget }}
+                                                </a>
+                                            </u>
+                                        </li>
+                                    @endforeach
+                                </ul>
                             </div>
                         </div>
                     </div>
@@ -247,7 +363,7 @@
                             <h6 class="m-0 font-weight-bold text-primary">Detail Pengajuan</h6>
                         </div>
 
-                        <div class="card-body p-4">
+                        <div class="card-body p-4 tw-max-h-[50vh] tw-overflow-y-auto">
                             <ol class="tw-relative tw-border-s tw-border-gray-200">
                                 @foreach ($submission->status as $status)
                                     <li class="tw-mb-10 tw-ms-4">

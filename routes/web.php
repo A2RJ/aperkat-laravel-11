@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Ppuf\PpufController;
+use App\Http\Controllers\Submission\DisbursementController;
 use App\Http\Controllers\Submission\DisbursementPeriodController;
 use App\Http\Controllers\Submission\SubDivisionController;
 use App\Http\Controllers\Submission\SubmissionController;
@@ -40,7 +41,11 @@ Route::middleware('auth')->group(function () {
         Route::get('warek-2', 'wr2')->name('submission.wr2');
         Route::post('warek-2-approve/{period}', 'wr2Approve')->name('submission.wr2.approve');
         Route::post('action/{submission}', 'action')->name('submission.action');
+        Route::post('upload-lpj/{submission}', 'uploadLpj')->name('submission.upload-lpj');
+        Route::get('donwload-lpj/{submission}', 'downloadLpj')->name('submission.download-lpj');
+        Route::post('aksi-lpj/{submission}', 'actionLpj')->name('submission.aksi-lpj');
     });
+    Route::resource('pencairan', DisbursementController::class)->only(['index', 'store', 'show', 'update', 'destroy']);
     Route::resource('submission', SubmissionController::class);
     // Route::resource('submission-period', DisbursementPeriodController::class)->only('inedx');
     Route::resource('disbursement-period', DisbursementPeriodController::class)->except(['create', 'show',  'edit']);

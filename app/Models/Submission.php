@@ -119,4 +119,9 @@ class Submission extends Model
     {
         return $this->belongsTo(DisbursementPeriod::class, 'disbursement_period_id');
     }
+
+    public function disbursements()
+    {
+        return $this->hasMany(Disbursement::class);
+    }
 }

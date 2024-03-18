@@ -114,6 +114,7 @@ class SubmissionController extends Controller
         // }
 
         $user = Auth::user();
+        $author = $role_id == $user->strictRole->id;
         $statusesCount = count($statuses);
 
         // Mengecek apakah user ada dan statuses tidak kosong
@@ -155,7 +156,7 @@ class SubmissionController extends Controller
             }
         }
 
-        return view('submission.detail', compact('submission', 'statuses', 'approve'));
+        return view('submission.detail', compact('submission', 'statuses', 'approve', 'author'));
     }
 
     public function edit(Submission $submission)

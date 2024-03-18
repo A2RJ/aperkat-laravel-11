@@ -19,8 +19,8 @@
     - pengajuan semua sub divisi
 [ ] Pencairan
     - pengajuan semua sub divisi
-    - [ ] upload pencairan bertahap
+    - upload pencairan bertahap
 [ ] Periksa LPJ
     - pengajuan semua sub divisi
-    - terima dan revisi lpj
+    - [ ] terima dan revisi lpj
     

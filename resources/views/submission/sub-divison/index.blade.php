@@ -34,7 +34,9 @@
                                     <th scope="col">Nama Kegiatan</th>
                                     <th scope="col">Latar Belakang</th>
                                     <th scope="col">Tempat dan Waktu</th>
-                                    <th scope="col">RAB</th>
+                                    <th scope="col">RAB Diajukan</th>
+                                    <th scope="col">RAB Disetujui</th>
+                                    <th scope="col">Periode Pencairan</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -48,6 +50,8 @@
                                         <td>{{ $submission->background }}</td>
                                         <td>{{ $submission->place }}, {{ $submission->date }}</td>
                                         <td>{{ $submission->budget }}</td>
+                                        <td>{{ $submission->approved_budget }}</td>
+                                        <td>{{ $submission->period?->period }}</td>
                                         <td>
                                             <div class="d-flex">
                                                 <a class="btn btn-sm btn-success mr-1 mb-1"
