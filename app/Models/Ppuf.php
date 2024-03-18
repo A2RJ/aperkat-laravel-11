@@ -8,6 +8,48 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * 
+ *
+ * @property int $id
+ * @property int|null $role_id
+ * @property string $iku
+ * @property string $ppuf_number
+ * @property string $activity_type
+ * @property string $program_name
+ * @property string $description
+ * @property string $place
+ * @property string $date
+ * @property-read string $budget
+ * @property string|null $detail
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \App\Models\Role|null $author
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Submission> $submissions
+ * @property-read int|null $submissions_count
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf whereActivityType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf whereBudget($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf whereDetail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf whereIku($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf wherePlace($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf wherePpufNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf whereProgramName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf whereRoleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf withoutTrashed()
+ * @mixin \Eloquent
+ */
 class Ppuf extends Model
 {
     use HasFactory, SoftDeletes;

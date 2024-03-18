@@ -1,5 +1,5 @@
  <div class="sidebar-heading">
-     Warek II
+     Direktur Keuangan
  </div>
  <li class="nav-item">
      <a class="nav-link" href="{{ route('ppuf.index') }}">
@@ -16,7 +16,14 @@
  </li>
 
  <li class="nav-item">
-     <a class="nav-link" href="{{ route('submission.wr2') }}">
+     <a class="nav-link" href="{{ route('disbursement-period.index') }}">
+         <i class="fas fa-fw fa-table"></i>
+         <span>Periode Pencairan</span>
+     </a>
+ </li>
+
+ <li class="nav-item">
+     <a class="nav-link" href="{{ route('submission.dir-keuangan') }}">
          <i class="fas fa-fw fa-folder"></i>
          <span>Pengajuan Sub Divisi</span>
      </a>

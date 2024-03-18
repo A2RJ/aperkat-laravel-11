@@ -15,6 +15,7 @@ class SubmissionController extends Controller
     public function index()
     {
         $keyword = request('keyword', NULL);
+        $roleId = Auth::user()->allRoleId();
         $submissions = Submission::query()
             ->when($keyword, function (Builder $builder) {
                 $builder->whereAny(
@@ -22,18 +23,25 @@ class SubmissionController extends Controller
                     ''
                 );
             })
+            ->whereHas('ppuf', function ($query) use ($roleId) {
+                $query->whereIn('role_id', $roleId);
+            })
             ->paginate();
         return view('submission.index', compact('submissions'));
     }
 
     public function create()
     {
-        $role_id = Auth::id();
-        $status = Role::query()->where('user_id', $role_id)->whereHas('parent')->first();
+        $status = Role::query()->where('user_id', Auth::id())->whereHas('parent')->first();
         if (!$status) {
-            return redirect()->route('submission.index')->with('failed', 'Anda tidak memiliki struktur organisasi, segera hubungi admin.');
+            return redirect()
+                ->route('submission.index')
+                ->with('failed', 'Anda tidak memiliki struktur organisasi, segera hubungi admin');
         }
-        $ppufs = Ppuf::query()->get(['id', 'program_name', 'ppuf_number', 'budget', 'activity_type']);
+        $ppufs = Ppuf::query()
+            ->whereIn('role_id', Auth::user()->allRoleId())
+            ->select(['id', 'program_name', 'ppuf_number', 'budget', 'activity_type'])
+            ->get();
         $ikus = Ppuf::iku();
         $activity_dates = Ppuf::$activity_dates;
         return view('submission.create', compact('ppufs', 'ikus', 'activity_dates'));
@@ -55,7 +63,7 @@ class SubmissionController extends Controller
             'budget',
             'vendor',
         ]);
-        $ppuf = Ppuf::query()->find($request->ppuf_id)->first();
+        $ppuf = Ppuf::query()->where('id', $request->ppuf_id)->first();
         $form = array_merge($form, ['role_id' => $ppuf->author->parent->id]);
         $submission = Submission::create($form);
         $submission->status()->create([

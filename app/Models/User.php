@@ -3,6 +3,9 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Auth;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -37,6 +40,19 @@ use Illuminate\Notifications\Notifiable;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereTreeStructure($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereWhatsapp($value)
+ * @property string|null $bank_name
+ * @property string|null $bank_account_number
+ * @property string|null $bank_account_name
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Role> $role
+ * @property-read int|null $role_count
+ * @method static \Illuminate\Database\Eloquent\Builder|User onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereBankAccountName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereBankAccountNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereBankName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|User withoutTrashed()
  * @mixin \Eloquent
  */
 class User extends Authenticatable
@@ -82,5 +98,69 @@ class User extends Authenticatable
     public function role()
     {
         return $this->hasMany(Role::class);
+    }
+
+    public function allRoleId()
+    {
+        return auth()->user()->role->pluck('id')->toArray();
+    }
+
+    public function roles()
+    {
+        return auth()->user()->role->pluck('role')->toArray();
+    }
+
+    public function superAdmin()
+    {
+        return in_array('Super Admin', $this->roles());
+    }
+
+    public function wr2()
+    {
+        return in_array('Warek II Keuangan', $this->roles());
+    }
+
+    public function dirKeuangan()
+    {
+        return in_array('Direktur Keuangan', $this->roles());
+    }
+
+    public function rektor()
+    {
+        return in_array('Rektor', $this->roles());
+    }
+
+    public function dirKeuanganPencairan()
+    {
+        return in_array('Direktur Keuangan - Pencairan', $this->roles());
+    }
+
+    public function dirKeuanganLpj()
+    {
+        return in_array('Direktur Keuangan - LPJ', $this->roles());
+    }
+
+    public function user()
+    {
+        if ($this->superAdmin() || $this->wr2() || $this->dirKeuangan() || $this->rektor() || $this->dirKeuanganLpj() || $this->dirKeuanganPencairan()) {
+            return false;
+        }
+        return true;
+    }
+
+
+    public function hasSubDivision(bool $filter = true)
+    {
+        $role = Auth::user()->role;
+        $role_id = $role->pluck('id');
+        $subdivision = Role::flattenAllChildren(function (Builder $builder) use ($role_id) {
+            $builder->whereIn('id', $role_id)->get();
+        });
+        if ($filter) {
+            $subdivision = collect($subdivision)->filter(function ($item) {
+                return $item['user_id'] != Auth::id();
+            });
+        }
+        return $subdivision;
     }
 }

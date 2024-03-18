@@ -7,10 +7,11 @@ use App\Http\Requests\Ppuf\ImportRequest;
 use App\Http\Requests\Ppuf\PpufRequest;
 use App\Models\Ppuf;
 use App\Models\Role;
+use Auth;
 use Crypt;
 use Exception;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 use Rap2hpoutre\FastExcel\FastExcel;
 
 class PpufController extends Controller
@@ -18,18 +19,34 @@ class PpufController extends Controller
     public function index()
     {
         $keyword = request('keyword', NULL);
+        $user = Auth::user();
+        $childrenIds = collect($user->hasSubDivision(false))->pluck('id')->toArray();
         $ppufs = Ppuf::query()
-            ->when($keyword, function (Builder $query) {
-                $query
-            ->whereAny([
-                'ppuf_number',
-                'activity_type',
-                'program_name',
-                'description',
-                'place',
-                'date',
-                ], 'LIKE', '%apa%');
-        })
+            ->when(
+                $keyword,
+                function (Builder $query) {
+                    $query->whereAny([
+                        'ppuf_number',
+                        'activity_type',
+                        'program_name',
+                        'description',
+                        'place',
+                        'date',
+                    ], 'LIKE', '%apa%');
+                }
+            )
+            ->when(
+                $user->user(),
+                function (Builder $query) use ($user) {
+                    $query->whereIn('role_id', $user->allRoleId());
+                }
+            )
+            ->when(
+                $user->user() == false && isset($childrenIds),
+                function (Builder $query) use ($childrenIds) {
+                    $query->whereIn('role_id', $childrenIds);
+                }
+            )
             ->paginate();
         return view('ppuf.index', compact('ppufs'));
     }

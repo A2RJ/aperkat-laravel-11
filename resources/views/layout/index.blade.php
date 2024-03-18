@@ -1,9 +1,11 @@
+@php
+    $role = auth()->user();
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    {{-- https://laravel.com/docs/11.x/blade#extending-a-layout --}}
-
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -48,20 +50,23 @@
                 </a>
             </li>
 
-            {{--
-            - Wr 2
-            - dir keuangan tambah periode
-            - dir keuangan upload pencairan
-            - dir keuangan lpj
-            - user
-            - super admin tambah menu login as spefisik user
-            --}}
-
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            <!-- Heading -->
-           @include('layout.super-admin')
+            @if ($role->superAdmin())
+                @include('layout.super-admin')
+            @elseif ($role->wr2())
+                @include('layout.wr2')
+            @elseif ($role->dirKeuangan())
+                @include('layout.keuangan')
+            @elseif ($role->dirKeuanganPencairan())
+                @include('layout.keuangan-pencairan')
+            @elseif ($role->dirKeuanganLpj())
+                @include('layout.keuangan-lpj')
+            @else
+                @include('layout.user')
+            @endif
+
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
 
@@ -97,7 +102,7 @@
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span
-                                    class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }}</span>
+                                    class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }} - {{ implode(', ', auth()->user()->roles()) }}</span>
                                 <img class="img-profile rounded-circle" src="/sb-admin-2/img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->

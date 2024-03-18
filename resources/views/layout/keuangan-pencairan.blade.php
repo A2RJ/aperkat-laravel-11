@@ -1,5 +1,5 @@
  <div class="sidebar-heading">
-     Direktur Keuangan - LPJ
+     Direktur Keuangan Pencairan
  </div>
  <li class="nav-item">
      <a class="nav-link" href="{{ route('sub-division.on-proccess') }}">

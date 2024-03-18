@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Ppuf\PpufController;
+use App\Http\Controllers\Submission\DisbursementPeriodController;
 use App\Http\Controllers\Submission\SubDivisionController;
 use App\Http\Controllers\Submission\SubmissionController;
 use App\Http\Controllers\SuperAdmin\RoleController;
@@ -33,7 +34,14 @@ Route::middleware('auth')->group(function () {
     });
     Route::resource('ppuf', PpufController::class)->except('show');
 
+    Route::prefix('submission')->controller(SubDivisionController::class)->group(function () {
+        Route::get('direktur-keuangan', 'dirKeuangan')->name('submission.dir-keuangan');
+        Route::post('period/{submission}', 'period')->name('submission.period');
+        Route::get('warek-2', 'wr2')->name('submission.wr2');
+    });
     Route::resource('submission', SubmissionController::class);
+    // Route::resource('submission-period', DisbursementPeriodController::class)->only('inedx');
+    Route::resource('disbursement-period', DisbursementPeriodController::class)->except(['create', 'show',  'edit']);
 
     Route::prefix('sub-division')->controller(SubDivisionController::class)->group(function () {
         Route::get('', 'index')->name('sub-division.on-proccess');

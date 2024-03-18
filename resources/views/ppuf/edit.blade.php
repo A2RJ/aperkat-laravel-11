@@ -145,7 +145,10 @@
                         </div>
                         <div>
                             <a href="{{ route('ppuf.index') }}" class="btn btn-dark ">Cancel</a>
+
+                            @if (auth()->user()->wr2())
                             <button type="submit" class="btn btn-primary float-right ">Save</button>
+                            @endif
                         </div>
                     </form>
                 </div>

@@ -8,20 +8,10 @@
             <div class="card shadow">
                 <!-- Card Header - Dropdown -->
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Daftar Pengajuan</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Daftar Pengajuan Sub Divisi</h6>
                 </div>
 
                 <div class="card-body p-4">
-                    <div class="mb-4">
-                        <a class="btn btn-sm btn-primary " href="{{ route('submission.create') }}">
-                            <i class="fas fa-plus fa-sm text-white-50"></i>
-                            Tambah Pengajuan
-                        </a>
-                        <a href="#" class="btn btn-sm btn-primary">
-                            <i class="fas fa-download fa-sm text-white-50"></i> Export PPUF
-                        </a>
-                    </div>
-
                     @if (session()->has('success'))
                         <div class="alert alert-success">
                             {{ session()->get('success') }}.
@@ -61,23 +51,9 @@
                                         <td>
                                             <div class="d-flex">
                                                 <a class="btn btn-sm btn-success mr-1 mb-1"
-                                                    href="{{ route('submission.edit', $submission->id) }}">
-                                                    <i class="fas fa-fw fa-edit"></i>
-                                                </a>
-                                                <a class="btn btn-sm btn-success mr-1 mb-1"
                                                     href="{{ route('submission.show', $submission->id) }}">
                                                     <i class="fas fa-fw fa-info"></i>
                                                 </a>
-
-                                                <form action="{{ route('submission.destroy', $submission->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger bg-danger "
-                                                        onclick="return confirm('Are you sure you want to delete this item?')">
-                                                        <i class="fas fa-fw fa-trash"></i>
-                                                    </button>
-                                                </form>
                                             </div>
                                         </td>
                                     </tr>

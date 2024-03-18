@@ -7,6 +7,37 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $role
+ * @property string $parent_id
+ * @property int|null $user_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Role> $children
+ * @property-read int|null $children_count
+ * @property-read Role|null $parent
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Ppuf> $ppuf
+ * @property-read int|null $ppuf_count
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Role newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Role newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Role onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Role query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Role whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Role whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Role whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Role whereParentId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Role whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Role whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Role whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Role withTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|Role withoutTrashed()
+ * @mixin \Eloquent
+ */
 class Role extends Model
 {
     use HasFactory, SoftDeletes;

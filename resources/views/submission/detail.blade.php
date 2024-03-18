@@ -17,9 +17,9 @@
                             <li class="tw-relative tw-mb-6 sm:tw-mb-0">
                                 <div class="tw-flex tw-items-center">
                                     <div
-                                        class="tw-z-10 tw-flex tw-h-6 tw-w-6 tw-shrink-0 tw-items-center tw-justify-center tw-rounded-full tw-bg-blue-100 tw-ring-0 tw-ring-white sm:tw-ring-8 dark:tw-bg-blue-900 dark:tw-ring-gray-900">
+                                        class="tw-z-10 tw-flex tw-h-6 tw-w-6 tw-shrink-0 tw-items-center tw-justify-center tw-rounded-full tw-bg-blue-100 tw-ring-0 tw-ring-white sm:tw-ring-8">
                                         @if ($status['status'] && $status['status']['status'])
-                                            <svg class="tw-h-10 tw-w-10 tw-text-green-800 dark:tw-text-green-300"
+                                            <svg class="tw-h-10 tw-w-10 tw-text-green-800"
                                                 xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                                                 viewBox="0 0 24 24">
                                                 <path fill="currentColor" fill-rule="evenodd"
@@ -27,7 +27,7 @@
                                                     clip-rule="evenodd" />
                                             </svg>
                                         @else
-                                            <svg class="tw-h-10 tw-w-10 tw-text-blue-800 dark:tw-text-blue-300"
+                                            <svg class="tw-h-10 tw-w-10 tw-text-blue-800 "
                                                 xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                                                 viewBox="0 0 24 24">
                                                 <path fill="currentColor"
@@ -42,16 +42,16 @@
                                         @endif
                                     </div>
                                     {{-- @if (!$loop->last) --}}
-                                    <div class="tw-hidden tw-h-0.5 tw-w-full tw-bg-gray-200 sm:tw-flex dark:tw-bg-gray-700">
+                                    <div class="tw-hidden tw-h-0.5 tw-w-full tw-bg-gray-200 sm:tw-flex ">
                                     </div>
                                     {{-- @endif --}}
                                 </div>
                                 <div class="tw-mt-3 sm:tw-pe-8">
-                                    <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white">
+                                    <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 ">
                                         {{ $status['role'] }}
                                     </h3>
                                     <p
-                                        class="tw-mb-2 tw-block tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 dark:tw-text-gray-500">
+                                        class="tw-mb-2 tw-block tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 ">
                                         @if ($loop->first)
                                             Telah Diajukan
                                         @elseif ($status['status'] && $status['status']['status'])
@@ -66,9 +66,9 @@
                         <li class="tw-relative tw-mb-6 sm:tw-mb-0">
                             <div class="tw-flex tw-items-center">
                                 <div
-                                    class="tw-z-10 tw-flex tw-h-6 tw-w-6 tw-shrink-0 tw-items-center tw-justify-center tw-rounded-full tw-bg-blue-100 tw-ring-0 tw-ring-white sm:tw-ring-8 dark:tw-bg-blue-900 dark:tw-ring-gray-900">
+                                    class="tw-z-10 tw-flex tw-h-6 tw-w-6 tw-shrink-0 tw-items-center tw-justify-center tw-rounded-full tw-bg-blue-100 tw-ring-0 tw-ring-white sm:tw-ring-8">
                                     @if ($submission->is_done)
-                                        <svg class="tw-h-10 tw-w-10 tw-text-green-800 dark:tw-text-green-300"
+                                        <svg class="tw-h-10 tw-w-10 tw-text-green-800"
                                             xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                                             viewBox="0 0 24 24">
                                             <path fill="currentColor" fill-rule="evenodd"
@@ -76,7 +76,7 @@
                                                 clip-rule="evenodd" />
                                         </svg>
                                     @else
-                                        <svg class="tw-h-10 tw-w-10 tw-text-blue-800 dark:tw-text-blue-300"
+                                        <svg class="tw-h-10 tw-w-10 tw-text-blue-800 "
                                             xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                                             viewBox="0 0 24 24">
                                             <path fill="currentColor"
@@ -91,11 +91,11 @@
                                 </div>
                             </div>
                             <div class="tw-mt-3 sm:tw-pe-8">
-                                <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white">
+                                <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 ">
                                     Selesai
                                 </h3>
                                 <p
-                                    class="tw-mb-2 tw-block tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 dark:tw-text-gray-500">
+                                    class="tw-mb-2 tw-block tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 ">
                                     @if ($submission->is_done)
                                         Selesai
                                     @else
@@ -223,18 +223,18 @@
                         </div>
 
                         <div class="card-body p-4">
-                            <ol class="tw-relative tw-border-s tw-border-gray-200 dark:tw-border-gray-700">
+                            <ol class="tw-relative tw-border-s tw-border-gray-200">
                                 @foreach ($submission->status as $status)
                                     <li class="tw-mb-10 tw-ms-4">
                                         <div
-                                            class="tw-absolute tw-w-3 tw-h-3 tw-bg-gray-200 tw-rounded-full tw-mt-1.5 tw--start-1.5 tw-border tw-border-white dark:tw-border-gray-900 dark:tw-bg-gray-700">
+                                            class="tw-absolute tw-w-3 tw-h-3 tw-bg-gray-200 tw-rounded-full tw-mt-1.5 tw--start-1.5 tw-border tw-border-white ">
                                         </div>
                                         <time
-                                            class="tw-mb-1 tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 dark:tw-text-gray-500">{{ $status->created_at }}</time>
-                                        <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 dark:tw-text-white">
+                                            class="tw-mb-1 tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 ">{{ $status->created_at }}</time>
+                                        <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 ">
                                             {{ $status->role->role }}</h3>
                                         <p
-                                            class="tw-mb-4 tw-text-base tw-font-normal tw-text-gray-500 dark:tw-text-gray-400">
+                                            class="tw-mb-4 tw-text-base tw-font-normal tw-text-gray-500">
                                             {{ $status->message }}.</p>
                                     </li>
                                 @endforeach

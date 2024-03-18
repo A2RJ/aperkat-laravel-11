@@ -57,8 +57,8 @@
                                         </td>
                                         <td>
                                             <div class="d-flex">
-                                                <a class="btn btn-sm btn-success mr-1 mb-1" href="#" data-toggle="modal"
-                                                    data-target="#editModal{{ $role->id }}">
+                                                <a class="btn btn-sm btn-success mr-1 mb-1" href="#"
+                                                    data-toggle="modal" data-target="#editModal{{ $role->id }}">
                                                     <i class="fas fa-fw fa-edit"></i>
                                                 </a>
 
@@ -232,13 +232,14 @@
                 @endforeach
             </div>
         </div>
-    @endsection
+    </div>
+@endsection
 
-    @section('scriptjs')
-        <script src="/sb-admin-2/vendor/bootstrap-select/bootstrap-select.min.js"></script>
-        <script type="text/javascript" charset="utf-8">
-            $(function() {
-                $('.selectpicker').selectpicker()
-            });
-        </script>
-    @endsection
+@section('scriptjs')
+    <script src="/sb-admin-2/vendor/bootstrap-select/bootstrap-select.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        $(function() {
+            $('.selectpicker').selectpicker()
+        });
+    </script>
+@endsection

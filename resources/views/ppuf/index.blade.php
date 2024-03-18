@@ -13,13 +13,15 @@
 
                 <div class="card-body">
                     <div class="mb-4">
-                        <a class="btn btn-sm btn-primary " href="{{ route('ppuf.create') }}">
-                            <i class="fas fa-plus fa-sm text-white-50"></i>
-                            Add PPUF
-                        </a>
-                        <a class="btn btn-sm btn-primary " href="{{ route('ppuf.import') }}">
-                            <i class="fas fa-upload fa-sm text-white-50"></i> Import PPUF
-                        </a>
+                        @if (auth()->user()->wr2())
+                            <a class="btn btn-sm btn-primary " href="{{ route('ppuf.create') }}">
+                                <i class="fas fa-plus fa-sm text-white-50"></i>
+                                Add PPUF
+                            </a>
+                            <a class="btn btn-sm btn-primary " href="{{ route('ppuf.import') }}">
+                                <i class="fas fa-upload fa-sm text-white-50"></i> Import PPUF
+                            </a>
+                        @endif
                         <a href="#" class="btn btn-sm btn-primary">
                             <i class="fas fa-download fa-sm text-white-50"></i> Export PPUF
                         </a>
@@ -70,15 +72,16 @@
                                                     href="{{ route('ppuf.edit', $ppuf->id) }}">
                                                     <i class="fas fa-fw fa-edit"></i>
                                                 </a>
-
-                                                <form action="{{ route('ppuf.destroy', $ppuf->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-sm btn-danger bg-danger "
-                                                        onclick="return confirm('Are you sure you want to delete this item?')">
-                                                        <i class="fas fa-fw fa-trash"></i>
-                                                    </button>
-                                                </form>
+                                                @if (auth()->user()->wr2())
+                                                    <form action="{{ route('ppuf.destroy', $ppuf->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="btn btn-sm btn-danger bg-danger "
+                                                            onclick="return confirm('Are you sure you want to delete this item?')">
+                                                            <i class="fas fa-fw fa-trash"></i>
+                                                        </button>
+                                                    </form>
+                                                @endif
                                             </div>
                                         </td>
                                     </tr>
