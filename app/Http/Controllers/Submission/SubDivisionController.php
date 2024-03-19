@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Submission;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Submission\ActionLpjRequest;
 use App\Http\Requests\Submission\PeriodRequest;
 use App\Http\Requests\Submission\UploadLpjRequest;
 use App\Models\DisbursementPeriod;
@@ -41,7 +42,6 @@ class SubDivisionController extends Controller
     {
         $roleId = Auth::user()->allRoleId();
         $status = request('status', NULL);
-        // return [$status == 'need approve', $status];
         $submissions = Submission::with('ppuf')
             ->when($status == 'done', function (Builder $query) {
                 $query->where('is_done', 1);
@@ -135,7 +135,7 @@ class SubDivisionController extends Controller
         }
     }
 
-    public function action(Request $request, Submission $submission)
+    public function action(ActionLpjRequest $request, Submission $submission)
     {
         $note = $request->note;
         $action = $request->action;
@@ -191,10 +191,46 @@ class SubDivisionController extends Controller
         }
     }
 
-    public function actionLpj(Submission $submission)
+    public function adminLpj()
     {
-        try {
-            $role = Auth::user()->strictRole;
+        $roleId = Auth::user()->strictRole->id;
+        $user = Auth::user();
+        $subdivisionIds = collect($user->hasSubDivision())->pluck('id')->toArray();
+        $status = request('status', NULL);
+        $submissions = Submission::with('ppuf')
+        ->whereHas('ppuf', function ($query) use ($subdivisionIds) {
+            $query->whereIn('role_id', $subdivisionIds);
+        })
+            ->when($status == 'done', function (Builder $query) {
+                $query->where('is_done', 1);
+            })
+            ->when($status == 'progress', function (Builder $query) {
+                $query->where('is_done', 0);
+            })
+            ->when($status == 'need approve', function (Builder $query) use ($roleId) {
+                $query->where('role_id', $roleId);
+            })
+            ->paginate();
+        return view('submission.direktur-keuangan-lpj.index', compact('submissions', 'roleId'));
+    }
+
+    public function actionLpj(ActionLpjRequest $request, Submission $submission)
+    {
+        $note = $request->note;
+        $action = $request->action;
+
+        $role = Auth::user()->strictRole;
+        if ($action == 'revisi') {
+            DB::transaction(function () use ($submission, $role, $note) {
+                $submission->status()->create([
+                    'role_id' => $role->id,
+                    'status' => false,
+                    'message' => 'Mohon direvisi: ' . $note,
+                ]);
+            });
+            return back()->with('failed', "Berhasil meminta untuk revisi pengajuan");
+        } elseif ($action == 'terima') {
+
             DB::transaction(function () use ($submission,  $role) {
                 $submission->update([
                     'role_id' => $role->parent->id,
@@ -208,9 +244,7 @@ class SubDivisionController extends Controller
                 ]);
             });
 
-            return redirect()->back()->with('success', 'Berhasil terima LPJ kegiatan');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('failed', 'Gagal terima LPJ kegiatan');
+            return back()->with('success', 'Berhasil terima LPJ kegiatan');
         }
     }
 

@@ -48,6 +48,7 @@
                                     <th scope="col">RAB Disetujui</th>
                                     <th scope="col">Periode Pencairan</th>
                                     <th scope="col">Bukti Pencairan</th>
+                                    <th scope="col">File LPJ</th>
                                     <th scope="col">Action</th>
                                 </tr>
                             </thead>
@@ -71,21 +72,20 @@
                                                             target="_blank">
                                                             {{ $disbursement->budget }}
                                                         </a>
-                                                        @if (!$submission->is_disbursement_complete)
-                                                            <form
-                                                                action="{{ route('pencairan.destroy', $disbursement->id) }}"
-                                                                method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="text-danger "
-                                                                    onclick="return confirm('Are you sure you want to delete this item?')">
-                                                                    <u> Hapus</u>
-                                                                </button>
-                                                            </form>
-                                                        @endif
                                                     </li>
                                                 @endforeach
                                             </ul>
+                                        </td>
+                                        <td>
+                                            @if ($submission->report_file)
+                                                <u>
+                                                    <a class="text-primary"
+                                                        href="{{ route('submission.download-lpj', $submission->id) }}"
+                                                        target="_blank">
+                                                        File LPJ
+                                                    </a>
+                                                </u>
+                                            @endif
                                         </td>
                                         <td>
                                             <div class="d-flex">
@@ -96,24 +96,8 @@
                                                 @if ($submission->role_id == $roleId)
                                                     <a class="btn btn-sm btn-primary mr-1 mb-1" href="#"
                                                         data-toggle="modal" data-target="#editModal{{ $submission->id }}">
-                                                        <i class="fas fa-fw fa-upload"></i>
+                                                        <i class="fas fa-fw fa-check"></i>
                                                     </a>
-                                                @endif
-                                                @if ($submission->disbursements && count($submission->disbursements) && !$submission->is_disbursement_complete)
-                                                    <form action="{{ route('pencairan.update', $disbursement->id) }}"
-                                                        method="POST">
-                                                        @csrf
-                                                        @method('PUT')
-                                                        <button type="submit"
-                                                            class="btn btn-sm bg-success btn-success mr-1 mb-1"
-                                                            onclick="return confirm('Anda telah selesai upload pencairan?')">
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="22"
-                                                                height="22" viewBox="0 0 24 24">
-                                                                <path fill="currentColor"
-                                                                    d="m9.55 15.15l8.475-8.475q.3-.3.713-.3t.712.3q.3.3.3.713t-.3.712l-9.2 9.2q-.3.3-.7.3t-.7-.3L4.55 13q-.3-.3-.288-.712t.313-.713q.3-.3.713-.3t.712.3z" />
-                                                            </svg>
-                                                        </button>
-                                                    </form>
                                                 @endif
                                             </div>
                                         </td>
@@ -136,69 +120,51 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Form Pencairan</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Form LPJ {{ $submission->ppuf->author->role }} -
+                            {{ $submission->ppuf->ppuf_number }}</h5>
                         <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">×</span>
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('pencairan.store') }}" method="post" enctype="multipart/form-data">
+                        <form id="submissionForm"
+                            action="{{ route('submission.aksi-lpj', ['submission' => $submission->id]) }}" method="post">
                             @csrf
                             <div class="form-row">
-                                <input type="hidden" name="submission_id" value="{{ $submission->id }}">
                                 <div class="col-12 mb-3">
-                                    <label for="budget">Jumlah Pencairan</label>
-                                    <input type="text" class="form-control @error('budget') is-invalid @enderror"
-                                        id="budget" name="budget" required>
-                                    @error('budget')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
+                                    <textarea id="note" name="note" class="form-control" required
+                                        placeholder="Tambahkan catatan untuk pengajuan ini"></textarea>
                                 </div>
-                                <div class="col-12 mb-3 d-flex flex-column">
-                                    <label for="file">User</label>
-                                    <input type="file" class="form-control @error('file') is-invalid @enderror"
-                                        id="file" name="file" required>
-                                    @error('file')
-                                        <div class="invalid-feedback">
-                                            {{ $message }}
-                                        </div>
-                                    @enderror
+                                <div class="col-12 d-flex justify-content-end">
+                                    <input id="actionInput" type="hidden" name="action" value="">
+                                    <button id="revisiButton" type="button"
+                                        class="btn btn-sm bg-danger btn-danger mr-2">Revisi</button>
+                                    <button id="terimaButton" type="button"
+                                        class="btn btn-sm bg-primary btn-primary">Terima Pengajuan</button>
                                 </div>
-                            </div>
-                            <div class="d-flex justify-content-between">
-                                <button class="btn btn-sm bg-secondary btn-secondary" type="button"
-                                    data-dismiss="modal">Cancel</button>
-                                <button type="submit" class="btn btn-sm bg-primary btn-primary">Save</button>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
-
-        <script type="text/javascript">
-            var rupiah = document.getElementById('budget');
-            rupiah.addEventListener('keyup', function(e) {
-                rupiah.value = formatRupiah(this.value, 'Rp. ');
-            });
-
-            function formatRupiah(angka, prefix) {
-                var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                    split = number_string.split(','),
-                    sisa = split[0].length % 3,
-                    rupiah = split[0].substr(0, sisa),
-                    ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-                if (ribuan) {
-                    separator = sisa ? '.' : '';
-                    rupiah += separator + ribuan.join('.');
-                }
-
-                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-                return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-            }
-        </script>
     @endforeach
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var forms = document.querySelectorAll('#submissionForm');
+
+            forms.forEach(function(form) {
+                form.querySelector('#revisiButton').addEventListener('click', function() {
+                    form.querySelector('#actionInput').value = 'revisi';
+                    form.submit();
+                });
+
+                form.querySelector('#terimaButton').addEventListener('click', function() {
+                    form.querySelector('#actionInput').value = 'terima';
+                    form.submit();
+                });
+            });
+        });
+    </script>
 @endsection

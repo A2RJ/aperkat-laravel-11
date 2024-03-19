@@ -1,7 +1,7 @@
 - STEP PER STEP
-[ ] User
+[ ] TODO: User
     - ppuf
-    - pengajuan
+    - ubah pengajuan saat direvisi dengan cara ambil semua status dan check status terakhir, jika status.status = false maka tombol ubah tampil
     - upload RAB
     - tambah detail rab yang disetujui di table dan form
 [ ] Atasan
@@ -22,5 +22,5 @@
     - upload pencairan bertahap
 [ ] Periksa LPJ
     - pengajuan semua sub divisi
-    - [ ] terima dan revisi lpj
+    - terima dan revisi lpj
     

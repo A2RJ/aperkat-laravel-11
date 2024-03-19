@@ -12,7 +12,7 @@
                 </div>
 
                 <div class="card-body tw-p-4 tw-flex tw-justify-center">
-                    <ol class="tw-items-center sm:tw-flex">
+                    <ol class="sm:tw-flex">
                         @foreach ($statuses as $status)
                             <li class="tw-relative tw-mb-6 sm:tw-mb-0">
                                 <div class="tw-flex tw-items-center">
@@ -130,6 +130,7 @@
                                         class="btn btn-sm bg-primary btn-primary">Terima Pengajuan</button>
                                 </div>
                             </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -261,7 +262,7 @@
         <div class="col-12 col-lg-4 mt-4 ">
             <div class="row">
                 @if ($approve)
-                    <div class="col-12 mt-4 d-none d-lg-block">
+                    <div class="col-12 d-none d-lg-block">
                         <div class="card shadow">
                             <!-- Card Header - Dropdown -->
                             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -330,11 +331,12 @@
                                     <i class="fas fa-download fa-sm text-white-50"></i> Print TOR
                                 </a>
                                 <a href="#" class="btn btn-sm btn-primary">
-                                    <i class="fas fa-download fa-sm text-white-50"></i> Template laporan keuangan
+                                    <i class="fas fa-download fa-sm text-white-50"></i> Template LPJ
                                 </a>
                                 @if ($submission->report_file)
-                                    <a href="{{ route('submission.download-lpj', $submission->id) }}" class="btn btn-sm btn-primary">
-                                        <i class="fas fa-download fa-sm text-white-50"></i> LPJ Kegiatan
+                                    <a href="{{ route('submission.download-lpj', $submission->id) }}"
+                                        class="btn btn-sm btn-primary">
+                                        <i class="fas fa-download fa-sm text-white-50"></i> File LPJ {{ $submission->ppuf->author->role }}
                                     </a>
                                 @endif
                             </div>
@@ -387,22 +389,30 @@
     </div>
 
     <script>
-        // Menunggu dokumen selesai dimuat
-        document.addEventListener('DOMContentLoaded', function() {
-            // Menangani klik tombol "Revisi"
-            document.getElementById('revisiButton').addEventListener('click', function() {
-                // Mengatur nilai input tersembunyi "action" menjadi "revisi"
-                document.getElementById('actionInput').value = 'revisi';
-                // Menyerahkan formulir
-                document.getElementById('submissionForm').submit();
-            });
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     document.getElementById('revisiButton').addEventListener('click', function() {
+        //         document.getElementById('actionInput').value = 'revisi';
+        //         document.getElementById('submissionForm').submit();
+        //     });
 
-            // Menangani klik tombol "Terima Pengajuan"
-            document.getElementById('terimaButton').addEventListener('click', function() {
-                // Mengatur nilai input tersembunyi "action" menjadi "terima"
-                document.getElementById('actionInput').value = 'terima';
-                // Menyerahkan formulir
-                document.getElementById('submissionForm').submit();
+        //     document.getElementById('terimaButton').addEventListener('click', function() {
+        //         document.getElementById('actionInput').value = 'terima';
+        //         document.getElementById('submissionForm').submit();
+        //     });
+        // });
+        document.addEventListener('DOMContentLoaded', function() {
+            var forms = document.querySelectorAll('#submissionForm');
+
+            forms.forEach(function(form) {
+                form.querySelector('#revisiButton').addEventListener('click', function() {
+                    form.querySelector('#actionInput').value = 'revisi';
+                    form.submit();
+                });
+
+                form.querySelector('#terimaButton').addEventListener('click', function() {
+                    form.querySelector('#actionInput').value = 'terima';
+                    form.submit();
+                });
             });
         });
     </script>

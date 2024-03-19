@@ -214,7 +214,7 @@
                             </div>
                         </div>
                         <div>
-                            <button type="submit" class="btn btn-primary float-right ">Save</button>
+                            <button type="submit" class="btn btn-sm bg-primary btn-primary float-right ">Save</button>
                         </div>
                     </form>
                 </div>
