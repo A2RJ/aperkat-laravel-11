@@ -204,15 +204,153 @@
                                     </div>
                                 @enderror
                             </div>
-                            <div class="col-12 col-lg-4 mb-3">
-                                <label for="file">Upload File RAB (.XLSX)</label>
-                                <input type="file" class="form-control" id="file" name="file">
-                                <small class="success-feedback">
-                                    Tidak perlu mengisi RAB jika meng-upload file RAB dan juga sebaliknya <br>
-                                    <a href="#">Klik untuk donwload template</a>.
-                                </small>
+                        </div>
+
+                        <div class="">
+                            <div class="min-w-max">
+                                <div class="bg-white tw-overflow-x-scroll shadow-md rounded-lg">
+                                    <table class="min-w-max w-full table-auto">
+                                        <thead>
+                                            <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                                <th style="width: 20%" class="py-3 px-6 text-left">Nama Item</th>
+                                                <th style="width: 20%" class="py-3 px-6 text-left">Qty</th>
+                                                <th style="width: 20%" class="py-3 px-6 text-left">Harga Satuan</th>
+                                                <th style="width: 20%" class="py-3 px-6 text-left">Harga Total</th>
+                                                <th style="width: 20%" class="py-3 px-6 text-left">Keterangan</th>
+                                                <th style="width: 20%" class="py-3 px-6 text-left">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="text-gray-600 text-sm font-light" id="form-container">
+                                            <div class="item-container">
+                                                @foreach (old('rab', ['']) as $key => $value)
+                                                    <tr class="border-b border-gray-200 hover:bg-gray-100 ">
+                                                        <td class="text-left p-1">
+                                                            <input type="text"
+                                                                class="p-1 rounded border w-auto nama-item @error('nama_item.*') border-red-500 @enderror"
+                                                                name="rab['nama_item'][]"
+                                                                value="{{ old('nama_item.0') }}">
+                                                            @error('nama_item.*')
+                                                                <p class="text-red-500 text-xs italic">
+                                                                    {{ $errors->first('nama_item.*') }}</p>
+                                                            @enderror
+                                                        </td>
+                                                        <td class="text-left p-1">
+                                                            <input type="number"
+                                                                class="p-1 rounded border w-200 qty @error('qty.*') border-red-500 @enderror"
+                                                                name="rab['qty'][]" value="{{ old('qty.0') }}">
+                                                            @error('qty.*')
+                                                                <p class="text-red-500 text-xs italic">
+                                                                    {{ $errors->first('qty.*') }}
+                                                                </p>
+                                                            @enderror
+                                                        </td>
+                                                        <td class="text-left p-1">
+                                                            <input type="number"
+                                                                class="p-1 rounded border w-200 harga-satuan @error('harga_satuan.*') border-red-500 @enderror"
+                                                                name="rab['harga_satuan'][]"
+                                                                value="{{ old('harga_satuan.0') }}">
+                                                            @error('harga_satuan.*')
+                                                                <p class="text-red-500 text-xs italic">
+                                                                    {{ $errors->first('harga_satuan.*') }}</p>
+                                                            @enderror
+                                                        </td>
+                                                        <td class="text-left p-1">
+                                                            <input type="number"
+                                                                class="p-1 rounded border w-200 harga-total @error('harga_total.*') border-red-500 @enderror"
+                                                                name="rab['harga_total'][]" readonly
+                                                                value="{{ old('harga_total.0') }}">
+                                                            @error('harga_total.*')
+                                                                <p class="text-red-500 text-xs italic">
+                                                                    {{ $errors->first('harga_total.*') }}</p>
+                                                            @enderror
+                                                        </td>
+                                                        <td class="text-left p-1">
+                                                            <input type="text"
+                                                                class="p-1 rounded border w-200 keteragan @error('keterangan.*') border-red-500 @enderror"
+                                                                name="rab['keterangan'][]"
+                                                                value="{{ old('keterangan.0') }}">
+                                                            @error('keterangan.*')
+                                                                <p class="text-red-500 text-xs italic">
+                                                                    {{ $errors->first('keterangan.*') }}</p>
+                                                            @enderror
+                                                        </td>
+                                                        <td class="text-left p-1">
+                                                            <button type="button"
+                                                                class="remove-item btn bg-danger btn-danger">
+                                                                <i class="fas fa-fw fa-trash"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            </div>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
+                        <button type="button" id="add-item" class="btn btn-sm bg-primary btn-primary mt-2">
+                            Tambah Item
+                        </button>
+
+                        <div class="form-group mb-3">
+                            <label for="participants">Daftar Anggota</label>
+                            <div id="lecturers-container">
+                                @foreach (old('participants', [['name' => '', 'nidn' => '', 'studyProgram' => '', 'detail' => '']]) as $index => $row)
+                                    <div class="row mb-1 participants-<?= $index ?>">
+                                        <div class="col">
+                                            <input type="text"
+                                                class="form-control @error('participants.' . $index . '.name') is-invalid @enderror"
+                                                name="participants[{{ $index }}][name]" placeholder="Name"
+                                                value="{{ $row['name'] }}">
+                                            @error('participants.' . $index . '.name')
+                                                <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="col">
+                                            <input type="text"
+                                                class="form-control @error('participants.' . $index . '.nidn') is-invalid @enderror"
+                                                name="participants[{{ $index }}][nidn]" placeholder="NIDN"
+                                                value="{{ $row['nidn'] }}">
+                                            @error('participants.' . $index . '.nidn')
+                                                <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="col">
+                                            <input type="text"
+                                                class="form-control @error('participants.' . $index . '.studyProgram') is-invalid @enderror"
+                                                name="participants[{{ $index }}][studyProgram]"
+                                                placeholder="Program Studi" value="{{ $row['studyProgram'] }}">
+                                            @error('participants.' . $index . '.studyProgram')
+                                                <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="col">
+                                            <input type="text"
+                                                class="form-control @error('participants.' . $index . '.detail') is-invalid @enderror"
+                                                name="participants[{{ $index }}][detail]" placeholder="Detail"
+                                                value="{{ $row['detail'] }}">
+                                            @error('participants.' . $index . '.detail')
+                                                <span class="invalid-feedback">{{ $message }}</span>
+                                            @enderror
+                                        </div>
+                                        <div class="col">
+                                            @if ($index == 0)
+                                                <button class="btn btn-danger" type="button" disabled>Remove</button>
+                                            @else
+                                                <button class="btn btn-danger" type="button"
+                                                    onclick="removeLecturer(<?= $index ?>)">Remove</button>
+                                            @endif
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                            <div class="mt-2 mb-3">
+                                <button class="btn btn-primary" type="button" onclick="addLecturer()">Tambah
+                                    dosen</button>
+                            </div>
+                        </div>
+
+
                         <div>
                             <button type="submit" class="btn btn-sm bg-primary btn-primary float-right ">Save</button>
                         </div>
@@ -221,27 +359,44 @@
             </div>
         </div>
     </div>
+    <script>
+        let lecturerIndex = 1;
 
-    <script type="text/javascript">
-        var rupiah = document.getElementById('budget');
-        rupiah.addEventListener('keyup', function(e) {
-            rupiah.value = formatRupiah(this.value, 'Rp. ');
-        });
+        function addLecturer() {
+            const container = document.getElementById('lecturers-container');
+            const newRow = document.createElement('div');
+            newRow.className = `row mb-1 participants-client-${lecturerIndex}`;
+            newRow.innerHTML = `
+                                <div class="col">
+                                    <input type="text" class="form-control" name="participants[${lecturerIndex}][name]" placeholder="Name">
+                                </div>
+                                <div class="col">
+                                    <input type="text" class="form-control" name="participants[${lecturerIndex}][nidn]" placeholder="NIDN">
+                                </div>
+                                <div class="col">
+                                    <input type="text" class="form-control" name="participants[${lecturerIndex}][studyProgram]" placeholder="Program Studi">
+                                </div>
+                                <div class="col">
+                                    <input type="text" class="form-control" name="participants[${lecturerIndex}][detail]" placeholder="Detail">
+                                </div>
+                                <div class="col">
+                                    <button class="btn btn-danger" type="button" onclick="removeLecturerClient(${lecturerIndex})">Remove</button>
+                                </div>
+                            `;
+            container.appendChild(newRow);
+            lecturerIndex++;
+        }
 
-        function formatRupiah(angka, prefix) {
-            var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                split = number_string.split(','),
-                sisa = split[0].length % 3,
-                rupiah = split[0].substr(0, sisa),
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+        function removeLecturer(index) {
+            const container = document.getElementById('lecturers-container');
+            const row = document.querySelector(`.participants-${index}`);
+            container.removeChild(row);
+        }
 
-            if (ribuan) {
-                separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
-
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+        function removeLecturerClient(lecturerIndex) {
+            const container = document.getElementById('lecturers-container');
+            const row = document.querySelector(`.participants-client-${lecturerIndex}`);
+            container.removeChild(row);
         }
     </script>
 @endsection
@@ -269,6 +424,74 @@
                     inputToDisable.disabled = false;
                 }
             }
+        });
+
+        $(document).ready(function() {
+            // Tambah item
+            $('#add-item').click(function() {
+                var newItem = $('.item-container:first').clone();
+                newItem.find('input').val('');
+                newItem.appendTo('#form-container');
+                updateRemoveButtonVisibility();
+                updateTotalHarga()
+            });
+
+            // Hapus item
+            $('#form-container').on('click', '.remove-item', function() {
+                $(this).closest('.item-container').remove();
+                updateRemoveButtonVisibility();
+                updateTotalHarga()
+            });
+
+            // Hitung harga total
+            $('#form-container').on('input', '.qty, .harga-satuan', function() {
+                var container = $(this).closest('.item-container');
+                var qty = parseInt(container.find('.qty').val()) || 0;
+                var hargaSatuan = parseInt(container.find('.harga-satuan').val()) || 0;
+
+                // Validasi untuk memastikan kedua input adalah angka yang valid
+                if (isNaN(qty) || isNaN(hargaSatuan)) {
+                    container.find('.harga-total').val('');
+                    return;
+                }
+
+                // Hitung dan set nilai harga total
+                container.find('.harga-total').val(qty * hargaSatuan);
+                updateTotalHarga()
+            });
+
+
+            // Fungsi untuk memperbarui visibilitas tombol hapus
+            function updateRemoveButtonVisibility() {
+                var itemsCount = $('.item-container').length;
+                $('.remove-item').prop('disabled', itemsCount <= 1);
+            }
+
+            function updateTotalHarga() {
+                var totalHarga = 0;
+                $('.harga-total').each(function() {
+                    var hargaTotal = parseInt($(this).val());
+                    totalHarga += isNaN(hargaTotal) ? 0 : hargaTotal;
+                });
+                $('#budget').val(formatRupiah(totalHarga));
+            }
+
+            function formatRupiah(angka, prefix = 'Rp. ') {
+                var number_string = angka.toString().replace(/[^0-9]/g, '');
+                var split = number_string.split(',');
+                var sisa = split[0].length % 3;
+                var rupiah = split[0].substr(0, sisa);
+                var ribuan = split[0].substr(sisa).match(/\d{3}/g);
+
+                if (ribuan) {
+                    separator = sisa ? '.' : '';
+                    rupiah += separator + ribuan.join('.');
+                }
+
+                rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+                return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+            }
+
         });
     </script>
 @endsection

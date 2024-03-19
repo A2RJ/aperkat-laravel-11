@@ -1,8 +1,8 @@
 - STEP PER STEP
-[ ] TODO: User
+[ ] User
     - ppuf
     - ubah pengajuan saat direvisi dengan cara ambil semua status dan check status terakhir, jika status.status = false maka tombol ubah tampil
-    - upload RAB
+    - TODO: upload RAB
     - tambah detail rab yang disetujui di table dan form
 [ ] Atasan
     - ppuf semua sub divisi

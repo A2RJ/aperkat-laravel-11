@@ -11,14 +11,63 @@
                     <h6 class="m-0 font-weight-bold text-primary">Status Pengajuan</h6>
                 </div>
 
-                <div class="card-body tw-p-4 tw-flex tw-justify-center">
-                    <ol class="sm:tw-flex">
-                        @foreach ($statuses as $status)
+                <div class="card-body">
+                    <div class="tw-flex tw-justify-center tw-overflow-scroll">
+                        <ol class="sm:tw-flex">
+                            @foreach ($statuses as $status)
+                                <li class="tw-relative tw-mb-6 sm:tw-mb-0">
+                                    <div class="tw-flex tw-items-center">
+                                        <div
+                                            class="tw-z-10 tw-flex tw-h-6 tw-w-6 tw-shrink-0 tw-items-center tw-justify-center tw-rounded-full tw-bg-blue-100 tw-ring-0 tw-ring-white sm:tw-ring-8">
+                                            @if ($status['status'] && $status['status']['status'])
+                                                <svg class="tw-h-10 tw-w-10 tw-text-green-800"
+                                                    xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                                                    viewBox="0 0 24 24">
+                                                    <path fill="currentColor" fill-rule="evenodd"
+                                                        d="M12 21a9 9 0 0 0 7.51-13.961l-7.155 7.95a2 2 0 0 1-2.687.262L6.4 12.8a1 1 0 0 1 1.2-1.6l3.268 2.451l7.346-8.161A9 9 0 1 0 12 21"
+                                                        clip-rule="evenodd" />
+                                                </svg>
+                                            @else
+                                                <svg class="tw-h-10 tw-w-10 tw-text-blue-800 "
+                                                    xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                                                    viewBox="0 0 24 24">
+                                                    <path fill="currentColor"
+                                                        d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z"
+                                                        opacity=".5" />
+                                                    <path fill="currentColor"
+                                                        d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z">
+                                                        <animateTransform attributeName="transform" dur="1s"
+                                                            from="0 12 12" repeatCount="indefinite" to="360 12 12"
+                                                            type="rotate" />
+                                                    </path>
+                                                </svg>
+                                            @endif
+                                        </div>
+                                        <div class="tw-hidden tw-h-0.5 tw-w-full tw-bg-gray-200 sm:tw-flex ">
+                                        </div>
+                                    </div>
+                                    <div class="tw-mt-3 sm:tw-pe-8">
+                                        <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 ">
+                                            {{ $status['role'] }}
+                                        </h3>
+                                        <p
+                                            class="tw-mb-2 tw-block tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 ">
+                                            @if ($loop->first)
+                                                Telah Diajukan
+                                            @elseif ($status['status'] && $status['status']['status'])
+                                                Telah Disetujui
+                                            @else
+                                                Menunggu Persetujuan
+                                            @endif
+                                        </p>
+                                    </div>
+                                </li>
+                            @endforeach
                             <li class="tw-relative tw-mb-6 sm:tw-mb-0">
                                 <div class="tw-flex tw-items-center">
                                     <div
                                         class="tw-z-10 tw-flex tw-h-6 tw-w-6 tw-shrink-0 tw-items-center tw-justify-center tw-rounded-full tw-bg-blue-100 tw-ring-0 tw-ring-white sm:tw-ring-8">
-                                        @if ($status['status'] && $status['status']['status'])
+                                        @if ($submission->is_done)
                                             <svg class="tw-h-10 tw-w-10 tw-text-green-800"
                                                 xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                                                 viewBox="0 0 24 24">
@@ -41,66 +90,22 @@
                                             </svg>
                                         @endif
                                     </div>
-                                    {{-- @if (!$loop->last) --}}
-                                    <div class="tw-hidden tw-h-0.5 tw-w-full tw-bg-gray-200 sm:tw-flex ">
-                                    </div>
-                                    {{-- @endif --}}
                                 </div>
                                 <div class="tw-mt-3 sm:tw-pe-8">
                                     <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 ">
-                                        {{ $status['role'] }}
+                                        Selesai
                                     </h3>
                                     <p class="tw-mb-2 tw-block tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 ">
-                                        @if ($loop->first)
-                                            Telah Diajukan
-                                        @elseif ($status['status'] && $status['status']['status'])
-                                            Telah Disetujui
+                                        @if ($submission->is_done)
+                                            Selesai
                                         @else
                                             Menunggu Persetujuan
                                         @endif
                                     </p>
                                 </div>
                             </li>
-                        @endforeach
-                        <li class="tw-relative tw-mb-6 sm:tw-mb-0">
-                            <div class="tw-flex tw-items-center">
-                                <div
-                                    class="tw-z-10 tw-flex tw-h-6 tw-w-6 tw-shrink-0 tw-items-center tw-justify-center tw-rounded-full tw-bg-blue-100 tw-ring-0 tw-ring-white sm:tw-ring-8">
-                                    @if ($submission->is_done)
-                                        <svg class="tw-h-10 tw-w-10 tw-text-green-800" xmlns="http://www.w3.org/2000/svg"
-                                            width="32" height="32" viewBox="0 0 24 24">
-                                            <path fill="currentColor" fill-rule="evenodd"
-                                                d="M12 21a9 9 0 0 0 7.51-13.961l-7.155 7.95a2 2 0 0 1-2.687.262L6.4 12.8a1 1 0 0 1 1.2-1.6l3.268 2.451l7.346-8.161A9 9 0 1 0 12 21"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    @else
-                                        <svg class="tw-h-10 tw-w-10 tw-text-blue-800 " xmlns="http://www.w3.org/2000/svg"
-                                            width="32" height="32" viewBox="0 0 24 24">
-                                            <path fill="currentColor"
-                                                d="M12 2A10 10 0 1 0 22 12A10 10 0 0 0 12 2Zm0 18a8 8 0 1 1 8-8A8 8 0 0 1 12 20Z"
-                                                opacity=".5" />
-                                            <path fill="currentColor" d="M20 12h2A10 10 0 0 0 12 2V4A8 8 0 0 1 20 12Z">
-                                                <animateTransform attributeName="transform" dur="1s" from="0 12 12"
-                                                    repeatCount="indefinite" to="360 12 12" type="rotate" />
-                                            </path>
-                                        </svg>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="tw-mt-3 sm:tw-pe-8">
-                                <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 ">
-                                    Selesai
-                                </h3>
-                                <p class="tw-mb-2 tw-block tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 ">
-                                    @if ($submission->is_done)
-                                        Selesai
-                                    @else
-                                        Menunggu Persetujuan
-                                    @endif
-                                </p>
-                            </div>
-                        </li>
-                    </ol>
+                        </ol>
+                    </div>
                 </div>
             </div>
         </div>
@@ -336,7 +341,8 @@
                                 @if ($submission->report_file)
                                     <a href="{{ route('submission.download-lpj', $submission->id) }}"
                                         class="btn btn-sm btn-primary">
-                                        <i class="fas fa-download fa-sm text-white-50"></i> File LPJ {{ $submission->ppuf->author->role }}
+                                        <i class="fas fa-download fa-sm text-white-50"></i> File LPJ
+                                        {{ $submission->ppuf->author->role }}
                                     </a>
                                 @endif
                             </div>
@@ -389,17 +395,6 @@
     </div>
 
     <script>
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     document.getElementById('revisiButton').addEventListener('click', function() {
-        //         document.getElementById('actionInput').value = 'revisi';
-        //         document.getElementById('submissionForm').submit();
-        //     });
-
-        //     document.getElementById('terimaButton').addEventListener('click', function() {
-        //         document.getElementById('actionInput').value = 'terima';
-        //         document.getElementById('submissionForm').submit();
-        //     });
-        // });
         document.addEventListener('DOMContentLoaded', function() {
             var forms = document.querySelectorAll('#submissionForm');
 

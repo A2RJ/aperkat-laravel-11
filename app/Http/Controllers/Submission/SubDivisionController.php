@@ -252,4 +252,9 @@ class SubDivisionController extends Controller
     {
         return response()->download(storage_path('app/public/' . $submission->report_file));
     }
+
+    public function rab(Request $request)
+    {
+        return $request->all();
+    }
 }

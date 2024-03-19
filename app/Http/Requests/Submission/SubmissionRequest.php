@@ -33,7 +33,12 @@ class SubmissionRequest extends FormRequest
             'place' => 'required',
             'date' => 'required',
             'budget' => 'required',
-            'vendor' => 'required'
+            'vendor' => 'required',
+            'nama_item.*' => 'required|string',
+            'qty.*' => 'required|integer|min:1',
+            'harga_satuan.*' => 'required|integer|min:1',
+            'harga_total.*' => 'required|integer|min:1',
+            'keterangan.*' => 'nullable|string',
         ];
     }
 
@@ -43,10 +48,22 @@ class SubmissionRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'ppuf_id' => 'PPUF is invalid',
-            'iku1_id' => 'IKU is invalid',
-            'iku2_id' => 'IKU is invalid',
-            'iku3_id' => 'IKU is invalid',
+            'ppuf_id' => 'Pilih PPUF',
+            'iku1_id' => 'Pilih IKU',
+            'iku2_id' => 'Pilih IKU',
+            'iku3_id' => 'Pilih IKU',
+            'nama_item.*.required' => 'Nama item harus diisi.',
+            'nama_item.*.string' => 'Format nama item tidak valid.',
+            'qty.*.required' => 'Qty harus diisi.',
+            'qty.*.integer' => 'Qty harus berupa bilangan bulat.',
+            'qty.*.min' => 'Qty harus lebih besar dari 0.',
+            'harga_satuan.*.required' => 'Harga satuan harus diisi.',
+            'harga_satuan.*.integer' => 'Harga satuan harus berupa bilangan bulat.',
+            'harga_satuan.*.min' => 'Harga satuan harus lebih besar dari 0.',
+            'harga_total.*.required' => 'Harga total harus diisi.',
+            'harga_total.*.integer' => 'Harga total harus berupa bilangan bulat.',
+            'harga_total.*.min' => 'Harga total harus lebih besar dari 0.',
+            'keterangan.*.string' => 'Format keterangan tidak valid.',
         ];
     }
 }
