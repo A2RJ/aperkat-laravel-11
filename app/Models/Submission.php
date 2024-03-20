@@ -84,10 +84,15 @@ class Submission extends Model
         'date',
         'vendor',
         'budget',
+        'budget_detail',
         'approved_budget',
         'report_file',
         'is_disbursement_complete',
         'is_done'
+    ];
+
+    protected $casts = [
+        'budget_detail' => 'array',
     ];
 
     public function ppuf()

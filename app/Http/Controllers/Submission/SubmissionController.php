@@ -51,7 +51,6 @@ class SubmissionController extends Controller
 
     public function store(SubmissionRequest $request)
     {
-        return $request->all();
         try {
             $form = $request->safe()->only([
                 'ppuf_id',
@@ -64,11 +63,20 @@ class SubmissionController extends Controller
                 'rundown',
                 'place',
                 'date',
-                'budget',
                 'vendor',
             ]);
             $ppuf = Ppuf::query()->where('id', $request->ppuf_id)->first();
-            $form = array_merge($form, ['role_id' => $ppuf->author->parent->id]);
+            $total = collect($request->rab)->sum(function ($item) {
+                return $item['qty'] * $item['harga_satuan'];
+            });
+            $form = array_merge(
+                $form,
+                [
+                    'budget' => $total,
+                    'budget_detail' => $request->rab,
+                    'role_id' => $ppuf->author->parent->id,
+                ]
+            );
             DB::transaction(function () use ($form, $ppuf) {
                 $submission = Submission::create($form);
                 $submission->status()->create([

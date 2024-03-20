@@ -196,79 +196,6 @@
                             </div>
                         </div>
 
-                        {{-- <div class="form-group mb-3">
-                            <label for="rab">Detail RAB</label>
-                            <div id="rabs-container">
-                                @foreach (old('rab', [['item' => '', 'qty' => '', 'harga_satuan' => '', 'total' => '', 'detail' => '']]) as $index => $row)
-                                    <div class="row mb-1 rab-<?= $index ?>" rab>
-                                        <div class="col-sm mb-1">
-                                            <input type="text"
-                                                class="form-control @error('rab.' . $index . '.item') is-invalid @enderror"
-                                                id="item" name="rab[{{ $index }}][item]" placeholder="Item"
-                                                value="{{ $row['item'] }}">
-                                            @error('rab.' . $index . '.item')
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="col-sm mb-1">
-                                            <input type="text"
-                                                class="form-control @error('rab.' . $index . '.qty') is-invalid @enderror"
-                                                id="qty" name="rab[{{ $index }}][qty]" placeholder="Qty"
-                                                value="{{ $row['qty'] }}"
-                                                oninput="calculateTotal({{ $index }})">
-                                            @error('rab.' . $index . '.qty')
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="col-sm mb-1">
-                                            <input type="text"
-                                                class="form-control @error('rab.' . $index . '.harga_satuan') is-invalid @enderror"
-                                                id="harga_satuan" name="rab[{{ $index }}][harga_satuan]"
-                                                placeholder="Harga Satuan" value="{{ $row['harga_satuan'] }}"
-                                                oninput="calculateTotal({{ $index }})">
-                                            @error('rab.' . $index . '.harga_satuan')
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="col-sm mb-1">
-                                            <input type="text"
-                                                class="form-control @error('rab.' . $index . '.total') is-invalid @enderror"
-                                                id="total" name="rab[{{ $index }}][total]"
-                                                placeholder="Total" value="{{ $row['total'] }}" readonly>
-                                            @error('rab.' . $index . '.total')
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="col-sm mb-1">
-                                            <input type="text"
-                                                class="form-control @error('rab.' . $index . '.detail') is-invalid @enderror"
-                                                id="detail" name="rab[{{ $index }}][detail]"
-                                                placeholder="Detail" value="{{ $row['detail'] }}">
-                                            @error('rab.' . $index . '.detail')
-                                                <span class="invalid-feedback">{{ $message }}</span>
-                                            @enderror
-                                        </div>
-                                        <div class="col-sm mb-1">
-                                            @if ($index == 0)
-                                                <button class="btn btn-danger" type="button" disabled>Remove</button>
-                                            @else
-                                                <button class="btn btn-danger" type="button"
-                                                    onclick="removeRab(<?= $index ?>)">Remove</button>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-                            <div class="mt-2 mb-3 row justify-content-between ">
-                                <div class="col">
-                                    <input type="text" class="form-control" id="totalRab" name="totalRab">
-                                </div>
-                                <div class="col align-self-end">
-                                    <button class="btn bg-primary btn-primary" type="button"
-                                        onclick="addRab()">Tambah</button>
-                                </div>
-                            </div>
-                        </div> --}}
                         <div class="form-group mb-3">
                             <label for="rab">Detail RAB</label>
                             <div id="rabs-container">
@@ -284,7 +211,7 @@
                                             @enderror
                                         </div>
                                         <div class="col-sm mb-1">
-                                            <input type="text"
+                                            <input type="number"
                                                 class="form-control @error('rab.' . $index . '.qty') is-invalid @enderror"
                                                 id="qty" name="rab[{{ $index }}][qty]" placeholder="Qty"
                                                 value="{{ $row['qty'] }}"
@@ -294,7 +221,7 @@
                                             @enderror
                                         </div>
                                         <div class="col-sm mb-1">
-                                            <input type="text"
+                                            <input type="number"
                                                 class="form-control @error('rab.' . $index . '.harga_satuan') is-invalid @enderror"
                                                 id="harga_satuan" name="rab[{{ $index }}][harga_satuan]"
                                                 placeholder="Harga Satuan" value="{{ $row['harga_satuan'] }}"
@@ -304,7 +231,7 @@
                                             @enderror
                                         </div>
                                         <div class="col-sm mb-1">
-                                            <input type="text"
+                                            <input type="number"
                                                 class="form-control @error('rab.' . $index . '.total') is-invalid @enderror"
                                                 id="total" name="rab[{{ $index }}][total]"
                                                 placeholder="Total" value="{{ $row['total'] }}" readonly>
@@ -334,7 +261,8 @@
                             </div>
                             <div class="mt-2 mb-3 row justify-content-between">
                                 <div class="col">
-                                    <input type="text" class="form-control" id="totalRab" name="totalRab" value="Rp. 0">
+                                    <input type="text" class="form-control" id="totalRab" name="totalRab"
+                                        value="Rp. 0">
                                 </div>
                                 <div class="col align-self-end">
                                     <button class="btn bg-primary btn-primary" type="button"
@@ -393,13 +321,13 @@
                 <input type="text" class="form-control" name="rab[${index}][item]" placeholder="Item">
             </div>
             <div class="col-sm mb-1">
-                <input type="text" class="form-control" name="rab[${index}][qty]" placeholder="Qty" oninput="calculateTotal(${index})">
+                <input type="number" class="form-control" name="rab[${index}][qty]" placeholder="Qty" oninput="calculateTotal(${index})">
             </div>
             <div class="col-sm mb-1">
-                <input type="text" class="form-control" name="rab[${index}][harga_satuan]" placeholder="Harga Satuan" oninput="calculateTotal(${index})">
+                <input type="number" class="form-control" name="rab[${index}][harga_satuan]" placeholder="Harga Satuan" oninput="calculateTotal(${index})">
             </div>
             <div class="col-sm mb-1">
-                <input type="text" class="form-control" name="rab[${index}][total]" placeholder="Total" readonly>
+                <input type="number" class="form-control" name="rab[${index}][total]" placeholder="Total" readonly>
             </div>
             <div class="col-sm mb-1">
                 <input type="text" class="form-control" name="rab[${index}][detail]" placeholder="Detail">
