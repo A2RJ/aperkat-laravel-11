@@ -32,7 +32,7 @@ class SubmissionRequest extends FormRequest
             'rundown' => 'required',
             'place' => 'required',
             'date' => 'required',
-            'budget' => 'required',
+            // 'budget' => 'required',
             'vendor' => 'required',
             'nama_item.*' => 'required|string',
             'qty.*' => 'required|integer|min:1',
