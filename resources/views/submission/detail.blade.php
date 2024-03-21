@@ -259,6 +259,40 @@
                             <label for="budget">RAB</label>
                             <input type="text" class="form-control" value="{{ $submission->budget }}">
                         </div>
+                        <div class="form-group mb-3">
+                            <label for="rab">Detail RAB</label>
+                            <div id="rabs-container">
+                                @foreach ($submission->budget_detail as $index => $row)
+                                    <div class="row mb-1 rab-{{ $index }} rab">
+                                        <div class="col-sm mb-1">
+                                            <input type="text" class="form-control" id="item"
+                                                name="rab[{{ $index }}][item]" placeholder="Item"
+                                                value="{{ $row['item'] }}">
+                                        </div>
+                                        <div class="col-sm mb-1">
+                                            <input type="number" class="form-control" id="qty"
+                                                name="rab[{{ $index }}][qty]" placeholder="Qty"
+                                                value="{{ $row['qty'] }}">
+                                        </div>
+                                        <div class="col-sm mb-1">
+                                            <input type="number" class="form-control" id="harga_satuan"
+                                                name="rab[{{ $index }}][harga_satuan]" placeholder="Harga Satuan"
+                                                value="{{ $row['harga_satuan'] }}">
+                                        </div>
+                                        <div class="col-sm mb-1">
+                                            <input type="number" class="form-control" id="total"
+                                                name="rab[{{ $index }}][total]" placeholder="Total"
+                                                value="{{ $row['total'] }}" readonly>
+                                        </div>
+                                        <div class="col-sm mb-1">
+                                            <input type="text" class="form-control" id="detail"
+                                                name="rab[{{ $index }}][detail]" placeholder="Detail"
+                                                value="{{ $row['detail'] }}">
+                                        </div>
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -332,15 +366,15 @@
 
                         <div class="card-body p-4">
                             <div class="mb-4">
-                                <a href="#" class="btn btn-sm btn-primary">
+                                <a href="#" class="btn btn-sm btn-primary mt-1">
                                     <i class="fas fa-download fa-sm text-white-50"></i> Print TOR
                                 </a>
-                                <a href="#" class="btn btn-sm btn-primary">
+                                <a href="#" class="btn btn-sm btn-primary mt-1">
                                     <i class="fas fa-download fa-sm text-white-50"></i> Template LPJ
                                 </a>
                                 @if ($submission->report_file)
                                     <a href="{{ route('submission.download-lpj', $submission->id) }}"
-                                        class="btn btn-sm btn-primary">
+                                        class="btn btn-sm btn-primary mt-1">
                                         <i class="fas fa-download fa-sm text-white-50"></i> File LPJ
                                         {{ $submission->ppuf->author->role }}
                                     </a>

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('submissions', function (Blueprint $table) {
-            $table->jsonb('budget_detail');
+            $table->jsonb('budget_detail')->default('[]');
         });
     }
 

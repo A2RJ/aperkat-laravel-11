@@ -160,7 +160,8 @@
                             <div class="col-12 col-lg-4 mb-3">
                                 <label for="vendor">Vendor</label>
                                 <input type="text" class="form-control @error('vendor') is-invalid @enderror"
-                                    id="vendor" name="vendor" required value="{{ old('vendor', $submission->vendor) }}">
+                                    id="vendor" name="vendor" required
+                                    value="{{ old('vendor', $submission->vendor) }}">
                                 @error('vendor')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -170,7 +171,8 @@
                             <div class="col-12 col-lg-4 mb-3">
                                 <label for="place">Tempat Pelaksanaan</label>
                                 <input type="text" class="form-control @error('place') is-invalid @enderror"
-                                    id="place" name="place" required value="{{ old('place', $submission->place) }}">
+                                    id="place" name="place" required
+                                    value="{{ old('place', $submission->place) }}">
                                 @error('place')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -195,23 +197,80 @@
                                     </div>
                                 @enderror
                             </div>
-                            <div class="col-12 col-lg-4 mb-3">
-                                <label for="budget">RAB</label>
-                                <input type="text" class="form-control @error('budget') is-invalid @enderror"
-                                    id="budget" name="budget" required value="{{ old('budget', $submission->budget) }}">
-                                @error('budget')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
+
+                            <div class="col-12 form-group mb-3">
+                                <label for="rab">Detail RAB</label>
+                                <div id="rabs-container">
+                                    @foreach (old('rab', $submission->budget_detail) as $index => $row)
+                                        <div class="row mb-1 rab-{{ $index }} rab">
+                                            <div class="col-sm mb-1">
+                                                <input type="text"
+                                                    class="form-control @error('rab.' . $index . '.item') is-invalid @enderror"
+                                                    id="item" name="rab[{{ $index }}][item]"
+                                                    placeholder="Item" value="{{ $row['item'] }}">
+                                                @error('rab.' . $index . '.item')
+                                                    <span class="invalid-feedback">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm mb-1">
+                                                <input type="number"
+                                                    class="form-control @error('rab.' . $index . '.qty') is-invalid @enderror"
+                                                    id="qty" name="rab[{{ $index }}][qty]"
+                                                    placeholder="Qty" value="{{ $row['qty'] }}"
+                                                    oninput="calculateTotal({{ $index }})">
+                                                @error('rab.' . $index . '.qty')
+                                                    <span class="invalid-feedback">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm mb-1">
+                                                <input type="number"
+                                                    class="form-control @error('rab.' . $index . '.harga_satuan') is-invalid @enderror"
+                                                    id="harga_satuan" name="rab[{{ $index }}][harga_satuan]"
+                                                    placeholder="Harga Satuan" value="{{ $row['harga_satuan'] }}"
+                                                    oninput="calculateTotal({{ $index }})">
+                                                @error('rab.' . $index . '.harga_satuan')
+                                                    <span class="invalid-feedback">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm mb-1">
+                                                <input type="number"
+                                                    class="form-control @error('rab.' . $index . '.total') is-invalid @enderror"
+                                                    id="total" name="rab[{{ $index }}][total]"
+                                                    placeholder="Total" value="{{ $row['total'] }}" readonly>
+                                                @error('rab.' . $index . '.total')
+                                                    <span class="invalid-feedback">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm mb-1">
+                                                <input type="text"
+                                                    class="form-control @error('rab.' . $index . '.detail') is-invalid @enderror"
+                                                    id="detail" name="rab[{{ $index }}][detail]"
+                                                    placeholder="Detail" value="{{ $row['detail'] }}">
+                                                @error('rab.' . $index . '.detail')
+                                                    <span class="invalid-feedback">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+                                            <div class="col-sm mb-1">
+                                                @if ($index == 0)
+                                                    <button class="btn btn-danger" type="button" disabled>Remove</button>
+                                                @else
+                                                    <button class="btn bg-danger btn-danger" type="button"
+                                                        onclick="removeRab({{ $index }})">Remove</button>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <div class="mt-2 mb-3 row">
+                                    <div class="col-4">
+                                        <input type="text" class="form-control" id="totalRab" name="totalRab"
+                                            value="Rp. 0">
                                     </div>
-                                @enderror
-                            </div>
-                            <div class="col-12 col-lg-4 mb-3">
-                                <label for="file">Upload File RAB (.XLSX)</label>
-                                <input type="file" class="form-control" id="file" name="file">
-                                <small class="success-feedback">
-                                    Tidak perlu mengisi RAB jika meng-upload file RAB dan juga sebaliknya <br>
-                                    <a href="#">Klik untuk donwload template</a>.
-                                </small>
+                                    <div class="col-4">
+                                        <button class="btn bg-primary btn-primary" type="button"
+                                            onclick="addRab()">Tambah</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div>
@@ -223,18 +282,79 @@
         </div>
     </div>
 
-    <script type="text/javascript">
-        var rupiah = document.getElementById('budget');
-        rupiah.addEventListener('keyup', function(e) {
-            rupiah.value = formatRupiah(this.value, 'Rp. ');
-        });
 
-        function formatRupiah(angka, prefix) {
-            var number_string = angka.replace(/[^,\d]/g, '').toString(),
-                split = number_string.split(','),
-                sisa = split[0].length % 3,
-                rupiah = split[0].substr(0, sisa),
-                ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+    <script>
+        function calculateTotal(index) {
+            var qty = parseFloat(document.querySelector('.rab-' + index + ' input[name="rab[' + index + '][qty]"]').value);
+            var hargaSatuan = parseFloat(document.querySelector('.rab-' + index + ' input[name="rab[' + index +
+                '][harga_satuan]"]').value);
+            var total = qty * hargaSatuan;
+            console.log(total);
+            if (!isNaN(total)) {
+                document.querySelector('.rab-' + index + ' input[name="rab[' + index + '][total]"]').value = total;
+                updateRabInput();
+            }
+        }
+
+
+        function updateRabInput() {
+            var totalRab = 0;
+            var rabs = document.querySelectorAll('.rab');
+            rabs.forEach(function(rab, index) {
+                var qty = parseFloat(rab.querySelector('input[name="rab[' + index + '][qty]"]').value);
+                var hargaSatuan = parseFloat(rab.querySelector('input[name="rab[' + index + '][harga_satuan]"]')
+                    .value);
+                var total = qty * hargaSatuan;
+                if (!isNaN(total)) {
+                    totalRab += total;
+                }
+            });
+            document.getElementById('totalRab').value = formatRupiah(totalRab); // Menyimpan total dengan dua angka desimal
+        }
+
+
+        function addRab() {
+            var rabsContainer = document.getElementById('rabs-container');
+            var index = rabsContainer.querySelectorAll('.rab').length;
+            var newRow = document.createElement('div');
+            newRow.classList.add('row', 'mb-1', 'rab-' + index, 'rab');
+            newRow.innerHTML = `
+            <div class="col-sm mb-1">
+                <input type="text" class="form-control" name="rab[${index}][item]" placeholder="Item">
+            </div>
+            <div class="col-sm mb-1">
+                <input type="number" class="form-control" name="rab[${index}][qty]" placeholder="Qty" oninput="calculateTotal(${index})">
+            </div>
+            <div class="col-sm mb-1">
+                <input type="number" class="form-control" name="rab[${index}][harga_satuan]" placeholder="Harga Satuan" oninput="calculateTotal(${index})">
+            </div>
+            <div class="col-sm mb-1">
+                <input type="number" class="form-control" name="rab[${index}][total]" placeholder="Total" readonly>
+            </div>
+            <div class="col-sm mb-1">
+                <input type="text" class="form-control" name="rab[${index}][detail]" placeholder="Detail">
+            </div>
+            <div class="col-sm mb-1">
+                <button class="btn bg-danger btn-danger" type="button" onclick="removeRab(${index})">Remove</button>
+            </div>
+        `;
+            rabsContainer.appendChild(newRow);
+        }
+
+        function removeRab(index) {
+            var rabsContainer = document.getElementById('rabs-container');
+            var rabToRemove = document.querySelector('.rab-' + index);
+            rabsContainer.removeChild(rabToRemove);
+            updateRabInput(); // Memanggil fungsi updateRabInput() setelah menghapus baris RAB
+        }
+
+        function formatRupiah(angka, prefix = 'Rp. ') {
+            var number_string = angka.toString().replace(/[^0-9]/g, '');
+            var split = number_string.split(',');
+            var sisa = split[0].length % 3;
+            var rupiah = split[0].substr(0, sisa);
+            var ribuan = split[0].substr(sisa).match(/\d{3}/g);
 
             if (ribuan) {
                 separator = sisa ? '.' : '';

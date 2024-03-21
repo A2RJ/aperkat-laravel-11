@@ -259,12 +259,12 @@
                                     </div>
                                 @endforeach
                             </div>
-                            <div class="mt-2 mb-3 row justify-content-between">
-                                <div class="col">
+                            <div class="mt-2 mb-3 row">
+                                <div class="col-4">
                                     <input type="text" class="form-control" id="totalRab" name="totalRab"
                                         value="Rp. 0">
                                 </div>
-                                <div class="col align-self-end">
+                                <div class="col-4">
                                     <button class="btn bg-primary btn-primary" type="button"
                                         onclick="addRab()">Tambah</button>
                                 </div>

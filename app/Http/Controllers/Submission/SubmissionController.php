@@ -10,7 +10,6 @@ use App\Models\Submission;
 use Auth;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Http\Request;
 
 class SubmissionController extends Controller
 {
@@ -167,10 +166,14 @@ class SubmissionController extends Controller
             'rundown',
             'place',
             'date',
-            'budget',
             'vendor',
         ]);
-        $submission->update($form);
+        $total = collect($request->rab)->sum(function ($item) {
+            return $item['qty'] * $item['harga_satuan'];
+        });
+        $submission->update(
+            array_merge($form, ['budget' => $total, 'budget_detail' => $request->rab])
+        );
         return redirect()->route('submission.index')->with('success', 'Berhasil mengubah pengajuan');
     }
 
