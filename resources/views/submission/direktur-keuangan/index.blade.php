@@ -34,6 +34,39 @@
                         </div>
                     @endif
 
+                    <div class="mb-4">
+                        <form action="{{ url()->current() }}" method="get">
+                            <div class="row">
+                                <div class="col-sm">
+                                    <select id="status" class="form-control" name="status">
+                                        <option value="">Pilih Status</option>
+                                        <option value="need approve"
+                                            {{ request('status', false) == 'need approve' ? 'selected' : '' }}>Perlu
+                                            Disetujui
+                                        </option>
+                                        <option value="progress"
+                                            {{ request('status', false) == 'progress' ? 'selected' : '' }}>
+                                            Sedang Diproses</option>
+                                        <option value="done" {{ request('status', false) == 'done' ? 'selected' : '' }}>
+                                            Selesai
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-sm ">
+                                    <input class="form-control " type="month" id="start" name="start"
+                                        min="{{ date('Y-m') }}" value="{{ request('start', '') }}" />
+                                </div>
+                                <div class="col-sm ">
+                                    <input class="form-control " type="month" id="end" name="end"
+                                        value="{{ request('end', '') }}" value="{{ request('end', '') }}" />
+                                </div>
+                                <div class="col-sm">
+                                    <button class="btn btn-sm bg-primary btn-primary px-4" type="submit">Filter</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="table table-bordered">
                             <thead class="thead-light">

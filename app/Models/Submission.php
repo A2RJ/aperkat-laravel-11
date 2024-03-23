@@ -103,6 +103,11 @@ class Submission extends Model
         );
     }
 
+    public function approval()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
+
     public function ppuf()
     {
         return $this->belongsTo(Ppuf::class);

@@ -40,9 +40,9 @@ class SubDivisionController extends Controller
 
     public function dirKeuangan()
     {
-        $roleId = Auth::user()->allRoleId();
+        $roleId = Auth::user()->strictRole->id;
         $status = request('status', NULL);
-        $submissions = Submission::with('ppuf')
+        $submissions = Submission::with(['ppuf', 'approval'])
             ->when($status == 'done', function (Builder $query) {
                 $query->where('is_done', 1);
             })
@@ -50,12 +50,14 @@ class SubDivisionController extends Controller
                 $query->where('is_done', 0);
             })
             ->when($status == 'need approve', function (Builder $query) use ($roleId) {
-                $query->whereIn('role_id', $roleId)
+            $query->where('role_id', $roleId)
                     ->whereNull('disbursement_period_id')
                     ->orWhere('role_id', 5)
                     ->whereNull('disbursement_period_id');
             })
             ->paginate();
+        // return $submissions;
+
         $periods = DisbursementPeriod::query()->get(['id', 'period']);
         return view('submission.direktur-keuangan.index', compact('submissions', 'periods'));
     }
@@ -198,9 +200,9 @@ class SubDivisionController extends Controller
         $subdivisionIds = collect($user->hasSubDivision())->pluck('id')->toArray();
         $status = request('status', NULL);
         $submissions = Submission::with('ppuf')
-        ->whereHas('ppuf', function ($query) use ($subdivisionIds) {
-            $query->whereIn('role_id', $subdivisionIds);
-        })
+            ->whereHas('ppuf', function ($query) use ($subdivisionIds) {
+                $query->whereIn('role_id', $subdivisionIds);
+            })
             ->when($status == 'done', function (Builder $query) {
                 $query->where('is_done', 1);
             })
