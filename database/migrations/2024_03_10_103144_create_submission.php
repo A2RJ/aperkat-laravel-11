@@ -51,6 +51,7 @@ return new class extends Migration
             $table->string('rundown');
             $table->string('vendor');
             $table->string('budget');
+            $table->jsonb('budget_detail');
             $table->string('approved_budget')->nullable()->default(0);
             $table->string('report_file')->nullable();
             $table->boolean('is_disbursement_complete')->default(false);

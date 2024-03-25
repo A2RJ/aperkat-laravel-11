@@ -16,16 +16,43 @@ class SubmissionController extends Controller
     public function index()
     {
         $keyword = request('keyword', NULL);
+        $start = request('start', NULL);
+        $end = request('end', NULL);
+        $status = request('status', NULL);
+
         $roleId = Auth::user()->strictRole->id;
         $submissions = Submission::query()
-            ->when($keyword, function (Builder $builder) {
-                $builder->whereAny(
-                    ['id'],
-                    ''
-                );
-            })
             ->whereHas('ppuf', function ($query) use ($roleId) {
                 $query->where('role_id', $roleId);
+            })
+            ->when($keyword, function (Builder $builder) use ($keyword) {
+                $builder->whereHas('ppuf', function (Builder $builder) use ($keyword) {
+                    $builder->whereAny([
+                        'ppuf_number',
+                        'activity_type',
+                        'program_name',
+                    ], 'LIKE', "%$keyword%");
+                })
+                    ->orWhereHas('ppuf', function (Builder $builder) use ($keyword) {
+                        $builder->whereHas('author', function (Builder $builder) use ($keyword) {
+                            $builder->where('role', 'LIKE', "%$keyword%");
+                        });
+                    });
+            })
+            ->when($start && !$end, function (Builder $builder) use ($start) {
+                $builder->whereDate('created_at', $start);
+            })
+            ->when($start && $end, function (Builder $builder) use ($start, $end) {
+                $builder->whereBetween('created_at', [$start, $end]);
+            })
+            ->when($status == 'done', function (Builder $query) {
+                $query->where('is_done', 1);
+            })
+            ->when($status == 'progress', function (Builder $query) {
+                $query->where('is_done', 0);
+            })
+            ->when($status == 'need approve', function (Builder $query) use ($roleId) {
+                $query->whereNot('role_id',  $roleId)->where('is_done', 0);
             })
             ->paginate();
         return view('submission.index', compact('submissions'));
