@@ -57,7 +57,7 @@
                                 <input class="form-control " type="date" id="end" name="end" value="{{ request('end') }}" />
                             </div>
                             <div class="col-sm ">
-                                <input class="form-control " type="text" id="keyword" name="keyword" value="{{ request('keyword') }}">
+                                <input class="form-control " type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" placeholder="Keyword">
                             </div>
                             <div class="col-sm">
                                 <button class="btn bg-primary btn-primary px-4" type="submit">Filter</button>
@@ -97,10 +97,10 @@
                                 <td>{{ $submission->period?->period }}</td>
                                 <td>
                                     <div class="d-flex">
-                                        <a class="btn btn-sm btn-success mr-1 mb-1" href="{{ route('submission.show', $submission->id) }}">
+                                        <a class="btn btn-sm btn-success mr-1 mb-1" href="{{ route('submission.show', $submission->id) }}" target="_blank">
                                             <i class="fas fa-fw fa-info"></i>
                                         </a>
-                                        @if (!$submission->disbursement_period_id)
+                                        @if (!$submission->disbursement_period_id && $submission->role_id == $roleId)
                                         <a class="btn btn-sm btn-warning  mr-1 mb-1" href="#" data-toggle="modal" data-target="#editModal{{ $submission->id }}">
                                             <i class="fas fa-fw fa-edit"></i>
                                         </a>
@@ -167,8 +167,8 @@
                         </div>
                     </div>
                     <div class="d-flex justify-content-between text-white ">
-                        <button class="btn btn-sm btn-secondary bg-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-sm btn-primary bg-primary">Save</button>
+                        <button class="btn btn-sm bg-secondary btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-sm bg-primary btn-primary">Save</button>
                     </div>
                 </form>
             </div>

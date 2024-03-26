@@ -21,6 +21,7 @@ class SubmissionController extends Controller
         $status = request('status', NULL);
 
         $roleId = Auth::user()->strictRole->id;
+        
         $submissions = Submission::query()
             ->whereHas('ppuf', function ($query) use ($roleId) {
                 $query->where('role_id', $roleId);

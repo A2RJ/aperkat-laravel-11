@@ -36,7 +36,6 @@ Route::middleware('auth')->group(function () {
     Route::resource('ppuf', PpufController::class)->except('show');
 
     Route::prefix('submission')->controller(SubDivisionController::class)->group(function () {
-        Route::post('rab', 'rab')->name('submission.post-rab');
         Route::get('direktur-keuangan', 'dirKeuangan')->name('submission.dir-keuangan');
         Route::post('period/{submission}', 'period')->name('submission.period');
         Route::get('warek-2', 'wr2')->name('submission.wr2');

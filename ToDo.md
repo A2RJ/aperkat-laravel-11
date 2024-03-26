@@ -15,6 +15,9 @@
 [ ] Wr II
     - pengajuan semua sub divisi - untuk need approval menjadi list pencairan berdasarkan role_id dan disbursement_period_id != null
     - pilih periode lalu terima semua
+    - [ ] Tambah filter periode
+    - [ ] Filter menunggu persetujuan tampilkan semua dan saat pilih periode maka tampilkan hanya yang belum diterima dan terima yang belum diterima saja
+    - [ ] selesai dengan periode dll
 [ ] Rektor 
     - pengajuan semua sub divisi
 [ ] Pencairan

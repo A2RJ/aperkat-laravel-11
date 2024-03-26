@@ -17,13 +17,38 @@ class SubDivisionController extends Controller
 {
     public function index()
     {
+        $keyword = request('keyword', NULL);
+        $start = request('start', NULL);
+        $end = request('end', NULL);
+        $status = request('status', NULL);
+
         $roleId = Auth::user()->strictRole->id;
         $user = Auth::user();
         $subdivisionIds = collect($user->hasSubDivision())->pluck('id')->toArray();
-        $status = request('status', NULL);
+
         $submissions = Submission::with('ppuf')
             ->whereHas('ppuf', function ($query) use ($subdivisionIds) {
                 $query->whereIn('role_id', $subdivisionIds);
+            })
+            ->when($keyword, function (Builder $builder) use ($keyword) {
+                $builder->whereHas('ppuf', function (Builder $builder) use ($keyword) {
+                    $builder->whereAny([
+                        'ppuf_number',
+                        'activity_type',
+                        'program_name',
+                    ], 'LIKE', "%$keyword%");
+                })
+                    ->orWhereHas('ppuf', function (Builder $builder) use ($keyword) {
+                        $builder->whereHas('author', function (Builder $builder) use ($keyword) {
+                            $builder->where('role', 'LIKE', "%$keyword%");
+                        });
+                    });
+            })
+            ->when($start && !$end, function (Builder $builder) use ($start) {
+                $builder->whereDate('created_at', $start);
+            })
+            ->when($start && $end, function (Builder $builder) use ($start, $end) {
+                $builder->whereBetween('created_at', [$start, $end]);
             })
             ->when($status == 'done', function (Builder $query) {
                 $query->where('is_done', 1);
@@ -40,9 +65,33 @@ class SubDivisionController extends Controller
 
     public function dirKeuangan()
     {
-        $roleId = Auth::user()->strictRole->id;
+        $keyword = request('keyword', NULL);
+        $start = request('start', NULL);
+        $end = request('end', NULL);
         $status = request('status', NULL);
+
+        $roleId = Auth::user()->strictRole->id;
         $submissions = Submission::with(['ppuf', 'approval'])
+            ->when($keyword, function (Builder $builder) use ($keyword) {
+                $builder->whereHas('ppuf', function (Builder $builder) use ($keyword) {
+                    $builder->whereAny([
+                        'ppuf_number',
+                        'activity_type',
+                        'program_name',
+                    ], 'LIKE', "%$keyword%");
+                })
+                    ->orWhereHas('ppuf', function (Builder $builder) use ($keyword) {
+                        $builder->whereHas('author', function (Builder $builder) use ($keyword) {
+                            $builder->where('role', 'LIKE', "%$keyword%");
+                        });
+                    });
+            })
+            ->when($start && !$end, function (Builder $builder) use ($start) {
+                $builder->whereDate('created_at', $start);
+            })
+            ->when($start && $end, function (Builder $builder) use ($start, $end) {
+                $builder->whereBetween('created_at', [$start, $end]);
+            })
             ->when($status == 'done', function (Builder $query) {
                 $query->where('is_done', 1);
             })
@@ -56,10 +105,9 @@ class SubDivisionController extends Controller
                     ->whereNull('disbursement_period_id');
             })
             ->paginate();
-        // return $submissions;
 
         $periods = DisbursementPeriod::query()->get(['id', 'period']);
-        return view('submission.direktur-keuangan.index', compact('submissions', 'periods'));
+        return view('submission.direktur-keuangan.index', compact('submissions', 'periods', 'roleId'));
     }
 
     public function period(PeriodRequest $request, Submission $submission)
@@ -93,10 +141,35 @@ class SubDivisionController extends Controller
 
     public function wr2()
     {
-        $roleId = Auth::user()->allRoleId();
+        $keyword = request('keyword', NULL);
+        $start = request('start', NULL);
+        $end = request('end', NULL);
         $status = request('status', NULL);
         $period = request('period', NULL);
+
+        $roleId = Auth::user()->strictRole->id;
+
         $submissions = Submission::with('ppuf')
+            ->when($keyword, function (Builder $builder) use ($keyword) {
+                $builder->whereHas('ppuf', function (Builder $builder) use ($keyword) {
+                    $builder->whereAny([
+                        'ppuf_number',
+                        'activity_type',
+                        'program_name',
+                    ], 'LIKE', "%$keyword%");
+                })
+                    ->orWhereHas('ppuf', function (Builder $builder) use ($keyword) {
+                        $builder->whereHas('author', function (Builder $builder) use ($keyword) {
+                            $builder->where('role', 'LIKE', "%$keyword%");
+                        });
+                    });
+            })
+            ->when($start && !$end, function (Builder $builder) use ($start) {
+                $builder->whereDate('created_at', $start);
+            })
+            ->when($start && $end, function (Builder $builder) use ($start, $end) {
+                $builder->whereBetween('created_at', [$start, $end]);
+            })
             ->when($status == 'done', function (Builder $query) {
                 $query->where('is_done', 1);
             })
@@ -104,13 +177,13 @@ class SubDivisionController extends Controller
                 $query->where('is_done', 0);
             })
             ->when($status == 'need approve', function (Builder $query) use ($roleId) {
-                $query->whereIn('role_id', $roleId)
-                    ->whereNotNull('disbursement_period_id');
+            $query->where('role_id', $roleId);
             })
             ->when($period, function (Builder $query) use ($period) {
                 $query->where('disbursement_period_id', $period);
             })
             ->paginate();
+
         $periods = DisbursementPeriod::query()->get(['id', 'period']);
         return view('submission.wr2.index', compact('submissions', 'periods'));
     }
@@ -195,13 +268,37 @@ class SubDivisionController extends Controller
 
     public function adminLpj()
     {
+        $keyword = request('keyword', NULL);
+        $start = request('start', NULL);
+        $end = request('end', NULL);
+        $status = request('status', NULL);
+
         $roleId = Auth::user()->strictRole->id;
         $user = Auth::user();
         $subdivisionIds = collect($user->hasSubDivision())->pluck('id')->toArray();
-        $status = request('status', NULL);
         $submissions = Submission::with('ppuf')
             ->whereHas('ppuf', function ($query) use ($subdivisionIds) {
                 $query->whereIn('role_id', $subdivisionIds);
+            })
+            ->when($keyword, function (Builder $builder) use ($keyword) {
+                $builder->whereHas('ppuf', function (Builder $builder) use ($keyword) {
+                    $builder->whereAny([
+                        'ppuf_number',
+                        'activity_type',
+                        'program_name',
+                    ], 'LIKE', "%$keyword%");
+                })
+                    ->orWhereHas('ppuf', function (Builder $builder) use ($keyword) {
+                        $builder->whereHas('author', function (Builder $builder) use ($keyword) {
+                            $builder->where('role', 'LIKE', "%$keyword%");
+                        });
+                    });
+            })
+            ->when($start && !$end, function (Builder $builder) use ($start) {
+                $builder->whereDate('created_at', $start);
+            })
+            ->when($start && $end, function (Builder $builder) use ($start, $end) {
+                $builder->whereBetween('created_at', [$start, $end]);
             })
             ->when($status == 'done', function (Builder $query) {
                 $query->where('is_done', 1);
@@ -213,6 +310,7 @@ class SubDivisionController extends Controller
                 $query->where('role_id', $roleId);
             })
             ->paginate();
+
         return view('submission.direktur-keuangan-lpj.index', compact('submissions', 'roleId'));
     }
 
@@ -253,10 +351,5 @@ class SubDivisionController extends Controller
     public function downloadLpj(Submission $submission)
     {
         return response()->download(storage_path('app/public/' . $submission->report_file));
-    }
-
-    public function rab(Request $request)
-    {
-        return $request->all();
     }
 }

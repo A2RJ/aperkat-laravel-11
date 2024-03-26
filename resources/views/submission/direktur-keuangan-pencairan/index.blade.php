@@ -57,7 +57,7 @@
                                 <input class="form-control " type="date" id="end" name="end" value="{{ request('end') }}" />
                             </div>
                             <div class="col-sm ">
-                                <input class="form-control " type="text" id="keyword" name="keyword" value="{{ request('keyword') }}">
+                                <input class="form-control " type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" placeholder="Keyword">
                             </div>
                             <div class="col-sm">
                                 <button class="btn bg-primary btn-primary px-4" type="submit">Filter</button>
@@ -118,7 +118,7 @@
                                 </td>
                                 <td>
                                     <div class="d-flex">
-                                        <a class="btn btn-sm btn-info  mr-1 mb-1" href="{{ route('submission.show', $submission->id) }}">
+                                        <a class="btn btn-sm btn-info  mr-1 mb-1" href="{{ route('submission.show', $submission->id) }}" target="_blank">
                                             <i class="fas fa-fw fa-info"></i>
                                         </a>
                                         @if ($submission->role_id == $roleId)

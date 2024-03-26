@@ -14,13 +14,38 @@ class DisbursementController extends Controller
 {
     public function index()
     {
+        $keyword = request('keyword', NULL);
+        $start = request('start', NULL);
+        $end = request('end', NULL);
+        $status = request('status', NULL);
+
         $roleId = Auth::user()->strictRole->id;
         $user = Auth::user();
         $subdivisionIds = collect($user->hasSubDivision())->pluck('id')->toArray();
-        $status = request('status', NULL);
+
         $submissions = Submission::with('ppuf')
             ->whereHas('ppuf', function ($query) use ($subdivisionIds) {
                 $query->whereIn('role_id', $subdivisionIds);
+            })
+            ->when($keyword, function (Builder $builder) use ($keyword) {
+                $builder->whereHas('ppuf', function (Builder $builder) use ($keyword) {
+                    $builder->whereAny([
+                        'ppuf_number',
+                        'activity_type',
+                        'program_name',
+                    ], 'LIKE', "%$keyword%");
+                })
+                    ->orWhereHas('ppuf', function (Builder $builder) use ($keyword) {
+                        $builder->whereHas('author', function (Builder $builder) use ($keyword) {
+                            $builder->where('role', 'LIKE', "%$keyword%");
+                        });
+                    });
+            })
+            ->when($start && !$end, function (Builder $builder) use ($start) {
+                $builder->whereDate('created_at', $start);
+            })
+            ->when($start && $end, function (Builder $builder) use ($start, $end) {
+                $builder->whereBetween('created_at', [$start, $end]);
             })
             ->when($status == 'done', function (Builder $query) {
                 $query->where('is_done', 1);
