@@ -193,7 +193,7 @@ class SubDivisionController extends Controller
         try {
             $role = Auth::user()->strictRole;
             DB::transaction(function () use ($period, $role) {
-                $period->submissions()->each(function ($submission) use ($period, $role) {
+                $period->submissions()->where('role_id', '=', $role->id)->each(function ($submission) use ($period, $role) {
                     $submission->update([
                         'role_id' => $role->parent->id,
                     ]);

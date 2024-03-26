@@ -12,38 +12,15 @@
             </div>
 
             <div class="card-body p-4">
-                {{-- Munculkan pilih periode saat user pilih filter need approve dalam pilihan done, proccess dan need approve --}}
-                <div class="row ">
-                    <div class="col-6 mb-3 d-flex flex-column">
-                        <select class="w-100 border rounded selectpicker @error('period_id') is-invalid @enderror" id="period_id" name="period_id" data-live-search="true" required>
-                            <option value="">Pilih Periode</option>
-                            @foreach ($periods as $period)
-                            <option value="{{ $period->id }}">{{ $period->period }}</option>
-                            @endforeach
-                        </select>
-                        @error('period_id')
-                        <div class="invalid-feedback">
-                            {{ $message }}
-                        </div>
-                        @enderror
-                    </div>
-                    <div class="col-6 ">
-                        <button class="btn btn-sm bg-primary btn-primary " type="button">Filter</button>
-                        @if (request('period'))
-                        <form action="{{ route('submission.wr2.approve', ['period' => request('period')]) }}" method="post">
-                            @csrf
-                            <button class="btn btn-sm bg-success btn-success" type="submit">Terima pengajuan
-                                periode
-                                terpilih</button>
-                        </form>
-                        @endif
-                    </div>
-                </div>
                 @if (session()->has('success'))
                 <div class="alert alert-success">
                     {{ session()->get('success') }}.
                 </div>
                 @endif
+
+                <div id="successMessage" class="alert alert-success" style="display: none;">
+                    Pengajuan pada periode terpilih berhasil diterima. Halaman akan dimuat ulang dalam <span id="countdown"></span>.
+                </div>
 
                 @if (session()->has('failed'))
                 <div class="alert alert-danger">
@@ -86,9 +63,27 @@
                             <div class="col-sm ">
                                 <input class="form-control " type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" placeholder="Keyword">
                             </div>
+                        </div>
+
+                        <div class="row mt-2">
                             <div class="col-sm">
-                                <button class="btn bg-primary btn-primary px-4" type="submit">Filter</button>
-                                <a href="{{ url()->current() }}"><button class="btn bg-warning btn-warning px-4" type="button">Clear</button></a>
+                                <select class="w-100 border rounded selectpicker" id="period" name="period" data-live-search="true">
+                                    <option value="">Pilih Periode</option>
+                                    @foreach ($periods as $period)
+                                    <option value="{{ $period->id }}" {{ request('period') == $period->id ? 'selected' : '' }}>{{ $period->period }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @if (request('period') && request('status') == 'need approve')
+                            <div class="col-sm">
+                                <button id="approveSubmission" class="btn bg-success btn-success">Terima pengajuan</button>
+                            </div>
+                            @endif
+                            <div class="col-sm">
+                                <button class="btn bg-primary btn-primary " type="submit">Filter</button>
+                                <a href="{{ url()->current() }}"><button class="btn bg-warning btn-warning" type="button">Clear</button></a>
+                            </div>
+                            <div class="col-sm">
                             </div>
                         </div>
                     </form>
@@ -148,6 +143,47 @@
 <script type="text/javascript" charset="utf-8">
     $(function() {
         $('.selectpicker').selectpicker()
+
+        $('#approveSubmission').click(function(e) {
+            e.preventDefault();
+            var period = "{{ request('period') }}";
+
+            if (!period) {
+                return;
+            }
+
+            $.ajax({
+                url: "{{ route('submission.wr2.approve', ['period' => ':period']) }}".replace(':period', period),
+                type: "POST",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(response) {
+                    $('#successMessage').show();
+
+                    var secondsLeft = 5; // Set countdown awal 5 detik
+                    updateCountdown(secondsLeft); // Tampilkan countdown awal
+
+                    // Jalankan countdown
+                    var countdownInterval = setInterval(function() {
+                        secondsLeft--; // Kurangi detik yang tersisa
+                        updateCountdown(secondsLeft); // Tampilkan countdown yang diperbarui
+
+                        // Jika waktu countdown habis, reload halaman
+                        if (secondsLeft <= 0) {
+                            clearInterval(countdownInterval); // Hentikan countdown
+                            location.reload(); // Reload halaman
+                        }
+                    }, 1000);
+                },
+                error: (xhr, status, error) => console.error(error)
+            });
+        });
+
+        function updateCountdown(seconds) {
+            // Tampilkan countdown di elemen dengan id "countdown"
+            document.getElementById("countdown").innerHTML = seconds + " detik";
+        }
     });
 </script>
 @endsection
