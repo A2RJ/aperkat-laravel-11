@@ -33,14 +33,15 @@ Route::middleware('auth')->group(function () {
         Route::post('import', 'import')->name('ppuf.post-import');
         Route::get('export', 'export')->name('ppuf.export');
     })->middleware('wr2');
-    Route::resource('ppuf', PpufController::class)->except('show')->middleware('wr2');
+    Route::resource('ppuf', PpufController::class)->only('index');
+    Route::resource('ppuf', PpufController::class)->except('index', 'show')->middleware('wr2');
 
     Route::prefix('submission')->controller(SubDivisionController::class)->group(function () {
         Route::middleware('dir-keuangan')->group(function () {
             Route::get('direktur-keuangan', 'dirKeuangan')->name('submission.dir-keuangan');
             Route::post('period/{submission}', 'period')->name('submission.period');
         });
-        Route::middleware('dir-keuangan')->group(function () {
+        Route::middleware('wr2')->group(function () {
             Route::get('warek-2', 'wr2')->name('submission.wr2');
             Route::post('warek-2-approve/{period}', 'wr2Approve')->name('submission.wr2.approve');
         });

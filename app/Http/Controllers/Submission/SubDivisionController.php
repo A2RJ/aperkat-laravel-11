@@ -118,7 +118,8 @@ class SubDivisionController extends Controller
             if ($approvalBudget > $budget) {
                 return redirect()
                     ->route('submission.dir-keuangan')
-                    ->with('failed', 'RAB disetujui tidak boleh lebih besar dari RAB diajukan');
+                ->with('failed', 'RAB disetujui tidak boleh lebih besar dari RAB diajukan')
+                ->withInput();
             }
             $period = DisbursementPeriod::query()->where('id', $request->period_id)->first();
             DB::transaction(function () use ($request, $submission, $period) {

@@ -92,6 +92,8 @@ class Submission extends Model
         'is_done'
     ];
 
+    protected $appends = ['can_edit'];
+
     protected $casts = [
         'budget_detail' => 'array',
     ];
@@ -101,6 +103,11 @@ class Submission extends Model
         return Attribute::make(
             get: fn (string $value) => money($value, 'IDR', true),
         );
+    }
+
+    public function getCanEditAttribute()
+    {
+        return;
     }
 
     public function approval()

@@ -89,10 +89,12 @@
                                             <i class="fas fa-fw fa-info"></i>
                                         </a>
 
-                                        @if (in_array($submission->ppuf->author->id, Auth::user()->allRoleId()))
+                                        @if ($submission->ppuf->author->id == Auth::user()->strictRole->id)
+                                        @if ($submission->status->last()->status == 0)
                                         <a class="btn btn-sm btn-success mr-1 mb-1" href="{{ route('submission.edit', $submission->id) }}" target="_blank">
                                             <i class="fas fa-fw fa-edit"></i>
                                         </a>
+                                        @endif
                                         <form action="{{ route('submission.destroy', $submission->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')

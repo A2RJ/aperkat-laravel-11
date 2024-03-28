@@ -21,7 +21,7 @@ class SubmissionController extends Controller
         $status = request('status', NULL);
 
         $roleId = Auth::user()->strictRole->id;
-        
+
         $submissions = Submission::query()
             ->whereHas('ppuf', function ($query) use ($roleId) {
                 $query->where('role_id', $roleId);
@@ -56,6 +56,7 @@ class SubmissionController extends Controller
                 $query->whereNot('role_id',  $roleId)->where('is_done', 0);
             })
             ->paginate();
+
         return view('submission.index', compact('submissions'));
     }
 
@@ -69,6 +70,7 @@ class SubmissionController extends Controller
         }
         $ppufs = Ppuf::query()
             ->where('role_id', $user->id)
+            ->whereDoesntHave('submissions')
             ->select(['id', 'program_name', 'ppuf_number', 'budget', 'activity_type'])
             ->get();
         $ikus = Ppuf::iku();
@@ -96,6 +98,16 @@ class SubmissionController extends Controller
             $total = collect($request->rab)->sum(function ($item) {
                 return $item['qty'] * $item['harga_satuan'];
             });
+            $total = preg_replace("/[^0-9]/", "", $total);
+            $rab = preg_replace("/[^0-9]/", "", $ppuf->budget);
+
+            if ($total > $rab) {
+                return redirect()
+                    ->route('submission.create')
+                    ->with('failed', 'Jumlah RAB melebihi RAB pada PPUF ' . $ppuf->ppuf_number . ' yakni ' . $ppuf->budget)
+                    ->withInput();
+            }
+
             $form = array_merge(
                 $form,
                 [
@@ -175,10 +187,9 @@ class SubmissionController extends Controller
 
     public function edit(Submission $submission)
     {
-        $ppufs = Ppuf::query()->get(['id', 'program_name', 'ppuf_number', 'budget', 'activity_type']);
         $ikus = Ppuf::iku();
         $activity_dates = Ppuf::$activity_dates;
-        return view('submission.edit', compact('submission', 'ppufs', 'ikus', 'activity_dates'));
+        return view('submission.edit', compact('submission', 'ikus', 'activity_dates'));
     }
 
     public function update(SubmissionRequest $request, Submission $submission)
@@ -199,9 +210,35 @@ class SubmissionController extends Controller
         $total = collect($request->rab)->sum(function ($item) {
             return $item['qty'] * $item['harga_satuan'];
         });
-        $submission->update(
-            array_merge($form, ['budget' => $total, 'budget_detail' => $request->rab])
-        );
+        $total = preg_replace("/[^0-9]/", "", $total);
+        $rab = preg_replace("/[^0-9]/", "", $submission->ppuf->budget);
+
+        if ($total > $rab) {
+            return redirect()
+                ->route('submission.edit', ['submission' => $submission->id])
+                ->with('failed', 'Jumlah RAB melebihi RAB pada PPUF ' . $submission->ppuf->ppuf_number . ' yakni ' . $submission->ppuf->budget)
+                ->withInput();
+        }
+
+        // $next_id = 0;
+        // if ($submission->status->count() == 1) {
+        //     $next_id = Auth::user()->strictRole->id;
+        // } else {
+        //     $next_id = $submission->status->last()->role_id;
+        // }
+        DB::transaction(function () use ($submission, $total, $request, $form) {
+            $submission->update(
+                array_merge(
+                    $form,
+                    ['budget' => $total, 'budget_detail' => $request->rab]
+                )
+            );
+            $submission->status()->create([
+                'role_id' => $submission->ppuf->role_id,
+                'status' => true,
+                'message' => 'Telah direvisi',
+            ]);
+        });
         return redirect()->route('submission.index')->with('success', 'Berhasil mengubah pengajuan');
     }
 
