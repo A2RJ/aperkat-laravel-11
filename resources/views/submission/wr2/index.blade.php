@@ -111,6 +111,13 @@
                             <tr>
                                 <th scope="row">{{ $loop->iteration + $submissions->firstItem() - 1 }}</th>
                                 <td>{{ $submission->ppuf->author->role }}</td>
+                                <td class="{{$submission->status->last()->status ? 'text-success ': 'text-warning ' }}">
+                                    @if ($submission->status->last()->message == 'LPJ Kegiatan telah disetujui')
+                                    Selesai
+                                    @else
+                                    {{ $submission->status->last()->role->role }}: {{ substr($submission->status->last()->message, 0, 10) }}...
+                                    @endif
+                                </td>
                                 <td>{{ $submission->ppuf->ppuf_number }}</td>
                                 <td>{{ $submission->ppuf->program_name }}</td>
                                 <td>{{ $submission->background }}</td>

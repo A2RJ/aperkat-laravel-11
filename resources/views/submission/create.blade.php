@@ -252,6 +252,87 @@
         </div>
     </div>
 </div>
+<script>
+    function calculateTotal(index) {
+        var qty = parseFloat(document.querySelector('.rab-' + index + ' input[name="rab[' + index + '][qty]"]').value);
+        var hargaSatuan = parseFloat(document.querySelector('.rab-' + index + ' input[name="rab[' + index +
+            '][harga_satuan]"]').value);
+        var total = qty * hargaSatuan;
+        console.log(total);
+        if (!isNaN(total)) {
+            document.querySelector('.rab-' + index + ' input[name="rab[' + index + '][total]"]').value = total;
+            updateRabInput();
+        }
+    }
+
+
+    function updateRabInput() {
+        var totalRab = 0;
+        var rabs = document.querySelectorAll('.rab');
+        rabs.forEach(function(rab, index) {
+            var qty = parseFloat(rab.querySelector('input[name="rab[' + index + '][qty]"]').value);
+            var hargaSatuan = parseFloat(rab.querySelector('input[name="rab[' + index + '][harga_satuan]"]')
+                .value);
+            var total = qty * hargaSatuan;
+            if (!isNaN(total)) {
+                totalRab += total;
+            }
+        });
+        document.getElementById('totalRab').value = formatRupiah(totalRab); // Menyimpan total dengan dua angka desimal
+    }
+
+
+    function addRab() {
+        var rabsContainer = document.getElementById('rabs-container');
+        var index = rabsContainer.querySelectorAll('.rab').length;
+        var newRow = document.createElement('div');
+        newRow.classList.add('row', 'mb-1', 'rab-' + index, 'rab');
+        newRow.innerHTML = `
+            <div class="col-sm mb-1">
+                <input type="text" class="form-control" name="rab[${index}][item]" placeholder="Item">
+            </div>
+            <div class="col-sm mb-1">
+                <input type="number" class="form-control" name="rab[${index}][qty]" placeholder="Qty" oninput="calculateTotal(${index})">
+            </div>
+            <div class="col-sm mb-1">
+                <input type="number" class="form-control" name="rab[${index}][harga_satuan]" placeholder="Harga Satuan" oninput="calculateTotal(${index})">
+            </div>
+            <div class="col-sm mb-1">
+                <input type="number" class="form-control" name="rab[${index}][total]" placeholder="Total" readonly>
+            </div>
+            <div class="col-sm mb-1">
+                <input type="text" class="form-control" name="rab[${index}][detail]" placeholder="Detail">
+            </div>
+            <div class="col-sm mb-1">
+                <button class="btn bg-danger btn-danger" type="button" onclick="removeRab(${index})">Remove</button>
+            </div>
+        `;
+        rabsContainer.appendChild(newRow);
+    }
+
+    function removeRab(index) {
+        var rabsContainer = document.getElementById('rabs-container');
+        var rabToRemove = document.querySelector('.rab-' + index);
+        rabsContainer.removeChild(rabToRemove);
+        updateRabInput(); // Memanggil fungsi updateRabInput() setelah menghapus baris RAB
+    }
+
+    function formatRupiah(angka, prefix = 'Rp. ') {
+        var number_string = angka.toString().replace(/[^0-9]/g, '');
+        var split = number_string.split(',');
+        var sisa = split[0].length % 3;
+        var rupiah = split[0].substr(0, sisa);
+        var ribuan = split[0].substr(sisa).match(/\d{3}/g);
+
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+    }
+</script>
 @endsection
 
 @section('scriptjs')
@@ -314,86 +395,6 @@
             }
         };
         optional()
-
-        function calculateTotal(index) {
-            var qty = parseFloat(document.querySelector('.rab-' + index + ' input[name="rab[' + index + '][qty]"]').value);
-            var hargaSatuan = parseFloat(document.querySelector('.rab-' + index + ' input[name="rab[' + index +
-                '][harga_satuan]"]').value);
-            var total = qty * hargaSatuan;
-            console.log(total);
-            if (!isNaN(total)) {
-                document.querySelector('.rab-' + index + ' input[name="rab[' + index + '][total]"]').value = total;
-                updateRabInput();
-            }
-        }
-
-
-        function updateRabInput() {
-            var totalRab = 0;
-            var rabs = document.querySelectorAll('.rab');
-            rabs.forEach(function(rab, index) {
-                var qty = parseFloat(rab.querySelector('input[name="rab[' + index + '][qty]"]').value);
-                var hargaSatuan = parseFloat(rab.querySelector('input[name="rab[' + index + '][harga_satuan]"]')
-                    .value);
-                var total = qty * hargaSatuan;
-                if (!isNaN(total)) {
-                    totalRab += total;
-                }
-            });
-            document.getElementById('totalRab').value = formatRupiah(totalRab); // Menyimpan total dengan dua angka desimal
-        }
-
-
-        function addRab() {
-            var rabsContainer = document.getElementById('rabs-container');
-            var index = rabsContainer.querySelectorAll('.rab').length;
-            var newRow = document.createElement('div');
-            newRow.classList.add('row', 'mb-1', 'rab-' + index, 'rab');
-            newRow.innerHTML = `
-            <div class="col-sm mb-1">
-                <input type="text" class="form-control" name="rab[${index}][item]" placeholder="Item">
-            </div>
-            <div class="col-sm mb-1">
-                <input type="number" class="form-control" name="rab[${index}][qty]" placeholder="Qty" oninput="calculateTotal(${index})">
-            </div>
-            <div class="col-sm mb-1">
-                <input type="number" class="form-control" name="rab[${index}][harga_satuan]" placeholder="Harga Satuan" oninput="calculateTotal(${index})">
-            </div>
-            <div class="col-sm mb-1">
-                <input type="number" class="form-control" name="rab[${index}][total]" placeholder="Total" readonly>
-            </div>
-            <div class="col-sm mb-1">
-                <input type="text" class="form-control" name="rab[${index}][detail]" placeholder="Detail">
-            </div>
-            <div class="col-sm mb-1">
-                <button class="btn bg-danger btn-danger" type="button" onclick="removeRab(${index})">Remove</button>
-            </div>
-        `;
-            rabsContainer.appendChild(newRow);
-        }
-
-        function removeRab(index) {
-            var rabsContainer = document.getElementById('rabs-container');
-            var rabToRemove = document.querySelector('.rab-' + index);
-            rabsContainer.removeChild(rabToRemove);
-            updateRabInput(); // Memanggil fungsi updateRabInput() setelah menghapus baris RAB
-        }
-
-        function formatRupiah(angka, prefix = 'Rp. ') {
-            var number_string = angka.toString().replace(/[^0-9]/g, '');
-            var split = number_string.split(',');
-            var sisa = split[0].length % 3;
-            var rupiah = split[0].substr(0, sisa);
-            var ribuan = split[0].substr(sisa).match(/\d{3}/g);
-
-            if (ribuan) {
-                separator = sisa ? '.' : '';
-                rupiah += separator + ribuan.join('.');
-            }
-
-            rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-            return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-        }
     });
 </script>
 @endsection

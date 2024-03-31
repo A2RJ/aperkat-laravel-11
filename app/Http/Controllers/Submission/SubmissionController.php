@@ -203,7 +203,6 @@ class SubmissionController extends Controller
     public function update(SubmissionRequest $request, Submission $submission)
     {
         $form = $request->safe()->only([
-            'ppuf_id',
             'iku1_id',
             'iku2_id',
             'iku3_id',
@@ -224,7 +223,7 @@ class SubmissionController extends Controller
         if ($total > $rab) {
             return redirect()
                 ->route('submission.edit', ['submission' => $submission->id])
-                ->with('failed', 'Jumlah RAB melebihi RAB pada PPUF ' . $submission->ppuf->ppuf_number . ' yakni ' . $submission->ppuf->budget)
+                ->with('failed', 'Jumlah RAB melebihi RAB pada PPUF ' . $submission->ppuf->ppuf_number . ' sebesar ' . $submission->ppuf->budget)
                 ->withInput();
         }
 
