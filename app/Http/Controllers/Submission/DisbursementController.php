@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Submission;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Submission\UploadDisbursementRequest;
+use App\Mail\SendStatus;
 use App\Models\Disbursement;
 use App\Models\Submission;
 use Auth;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
+use Mail;
 
 class DisbursementController extends Controller
 {
@@ -77,12 +79,18 @@ class DisbursementController extends Controller
                     'budget' => $request->budget,
                     'filename' => $path
                 ]);
-
+                $message = 'Telah dilakukan pencairan dengan nominal ' . $request->budget;
                 $submission->status()->create([
                     'role_id' => $role->id,
                     'status' => false,
-                    'message' => 'Telah dilakukan pencairan dengan nominal ' . $request->budget,
+                    'message' => $message,
                 ]);
+
+                $ppuf = $submission->ppuf;
+                if ($ppuf->author->user) {
+                    $message = $role->role . ": $message";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                }
             });
 
             return redirect()->back()->with('success', 'Berhasil upload pencairan');
@@ -102,12 +110,18 @@ class DisbursementController extends Controller
                     'role_id' => $role->parent->id,
                     'is_disbursement_complete' => true
                 ]);
-
+                $message = 'Pencairan selesai, mohon segera upload LPJ kegiatan pada halaman detail pengajuan';
                 $submission->status()->create([
                     'role_id' => $role->id,
                     'status' => true,
-                    'message' => 'Pencairan selesai, mohon segera upload LPJ kegiatan pada form aksi',
+                    'message' => $message,
                 ]);
+
+                $ppuf = $submission->ppuf;
+                if ($ppuf->author->user) {
+                    $message = $role->role . ": $message";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                }
             });
 
             return redirect()->back()->with('success', 'Berhasil upload pencairan');

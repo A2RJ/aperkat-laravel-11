@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Submission\ActionLpjRequest;
 use App\Http\Requests\Submission\PeriodRequest;
 use App\Http\Requests\Submission\UploadLpjRequest;
+use App\Mail\SendStatus;
 use App\Models\DisbursementPeriod;
 use App\Models\Submission;
 use Auth;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Mail;
 
 class SubDivisionController extends Controller
 {
@@ -128,11 +130,19 @@ class SubDivisionController extends Controller
                     'disbursement_period_id' => $request->period_id,
                     'role_id' => 5
                 ]);
+                $message = 'Telah disetujui untuk pencairan ' . $period->period;
                 $submission->status()->create([
                     'role_id' => 6,
                     'status' => true,
-                    'message' => 'Telah disetujui untuk pencairan ' . $period->period,
+                    'message' => $message,
                 ]);
+
+                $role = Auth::user()->strictRole;
+                $ppuf = $submission->ppuf;
+                if ($ppuf->author->user) {
+                    $message = $role->role . ": $message";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                }
             });
             return redirect()->route('submission.dir-keuangan')->with('success', 'Berhasil menambahkan pengajuan ke periode tersebut');
         } catch (\Throwable $th) {
@@ -198,11 +208,18 @@ class SubDivisionController extends Controller
                     $submission->update([
                         'role_id' => $role->parent->id,
                     ]);
+                    $message = 'Telah disetujui untuk pencairan ' . $period->period;
                     $submission->status()->create([
                         'role_id' => $role->id,
                         'status' => true,
-                        'message' => 'Telah disetujui untuk pencairan ' . $period->period,
+                        'message' => $message,
                     ]);
+
+                    $ppuf = $submission->ppuf;
+                    if ($ppuf->author->user) {
+                        $message = $role->role . ": $message";
+                        Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                    }
                 });
             });
             return redirect()->route('submission.wr2')->with('success', 'Berhasil menerima pengajuan dengan periode ' . $period->period);
@@ -219,11 +236,18 @@ class SubDivisionController extends Controller
         $role = Auth::user()->strictRole;
         if ($action == 'revisi') {
             DB::transaction(function () use ($submission, $role, $note) {
+                $message = 'Mohon direvisi: ' . $note;
                 $submission->status()->create([
                     'role_id' => $role->id,
                     'status' => false,
-                    'message' => 'Mohon direvisi: ' . $note,
+                    'message' => $message,
                 ]);
+
+                $ppuf = $submission->ppuf;
+                if ($ppuf->author->user) {
+                    $message = $role->role . ": $message";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                }
             });
             return back()->with('failed', "Berhasil $action pengajuan");
         } elseif ($action == 'terima') {
@@ -231,11 +255,18 @@ class SubDivisionController extends Controller
                 $submission->update([
                     'role_id' => $role->parent->id,
                 ]);
+                $message = 'Telah disetujui: ' . $note;
                 $submission->status()->create([
                     'role_id' => $role->id,
                     'status' => true,
-                    'message' => 'Telah disetujui: ' . $note,
+                    'message' => $message,
                 ]);
+
+                $ppuf = $submission->ppuf;
+                if ($ppuf->author->user) {
+                    $message = $role->role . ": $message";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                }
             });
             return back()->with('success', "Berhasil $action pengajuan");
         }
@@ -253,12 +284,18 @@ class SubDivisionController extends Controller
                     'role_id' => 2,
                     'report_file' => $path,
                 ]);
-
+                $message = 'LPJ Kegiatan telah diupload';
                 $submission->status()->create([
                     'role_id' => $role->id,
                     'status' => true,
-                    'message' => 'LPJ Kegiatan telah diupload',
+                    'message' => $message,
                 ]);
+
+                $ppuf = $submission->ppuf;
+                if ($ppuf->author->user) {
+                    $message = $role->role . ": $message";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                }
             });
 
             return redirect()->back()->with('success', 'Berhasil upload pencairan');
@@ -323,11 +360,18 @@ class SubDivisionController extends Controller
         $role = Auth::user()->strictRole;
         if ($action == 'revisi') {
             DB::transaction(function () use ($submission, $role, $note) {
+                $message = 'Mohon direvisi: ' . $note;
                 $submission->status()->create([
                     'role_id' => $role->id,
                     'status' => false,
-                    'message' => 'Mohon direvisi: ' . $note,
+                    'message' => $message,
                 ]);
+
+                $ppuf = $submission->ppuf;
+                if ($ppuf->author->user) {
+                    $message = $role->role . ": $message";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                }
             });
             return back()->with('failed', "Berhasil meminta untuk revisi pengajuan");
         } elseif ($action == 'terima') {
@@ -337,12 +381,18 @@ class SubDivisionController extends Controller
                     'role_id' => $role->parent->id,
                     'is_done' => true,
                 ]);
-
+                $message = 'LPJ Kegiatan telah disetujui';
                 $submission->status()->create([
                     'role_id' => $role->id,
                     'status' => true,
-                    'message' => 'LPJ Kegiatan telah disetujui',
+                    'message' => $message,
                 ]);
+
+                $ppuf = $submission->ppuf;
+                if ($ppuf->author->user) {
+                    $message = $role->role . ": $message";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                }
             });
 
             return back()->with('success', 'Berhasil terima LPJ kegiatan');

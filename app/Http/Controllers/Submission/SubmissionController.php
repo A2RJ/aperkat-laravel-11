@@ -65,7 +65,6 @@ class SubmissionController extends Controller
     public function create()
     {
         $user = Auth::user()->strictRole;
-        Mail::to(Auth::user()->email)->send(new SendStatus('Random banget'));
         if (!$user->parent) {
             return redirect()
                 ->route('submission.index')
@@ -121,11 +120,18 @@ class SubmissionController extends Controller
             );
             DB::transaction(function () use ($form, $ppuf) {
                 $submission = Submission::create($form);
+                $message = 'Telah diajukan';
                 $submission->status()->create([
                     'role_id' => $ppuf->role_id,
                     'status' => true,
-                    'message' => 'Telah diajukan',
+                    'message' => $message,
                 ]);
+
+                $ppuf = $submission->ppuf;
+                if ($ppuf->author->user) {
+                    $message = $ppuf->author->role . ": $message";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                }
             });
             return redirect()->route('submission.index')->with('success', 'Berhasil menambahkan pengajuan');
         } catch (\Throwable $th) {
@@ -222,12 +228,6 @@ class SubmissionController extends Controller
                 ->withInput();
         }
 
-        // $next_id = 0;
-        // if ($submission->status->count() == 1) {
-        //     $next_id = Auth::user()->strictRole->id;
-        // } else {
-        //     $next_id = $submission->status->last()->role_id;
-        // }
         DB::transaction(function () use ($submission, $total, $request, $form) {
             $submission->update(
                 array_merge(
@@ -235,11 +235,18 @@ class SubmissionController extends Controller
                     ['budget' => $total, 'budget_detail' => $request->rab]
                 )
             );
+            $message = 'Telah direvisi';
             $submission->status()->create([
                 'role_id' => $submission->ppuf->role_id,
                 'status' => true,
-                'message' => 'Telah direvisi',
+                'message' => $message,
             ]);
+
+            $ppuf = $submission->ppuf;
+            if ($ppuf->author->user) {
+                $message = $ppuf->author->role . ": $message";
+                Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+            }
         });
         return redirect()->route('submission.index')->with('success', 'Berhasil mengubah pengajuan');
     }

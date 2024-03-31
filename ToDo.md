@@ -5,9 +5,9 @@
     - ubah dan tampilkan RAB
     - tambah detail rab yang disetujui di table dan form
     - aksi edit saat direvisi oleh atasan
-    - [ ] status pengajuan pada table
+    - status pengajuan pada table
     - validasi require if pada form pengajuan form pengajuan
-    - [ ] ubah message pada pesan history pengajuan
+    - ubah message pada pesan history pengajuan
 [ ] Atasan
     - ppuf semua sub divisi
     - pengajuan semua sub divisi
@@ -31,3 +31,4 @@
     - pengajuan semua sub divisi
     - terima dan revisi lpj
     
+Mail::to(Auth::user()->email)->send(new SendStatus('Random banget'));
