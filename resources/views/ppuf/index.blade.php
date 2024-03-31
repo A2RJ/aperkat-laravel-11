@@ -48,6 +48,7 @@
                                 <th scope="col">Unit Kerja</th>
                                 <th scope="col">Unit Pengaju</th>
                                 <th scope="col">Nomor PPUF</th>
+                                <th scope="col">Status Pengajuan</th>
                                 <th scope="col">Jenis Program</th>
                                 <th scope="col">Nama Program</th>
                                 <th scope="col">Tempat & Waktu</th>
@@ -62,6 +63,7 @@
                                 <td>{{ $ppuf->author->parent?->role }}</td>
                                 <td>{{ $ppuf->author->role }}</td>
                                 <td>{{ $ppuf->ppuf_number }}</td>
+                                <td class="{{$ppuf->submissions->count() ? 'text-success ': 'text-warning ' }}">{{ $ppuf->submissions->count() ? 'Telah Diajukan' : 'Belum Diajukan' }}</td>
                                 <td>{{ ucfirst($ppuf->activity_type) }}</td>
                                 <td>{{ $ppuf->program_name }}</td>
                                 <td>{{ $ppuf->place }}, {{ $ppuf->date }}</td>

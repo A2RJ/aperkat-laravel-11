@@ -104,7 +104,7 @@
                         <div class="col-12 d-flex justify-content-end">
                             <input id="actionInput" type="hidden" name="action" value="">
                             <button id="revisiButton" type="button" class="btn btn-sm bg-danger btn-danger mr-2">Revisi</button>
-                            <button id="terimaButton" type="button" class="btn btn-sm bg-primary btn-primary">Terima Pengajuan</button>
+                            <button id="terimaButton" type="button" class="btn btn-sm bg-primary btn-primary {{ auth()->user()->dirKeuangan() ? 'd-none' : '' }}">Terima Pengajuan</button>
                         </div>
                     </div>
                 </form>
@@ -279,7 +279,7 @@
                                 <div class="col-12 d-flex justify-content-end">
                                     <input id="actionInput" type="hidden" name="action" value="">
                                     <button id="revisiButton" type="button" class="btn btn-sm bg-danger btn-danger mr-2">Revisi</button>
-                                    <button id="terimaButton" type="button" class="btn btn-sm bg-primary btn-primary">Terima Pengajuan</button>
+                                    <button id="terimaButton" type="button" class="btn btn-sm bg-primary btn-primary {{ auth()->user()->dirKeuangan() ? 'd-none' : '' }}">Terima Pengajuan</button>
                                 </div>
                             </div>
                     </div>
@@ -364,7 +364,7 @@
                                 <div class="tw-absolute tw-w-3 tw-h-3 tw-bg-gray-200 tw-rounded-full tw-mt-1.5 tw--start-1.5 tw-border tw-border-white ">
                                 </div>
                                 <time class="tw-mb-1 tw-text-sm tw-font-normal tw-leading-none tw-text-gray-400 ">{{ $status->created_at }}</time>
-                                <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 ">
+                                <h3 class="tw-text-lg tw-font-semibold tw-text-gray-900 {{ $status->status ? 'text-success ': 'text-warning ' }}">
                                     {{ $status->role->role }}
                                 </h3>
                                 <p class="tw-mb-4 tw-text-base tw-font-normal tw-text-gray-500">

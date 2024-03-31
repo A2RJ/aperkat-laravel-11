@@ -4,8 +4,10 @@
     - ubah pengajuan saat direvisi dengan cara ambil semua status dan check status terakhir, jika status.status = false maka tombol ubah tampil
     - ubah dan tampilkan RAB
     - tambah detail rab yang disetujui di table dan form
+    - aksi edit saat direvisi oleh atasan
     - [ ] status pengajuan pada table
-    - [ ] aksi edit saat direvisi oleh atasan
+    - validasi require if pada form pengajuan form pengajuan
+    - [ ] ubah message pada pesan history pengajuan
 [ ] Atasan
     - ppuf semua sub divisi
     - pengajuan semua sub divisi

@@ -4,12 +4,14 @@ namespace App\Http\Controllers\Submission;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Submission\SubmissionRequest;
+use App\Mail\SendStatus;
 use App\Models\Ppuf;
 use App\Models\Role;
 use App\Models\Submission;
 use Auth;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
+use Mail;
 
 class SubmissionController extends Controller
 {
@@ -63,6 +65,7 @@ class SubmissionController extends Controller
     public function create()
     {
         $user = Auth::user()->strictRole;
+        Mail::to(Auth::user()->email)->send(new SendStatus('Random banget'));
         if (!$user->parent) {
             return redirect()
                 ->route('submission.index')
@@ -151,7 +154,7 @@ class SubmissionController extends Controller
         $author = $role_id == $user->strictRole->id;
         $statusesCount = count($statuses);
 
-        if ($user && $statusesCount > 0) {
+        if ($statusesCount > 0) {
             $filteredIndex = $statuses->search(function ($item) use ($user) {
                 return isset($item['user_id']) && $item['user_id'] === $user->id;
             });
@@ -169,7 +172,6 @@ class SubmissionController extends Controller
                             $statuses[$previousStatusIndex]['status']['status'];
 
                         if (
-                            !$user->dirKeuangan() &&
                             !$user->wr2() &&
                             !$user->dirKeuanganLpj() &&
                             !$user->dirKeuanganPencairan() &&

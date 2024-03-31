@@ -44,12 +44,12 @@ return new class extends Migration
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
             $table->string('background');
-            $table->string('speaker');
-            $table->string('participant');
+            $table->string('speaker')->nullable();
+            $table->string('participant')->nullable();
+            $table->string('rundown')->nullable();
             $table->string('place');
             $table->string('date');
-            $table->string('rundown');
-            $table->string('vendor');
+            $table->string('vendor')->nullable();
             $table->string('budget');
             $table->jsonb('budget_detail');
             $table->string('approved_budget')->nullable()->default(0);

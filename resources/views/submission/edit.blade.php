@@ -337,6 +337,44 @@
                 inputToDisable.disabled = false;
             }
         }
+
+
+        document.getElementById("activity_type").onchange = optional
+
+        function optional() {
+            var selectBox = document.getElementById("activity_type");
+            var selectedText = selectBox.options[selectBox.selectedIndex].textContent;
+            selectedText = selectedText.replace(/\s/g, '');
+
+            var textareaPeserta = document.getElementById("participant");
+            if (selectedText !== 'Program') {
+                textareaPeserta.setAttribute('disabled', 'disabled');
+            } else {
+                textareaPeserta.removeAttribute('disabled');
+            }
+
+            var speaker = document.getElementById("speaker");
+            if (selectedText !== 'Program') {
+                speaker.setAttribute('disabled', 'disabled');
+            } else {
+                speaker.removeAttribute('disabled');
+            }
+
+            var rundown = document.getElementById("rundown");
+            if (selectedText !== 'Program') {
+                rundown.setAttribute('disabled', 'disabled');
+            } else {
+                rundown.removeAttribute('disabled');
+            }
+
+            var rundown = document.getElementById("vendor");
+            if (selectedText === 'Program') {
+                rundown.setAttribute('disabled', 'disabled');
+            } else {
+                rundown.removeAttribute('disabled');
+            }
+        };
+        optional()
     });
 </script>
 @endsection

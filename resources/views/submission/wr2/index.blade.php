@@ -95,6 +95,7 @@
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">Unit Pengaju</th>
+                                <th scope="col">Status Pengajuan</th>
                                 <th scope="col">Nomor PPUF</th>
                                 <th scope="col">Nama Kegiatan</th>
                                 <th scope="col">Latar Belakang</th>
