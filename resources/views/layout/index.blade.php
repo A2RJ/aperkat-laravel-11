@@ -52,6 +52,7 @@ $role = auth()->user();
             <!-- Divider -->
             <hr class="sidebar-divider">
 
+            @if (auth()->user()->strictRole)
             @if ($role->superAdmin())
             @include('layout.super-admin')
             @elseif ($role->wr2())
@@ -64,6 +65,7 @@ $role = auth()->user();
             @include('layout.keuangan-lpj')
             @else
             @include('layout.user')
+            @endif
             @endif
 
             <!-- Divider -->
