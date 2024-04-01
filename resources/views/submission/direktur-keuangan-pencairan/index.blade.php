@@ -91,7 +91,7 @@
                                 <th scope="row">{{ $loop->iteration + $submissions->firstItem() - 1 }}</th>
                                 <td>{{ $submission->ppuf->author->role }}</td>
                                 <td class="{{$submission->status->last()->status ? 'text-success ': 'text-warning ' }}">
-                                    @if ($submission->status->last()->message == 'LPJ Kegiatan telah disetujui')
+                                    @if ($submission->status->last()->message == 'LPJ telah disetujui')
                                     Selesai
                                     @else
                                     {{ $submission->status->last()->role->role }}: {{ substr($submission->status->last()->message, 0, 10) }}...

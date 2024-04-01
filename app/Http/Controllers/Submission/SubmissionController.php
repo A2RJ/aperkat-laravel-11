@@ -64,14 +64,29 @@ class SubmissionController extends Controller
 
     public function create()
     {
-        $user = Auth::user()->strictRole;
-        if (!$user->parent) {
+        $role = Auth::user()->strictRole;
+        if (!$role->parent) {
             return redirect()
                 ->route('submission.index')
                 ->with('failed', 'Anda tidak memiliki struktur organisasi, segera hubungi admin');
         }
+        $count = Submission::query()
+            ->whereHas('ppuf', function (Builder $query) use ($role) {
+                $query->where('role_id', $role->id);
+            })
+            ->whereNotNull('is_disbursement_complete')
+            ->whereNull('is_done')
+            ->whereDoesntHave('status', function (Builder $query) {
+                $query->where('message', 'LPJ telah disetujui');
+            })
+            ->count();
+        if ($count >= 2) {
+            return redirect()
+                ->route('submission.index')
+                ->with('failed', 'Anda tidak dapat melakukan pengajuan, segera lengkapi LPJ anda');
+        }
         $ppufs = Ppuf::query()
-            ->where('role_id', $user->id)
+            ->where('role_id', $role->id)
             ->whereDoesntHave('submissions')
             ->select(['id', 'program_name', 'ppuf_number', 'budget', 'activity_type'])
             ->get();

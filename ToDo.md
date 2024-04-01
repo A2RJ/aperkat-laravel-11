@@ -7,7 +7,9 @@
     - aksi edit saat direvisi oleh atasan
     - status pengajuan pada table
     - validasi require if pada form pengajuan form pengajuan
-    - ubah message pada pesan history pengajuan
+    - ubah message pada pesan history 
+    - [ ] validasi jika sudah 2 belum lakukan LPJ maka tidak bisa input pengajuan
+    - [ ] add cc into email notification
 [ ] Atasan
     - ppuf semua sub divisi
     - pengajuan semua sub divisi

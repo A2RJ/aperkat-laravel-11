@@ -381,7 +381,7 @@ class SubDivisionController extends Controller
                     'role_id' => $role->parent->id,
                     'is_done' => true,
                 ]);
-                $message = 'LPJ Kegiatan telah disetujui';
+                $message = 'LPJ telah disetujui';
                 $submission->status()->create([
                     'role_id' => $role->id,
                     'status' => true,

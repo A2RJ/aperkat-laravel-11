@@ -332,20 +332,11 @@
                                 {{ $submission->ppuf->author->role }}
                             </a>
                             @endif
-                        </div>
-                        <div>
-                            <h3>Pencairan:</h3>
-                            <ul class="tw-list-disc ml-3 ">
-                                @foreach ($submission->disbursements as $disbursement)
-                                <li>
-                                    <u>
-                                        <a href="{{ route('pencairan.show', $disbursement->id) }}" target="_blank" class="text-primary">
-                                            {{ $disbursement->budget }}
-                                        </a>
-                                    </u>
-                                </li>
-                                @endforeach
-                            </ul>
+                            @foreach ($submission->disbursements as $disbursement)
+                            <a href="{{ route('pencairan.show', $disbursement->id) }}" class="btn btn-sm btn-primary mt-1">
+                                <i class="fas fa-download fa-sm text-white-50"></i> Bukti Pencairan {{ $loop->index + 1 }} ({{ $disbursement->budget }})
+                            </a>
+                            @endforeach
                         </div>
                     </div>
                 </div>

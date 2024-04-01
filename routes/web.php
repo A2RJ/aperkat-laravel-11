@@ -54,7 +54,8 @@ Route::middleware('auth')->group(function () {
         });
         Route::get('sub-division', 'index')->name('submission.sub-division');
     });
-    Route::resource('pencairan', DisbursementController::class)->middleware('admin-pencairan');
+    Route::resource('pencairan', DisbursementController::class)->only('show');
+    Route::resource('pencairan', DisbursementController::class)->except('show')->middleware('admin-pencairan');
     Route::resource('submission', SubmissionController::class);
     Route::resource('disbursement-period', DisbursementPeriodController::class)->except(['create', 'show',  'edit'])->middleware('dir-keuangan');
 });

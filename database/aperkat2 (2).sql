@@ -2655,7 +2655,7 @@ INSERT INTO `submission_statuses` (`id`, `role_id`, `submission_id`, `status`, `
 (21, 7, 4, 1, 'LPJ Kegiatan telah diupload', '2024-03-18 11:11:56', '2024-03-18 11:11:56'),
 (22, 7, 4, 1, 'LPJ Kegiatan telah diupload', '2024-03-18 11:16:39', '2024-03-18 11:16:39'),
 (23, 2, 4, 0, 'Mohon direvisi: Laporan tidak sesuai template', '2024-03-18 20:03:26', '2024-03-18 20:03:26'),
-(24, 2, 4, 1, 'LPJ Kegiatan telah disetujui', '2024-03-18 20:07:55', '2024-03-18 20:07:55'),
+(24, 2, 4, 1, 'LPJ telah disetujui', '2024-03-18 20:07:55', '2024-03-18 20:07:55'),
 (25, 9, 9, 1, 'Telah diajukan', '2024-03-18 20:13:56', '2024-03-18 20:13:56'),
 (26, 8, 9, 0, 'Mohon direvisi: sdasdasd', '2024-03-18 20:25:15', '2024-03-18 20:25:15'),
 (27, 8, 9, 0, 'Mohon direvisi: asasdasdd', '2024-03-18 20:26:13', '2024-03-18 20:26:13'),
@@ -2670,7 +2670,7 @@ INSERT INTO `submission_statuses` (`id`, `role_id`, `submission_id`, `status`, `
 (36, 3, 9, 1, 'Pencairan selesai, mohon segera upload LPJ kegiatan pada form aksi', '2024-03-18 20:33:01', '2024-03-18 20:33:01'),
 (37, 9, 9, 1, 'LPJ Kegiatan telah diupload', '2024-03-18 20:33:53', '2024-03-18 20:33:53'),
 (38, 2, 9, 0, 'Mohon direvisi: Ubah aja misalnya gajelas', '2024-03-18 20:34:39', '2024-03-18 20:34:39'),
-(39, 2, 9, 1, 'LPJ Kegiatan telah disetujui', '2024-03-18 20:34:56', '2024-03-18 20:34:56'),
+(39, 2, 9, 1, 'LPJ telah disetujui', '2024-03-18 20:34:56', '2024-03-18 20:34:56'),
 (40, 7, 10, 1, 'Telah diajukan', '2024-03-19 23:51:42', '2024-03-19 23:51:42'),
 (41, 9, 11, 1, 'Telah diajukan', '2024-03-21 07:18:19', '2024-03-21 07:18:19');
 
