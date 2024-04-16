@@ -112,37 +112,36 @@ class User extends Authenticatable
 
     public function roles()
     {
-        return auth()->user()->role->pluck('role')->toArray();
+        return Auth::user()->strictRole->role;
     }
 
     public function superAdmin()
     {
-        return in_array('Super Admin', $this->roles());
+        return 'Super Admin' == $this->roles();
     }
-
     public function wr2()
     {
-        return in_array('Warek II Keuangan', $this->roles());
+        return 'Warek II Keuangan' == $this->roles();
     }
 
     public function dirKeuangan()
     {
-        return in_array('Direktur Keuangan', $this->roles());
+        return 'Direktur Keuangan' == $this->roles();
     }
 
     public function rektor()
     {
-        return in_array('Rektor', $this->roles());
+        return 'Rektor' == $this->roles();
     }
 
     public function dirKeuanganPencairan()
     {
-        return in_array('Direktur Keuangan - Pencairan', $this->roles());
+        return 'SUBDIR Bendahara/Pencairan' == $this->roles();
     }
 
     public function dirKeuanganLpj()
     {
-        return in_array('Direktur Keuangan - LPJ', $this->roles());
+        return 'SUBDIR LPJ dan Monev' == $this->roles();
     }
 
     public function user()

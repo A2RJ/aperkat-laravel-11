@@ -62,7 +62,7 @@
                             <label for="activity_type">Jenis Kegiatan</label>
                             <select class="w-100 border rounded custom-select" id="activity_type" name="activity_type">
                                 @foreach ($ppufs as $ppuf)
-                                <option value="{{ $ppuf->id }}" selected data-chained="{{ $ppuf->id }}">
+                                <option value="{{ strtolower($ppuf->activity_type) }}" selected data-chained="{{ $ppuf->id }}">
                                     {{ ucfirst($ppuf->activity_type) }}
                                 </option>
                                 @endforeach
@@ -172,19 +172,13 @@
                         </div>
                         <div class="col-12 col-lg-4 mb-3">
                             <label for="date">Waktu Pelaksanaan</label>
-                            <select class="w-100 border rounded selectpicker @error('date') is-invalid @enderror" id="date" name="date" data-live-search="true">
-                                <option value="">Pilih Waktu</option>
-                                @foreach ($activity_dates as $activity_date)
-                                <option value="{{ $activity_date }}" {{ old('date') == $activity_date ? 'selected' : '' }}>
-                                    {{ ucfirst($activity_date) }}
+                            <select class="w-100 border rounded custom-select" id="date" name="date">
+                                @foreach ($ppufs as $ppuf)
+                                <option value="{{ $ppuf->id }}" selected data-chained="{{ $ppuf->id }}">
+                                    {{ ucfirst($ppuf->date) }}
                                 </option>
                                 @endforeach
                             </select>
-                            @error('date')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
-                            @enderror
                         </div>
                     </div>
 
@@ -314,7 +308,7 @@
         var rabsContainer = document.getElementById('rabs-container');
         var rabToRemove = document.querySelector('.rab-' + index);
         rabsContainer.removeChild(rabToRemove);
-        updateRabInput(); // Memanggil fungsi updateRabInput() setelah menghapus baris RAB
+        updateRabInput();
     }
 
     function formatRupiah(angka, prefix = 'Rp. ') {
@@ -347,6 +341,7 @@
         $("#ppuf_name").chained("#ppuf_id");
         $("#rabkegiatan").chained("#ppuf_id");
         $("#activity_type").chained("#ppuf_id");
+        $("#date").chained("#ppuf_id");
 
         function checkDisable(selectId, inputId, selectedValue) {
             var selectValue = document.getElementById(selectId).value;

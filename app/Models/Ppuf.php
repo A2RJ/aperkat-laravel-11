@@ -63,6 +63,7 @@ class Ppuf extends Model
         'description',
         'place',
         'date',
+        'period',
         'budget',
         'detail',
     ];

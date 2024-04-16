@@ -9,6 +9,7 @@ use App\Models\Ppuf;
 use App\Models\Role;
 use App\Models\Submission;
 use Auth;
+use Carbon\Carbon;
 use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Mail;
@@ -88,7 +89,6 @@ class SubmissionController extends Controller
         $ppufs = Ppuf::query()
             ->where('role_id', $role->id)
             ->whereDoesntHave('submissions')
-            ->select(['id', 'program_name', 'ppuf_number', 'budget', 'activity_type'])
             ->get();
         $ikus = Ppuf::iku();
         $activity_dates = Ppuf::$activity_dates;
@@ -108,10 +108,35 @@ class SubmissionController extends Controller
                 'participant',
                 'rundown',
                 'place',
-                'date',
                 'vendor',
             ]);
             $ppuf = Ppuf::query()->where('id', $request->ppuf_id)->first();
+            $currentMonth = now()->format('m');
+            $monthMap = [
+                'januari' => '01',
+                'februari' => '02',
+                'maret' => '03',
+                'april' => '04',
+                'mei' => '05',
+                'juni' => '06',
+                'juli' => '07',
+                'agustus' => '08',
+                'september' => '09',
+                'oktober' => '10',
+                'november' => '11',
+                'desember' => '12',
+            ];
+
+            $ppufMonth = $monthMap[strtolower($ppuf->date)];
+            $ppufMonth = Carbon::createFromFormat('m', $ppufMonth)->format('m');
+
+            if ($currentMonth !== $ppufMonth) {
+                return redirect()
+                    ->route('submission.create')
+                    ->with('failed', 'Pengajuan tidak dapat dilakukan karena telah melewati waktu pelaksanaan')
+                    ->withInput();
+            }
+
             $total = collect($request->rab)->sum(function ($item) {
                 return $item['qty'] * $item['harga_satuan'];
             });
@@ -226,7 +251,6 @@ class SubmissionController extends Controller
             'participant',
             'rundown',
             'place',
-            'date',
             'vendor',
         ]);
         $total = collect($request->rab)->sum(function ($item) {

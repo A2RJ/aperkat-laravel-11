@@ -34,3 +34,18 @@
     - terima dan revisi lpj
     
 Mail::to(Auth::user()->email)->send(new SendStatus('Random banget'));
+
+
+- Bulan pada form pengajuan otomatis dari RKAT dan tidak bisa diajukan jika sudah lewat bulan
+- validasi pengjuan pada tipe program
+- lengkapi detail pegajuan pada pesan email
+- wr2-dsti-001
+- frs-ti-001
+- order by month
+- simpan prodi pada fakultas
+- redirect gagal DK
+- type upload lpj
+- pesan juga cek
+- jika revisi lpj tikda bisa edit     
+- batasan 5 slot upload bukan berdasarkan sudah pencairan dan belum lpj 
+- lpj bertahap

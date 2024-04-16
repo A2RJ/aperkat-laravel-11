@@ -19,31 +19,37 @@ class PpufController extends Controller
     public function index()
     {
         $keyword = request('keyword', NULL);
+        $year = request('year', NULL);
         $user = Auth::user();
         $childrenIds = collect($user->hasSubDivision(false))->pluck('id')->toArray();
 
         $ppufs = Ppuf::query()
             ->when(
                 $keyword,
-                function (Builder $query) {
+                function (Builder $query) use ($keyword) {
                     $query->whereAny([
                         'ppuf_number',
                         'activity_type',
                         'program_name',
-                        'description',
                         'place',
                         'date',
-                    ], 'LIKE', '%apa%');
+                    ], 'LIKE', "%$keyword%");
                 }
             )
             ->when(
-            !isset($user->strictRole->children),
+                $year,
+                function (Builder $query) use ($year) {
+                    $query->where('period', 'LIKE', "%$year%");
+                }
+            )
+            ->when(
+                !isset($user->strictRole->children),
                 function (Builder $query) use ($user) {
-                $query->where('role_id', $user->strictRole->id);
+                    $query->where('role_id', $user->strictRole->id);
                 }
             )
             ->when(
-            isset($user->strictRole->children),
+                isset($user->strictRole->children),
                 function (Builder $query) use ($childrenIds) {
                     $query->whereIn('role_id', $childrenIds);
                 }
@@ -72,6 +78,7 @@ class PpufController extends Controller
             'description',
             'place',
             'date',
+            'period',
             'budget',
             'detail'
         ]);
@@ -99,6 +106,7 @@ class PpufController extends Controller
             'description',
             'place',
             'date',
+            'period',
             'budget',
             'detail'
         ]);
@@ -122,8 +130,10 @@ class PpufController extends Controller
     {
         try {
             $role_id = $request->role_id;
+            $period = $request->period;
             $role = Role::query()->find($role_id);
-            $ppufs = (new FastExcel())->import($request->file('file'))->map(function ($item, $index) use ($role_id) {
+            // return (new FastExcel())->import($request->file('file'));
+            $ppufs = (new FastExcel())->import($request->file('file'))->map(function ($item, $index) use ($period, $role_id) {
                 $index = $index + 1;
 
                 $ppuf_number = $item['Nomor PPUF'];
@@ -135,15 +145,16 @@ class PpufController extends Controller
                     throw new Exception("Indikator Kinerja Utama tidak boleh kosong pada baris ke " . $index);
                 }
                 $activity_type = $item['Jenis Kegiatan'];
+                $activity_type = strtolower(str_replace(' ', '', $activity_type));
                 if (!$activity_type) {
                     throw new Exception("Jenis Kegiatan tidak boleh kosong pada baris ke " . $index);
                 }
                 if (!in_array(strtolower($activity_type), ['program', 'pengadaan', 'pemeliharaan', 'pengembangan'])) {
                     throw new Exception("Jenis Kegiatan tidak valid pada baris ke " . $index);
                 }
-                $program_name = $item['Nama Program'];
+                $program_name = $item['Nama Program / Kegiatan'];
                 if (!$program_name) {
-                    throw new Exception("Nama Program tidak boleh kosong pada baris ke " . $index);
+                    throw new Exception("Nama Program / Kegiatan tidak boleh kosong pada baris ke " . $index);
                 }
                 $deskripsi = $item['Deskripsi'];
                 if (!$deskripsi) {
@@ -154,10 +165,11 @@ class PpufController extends Controller
                     throw new Exception("Tempat Pelaksanaan tidak boleh kosong pada baris ke " . $index);
                 }
                 $date = $item['Waktu Pelaksanaan'];
+                $date = strtolower(str_replace(' ', '', $date));
                 if (!$date) {
                     throw new Exception("Waktu Pelaksanaan tidak boleh kosong pada baris ke " . $index);
                 }
-                if (!in_array(strtolower($date), ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'])) {
+                if (!in_array($date, ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'])) {
                     throw new Exception("Waktu Pelaksanaan tidak valid pada baris ke " . $index);
                 }
                 $rab = $item['RAB'];
@@ -174,6 +186,7 @@ class PpufController extends Controller
                     'description' => $deskripsi,
                     'place' => $place,
                     'date' => $date,
+                    'period' => $period,
                     'budget' => $rab,
                     'detail' => $item['Keterangan (Opsional)'],
                 ];

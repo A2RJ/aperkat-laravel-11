@@ -52,7 +52,7 @@ $role = auth()->user();
             <!-- Divider -->
             <hr class="sidebar-divider">
 
-            @if (auth()->user()->strictRole)
+            @if ($role->strictRole)
             @if ($role->superAdmin())
             @include('layout.super-admin')
             @elseif ($role->wr2())
@@ -101,7 +101,7 @@ $role = auth()->user();
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">
                             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }} - {{ implode(', ', auth()->user()->roles()) }}</span>
+                                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ auth()->user()->name }} - {{ $role->strictRole->role ?? 'No Role' }}</span>
                                 <img class="img-profile rounded-circle" src="/sb-admin-2/img/undraw_profile.svg">
                             </a>
                             <!-- Dropdown - User Information -->

@@ -39,6 +39,23 @@
                 </div>
                 @endif
 
+                <div class="mb-4">
+                    <form action="{{ url()->current() }}" method="get">
+                        <div class="row">
+                            <div class="col-sm ">
+                                <input class="form-control " type="number" id="year" name="year" value="{{ request('year') }}" placeholder="Tahun" />
+                            </div>
+                            <div class="col-sm ">
+                                <input class="form-control " type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" placeholder="Keyword">
+                            </div>
+                            <div class="col-sm">
+                                <button class="btn bg-primary btn-primary px-4" type="submit">Filter</button>
+                                <a href="{{ url()->current() }}"><button class="btn bg-warning btn-warning px-4" type="button">Clear</button></a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
                 <!-- Card Body -->
                 <div class="table-responsive ">
                     <table class="table table-bordered">
@@ -48,6 +65,7 @@
                                 <th scope="col">Unit Kerja</th>
                                 <th scope="col">Unit Pengaju</th>
                                 <th scope="col">Nomor PPUF</th>
+                                <th scope="col">Periode</th>
                                 <th scope="col">Status Pengajuan</th>
                                 <th scope="col">Jenis Program</th>
                                 <th scope="col">Nama Program</th>
@@ -63,6 +81,7 @@
                                 <td>{{ $ppuf->author->parent?->role }}</td>
                                 <td>{{ $ppuf->author->role }}</td>
                                 <td>{{ $ppuf->ppuf_number }}</td>
+                                <td>{{ $ppuf->period }}</td>
                                 <td class="{{$ppuf->submissions->count() ? 'text-success ': 'text-warning ' }}">{{ $ppuf->submissions->count() ? 'Telah Diajukan' : 'Belum Diajukan' }}</td>
                                 <td>{{ ucfirst($ppuf->activity_type) }}</td>
                                 <td>{{ $ppuf->program_name }}</td>

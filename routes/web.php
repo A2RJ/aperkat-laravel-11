@@ -48,7 +48,7 @@ Route::middleware('auth')->group(function () {
         Route::post('action/{submission}', 'action')->name('submission.action');
         Route::get('donwload-lpj/{submission}', 'downloadLpj')->name('submission.download-lpj');
         Route::post('upload-lpj/{submission}', 'uploadLpj')->name('submission.upload-lpj')->middleware('user');
-        Route::middleware('dir-keuangan')->group(function () {
+        Route::middleware('admin-lpj')->group(function () {
             Route::get('admin-lpj', 'adminLpj')->name('submission.admin-lpj');
             Route::post('aksi-lpj/{submission}', 'actionLpj')->name('submission.aksi-lpj');
         });

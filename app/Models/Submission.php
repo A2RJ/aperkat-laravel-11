@@ -82,7 +82,6 @@ class Submission extends Model
         'participant',
         'rundown',
         'place',
-        'date',
         'vendor',
         'budget',
         'budget_detail',

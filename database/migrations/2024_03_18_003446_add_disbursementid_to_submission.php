@@ -18,7 +18,6 @@ return new class extends Migration
                 ->on('disbursement_periods')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
-            $table->boolean('disbursement_status')->default(NULL);
         });
     }
 
@@ -29,7 +28,6 @@ return new class extends Migration
     {
         Schema::table('submissions', function (Blueprint $table) {
             $table->dropColumn('disbursement_period_id');
-            $table->dropColumn('disbursement_status');
         });
     }
 };

@@ -48,7 +48,6 @@ return new class extends Migration
             $table->string('participant')->nullable();
             $table->string('rundown')->nullable();
             $table->string('place');
-            $table->string('date');
             $table->string('vendor')->nullable();
             $table->string('budget');
             $table->jsonb('budget_detail');

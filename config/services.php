@@ -34,7 +34,7 @@ return [
     'google' => [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => app()->hasDebugModeEnabled() ? 'http://127.0.0.1:8000/auth/callback' : 'https://v2.aperkat.uts.ac.id/auth/callback',
+        'redirect' => env('APP_ENV') == 'local' ? 'http://127.0.0.1:8000/auth/callback' : 'https://v2.aperkat.uts.ac.id/auth/callback',
     ],
 
 ];
