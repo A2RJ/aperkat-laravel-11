@@ -33,19 +33,19 @@
     - pengajuan semua sub divisi
     - terima dan revisi lpj
     
-Mail::to(Auth::user()->email)->send(new SendStatus('Random banget'));
-
-
-- Bulan pada form pengajuan otomatis dari RKAT dan tidak bisa diajukan jika sudah lewat bulan
-- validasi pengjuan pada tipe program
-- lengkapi detail pegajuan pada pesan email
-- wr2-dsti-001
-- frs-ti-001
-- order by month
+## PROGRESS
+- ok - Bulan pada form pengajuan otomatis dari RKAT dan tidak bisa diajukan jika sudah lewat bulan
+- ok - validasi pengjuan pada tipe program
+- ok - validasi 5 slot upload
+- ok - lengkapi detail pegajuan pada pesan email
+- ok - wr2-dsti-001
+- ok - frs-ti-001
+- ok - order by month
 - simpan prodi pada fakultas
 - redirect gagal DK
-- type upload lpj
+- ok - type upload lpj
 - pesan juga cek
-- jika revisi lpj tikda bisa edit     
-- batasan 5 slot upload bukan berdasarkan sudah pencairan dan belum lpj 
+- ok - jika revisi lpj tidak bisa edit     
+- ok - batasan 5 slot upload bukan berdasarkan sudah pencairan dan belum lpj 
+- buat dashbord untuk warek 2
 - lpj bertahap

@@ -31,7 +31,6 @@ class SubmissionRequest extends FormRequest
             'participant' => 'required_if:activity_type,program',
             'rundown' => 'required_if:activity_type,program',
             'place' => 'required',
-            'date' => 'required',
             'vendor' => 'required_unless:activity_type,program',
             'rab.*.item' => 'required|string',
             'rab.*.qty' => 'required|integer|min:1',

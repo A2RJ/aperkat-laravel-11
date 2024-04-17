@@ -15,7 +15,7 @@ class SendStatus extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(private $ppuf, private $status)
+    public function __construct(public $subject, public $status)
     {
         //
     }
@@ -26,7 +26,7 @@ class SendStatus extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Pengajuan dengan kode: ' . $this->ppuf,
+            subject: $this->subject,
         );
     }
 

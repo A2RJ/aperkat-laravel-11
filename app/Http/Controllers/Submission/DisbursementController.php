@@ -58,6 +58,21 @@ class DisbursementController extends Controller
             ->when($status == 'need approve', function (Builder $query) use ($roleId) {
                 $query->where('role_id', $roleId);
             })
+            ->orderByRaw("CASE 
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'januari' THEN 1
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'februari' THEN 2
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'maret' THEN 3
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'april' THEN 4
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'mei' THEN 5
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'juni' THEN 6
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'juli' THEN 7
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'agustus' THEN 8
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'september' THEN 9
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'oktober' THEN 10
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'november' THEN 11
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'desember' THEN 12
+                ELSE 99
+            END")
             ->paginate();
         return view('submission.direktur-keuangan-pencairan.index', compact('submissions', 'roleId'));
     }
@@ -88,8 +103,10 @@ class DisbursementController extends Controller
 
                 $ppuf = $submission->ppuf;
                 if ($ppuf->author->user) {
-                    $message = $role->role . ": $message";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                    $message = "$role->role: $message ($ppuf->ppuf_number)";
+                    $role = $ppuf->author->role;
+                    $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
 
@@ -120,7 +137,9 @@ class DisbursementController extends Controller
                 $ppuf = $submission->ppuf;
                 if ($ppuf->author->user) {
                     $message = $role->role . ": $message";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                    $role = $ppuf->author->role;
+                    $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
 

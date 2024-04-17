@@ -100,7 +100,7 @@
                                 <td>{{ $submission->ppuf->ppuf_number }}</td>
                                 <td>{{ $submission->ppuf->program_name }}</td>
                                 <td>{{ $submission->background }}</td>
-                                <td>{{ $submission->place }}, {{ $submission->date }}</td>
+                                <td>{{ ucfirst($submission->place) }}, {{ ucfirst($submission->ppuf->date) }}</td>
                                 <td>{{ $submission->budget }}</td>
                                 <td>{{ $submission->approved_budget }}</td>
                                 <td>{{ $submission->period?->period }}</td>

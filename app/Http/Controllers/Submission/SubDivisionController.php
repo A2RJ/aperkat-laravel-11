@@ -38,6 +38,7 @@ class SubDivisionController extends Controller
                         'ppuf_number',
                         'activity_type',
                         'program_name',
+                        'date',
                     ], 'LIKE', "%$keyword%");
                 })
                     ->orWhereHas('ppuf', function (Builder $builder) use ($keyword) {
@@ -59,8 +60,23 @@ class SubDivisionController extends Controller
                 $query->where('is_done', 0);
             })
             ->when($status == 'need approve', function (Builder $query) use ($roleId) {
-            $query->where('role_id', $roleId);
+                $query->where('role_id', $roleId);
             })
+            ->orderByRaw("CASE 
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'januari' THEN 1
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'februari' THEN 2
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'maret' THEN 3
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'april' THEN 4
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'mei' THEN 5
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'juni' THEN 6
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'juli' THEN 7
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'agustus' THEN 8
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'september' THEN 9
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'oktober' THEN 10
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'november' THEN 11
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'desember' THEN 12
+                ELSE 99
+            END")
             ->paginate();
         return view('submission.sub-divison.index', compact('submissions'));
     }
@@ -80,6 +96,7 @@ class SubDivisionController extends Controller
                         'ppuf_number',
                         'activity_type',
                         'program_name',
+                        'date',
                     ], 'LIKE', "%$keyword%");
                 })
                     ->orWhereHas('ppuf', function (Builder $builder) use ($keyword) {
@@ -101,11 +118,26 @@ class SubDivisionController extends Controller
                 $query->where('is_done', 0);
             })
             ->when($status == 'need approve', function (Builder $query) use ($roleId) {
-            $query->where('role_id', $roleId)
+                $query->where('role_id', $roleId)
                     ->whereNull('disbursement_period_id')
                     ->orWhere('role_id', 5)
                     ->whereNull('disbursement_period_id');
             })
+            ->orderByRaw("CASE 
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'januari' THEN 1
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'februari' THEN 2
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'maret' THEN 3
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'april' THEN 4
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'mei' THEN 5
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'juni' THEN 6
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'juli' THEN 7
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'agustus' THEN 8
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'september' THEN 9
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'oktober' THEN 10
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'november' THEN 11
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'desember' THEN 12
+                ELSE 99
+            END")
             ->paginate();
 
         $periods = DisbursementPeriod::query()->get(['id', 'period']);
@@ -120,8 +152,8 @@ class SubDivisionController extends Controller
             if ($approvalBudget > $budget) {
                 return redirect()
                     ->route('submission.dir-keuangan')
-                ->with('failed', 'RAB disetujui tidak boleh lebih besar dari RAB diajukan')
-                ->withInput();
+                    ->with('failed', 'RAB disetujui tidak boleh lebih besar dari RAB diajukan')
+                    ->withInput();
             }
             $period = DisbursementPeriod::query()->where('id', $request->period_id)->first();
             DB::transaction(function () use ($request, $submission, $period) {
@@ -141,7 +173,9 @@ class SubDivisionController extends Controller
                 $ppuf = $submission->ppuf;
                 if ($ppuf->author->user) {
                     $message = $role->role . ": $message";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                    $role = $ppuf->author->role;
+                    $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
             return redirect()->route('submission.dir-keuangan')->with('success', 'Berhasil menambahkan pengajuan ke periode tersebut');
@@ -167,6 +201,7 @@ class SubDivisionController extends Controller
                         'ppuf_number',
                         'activity_type',
                         'program_name',
+                        'date',
                     ], 'LIKE', "%$keyword%");
                 })
                     ->orWhereHas('ppuf', function (Builder $builder) use ($keyword) {
@@ -188,11 +223,26 @@ class SubDivisionController extends Controller
                 $query->where('is_done', 0);
             })
             ->when($status == 'need approve', function (Builder $query) use ($roleId) {
-            $query->where('role_id', $roleId);
+                $query->where('role_id', $roleId);
             })
             ->when($period, function (Builder $query) use ($period) {
                 $query->where('disbursement_period_id', $period);
             })
+            ->orderByRaw("CASE 
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'januari' THEN 1
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'februari' THEN 2
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'maret' THEN 3
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'april' THEN 4
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'mei' THEN 5
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'juni' THEN 6
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'juli' THEN 7
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'agustus' THEN 8
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'september' THEN 9
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'oktober' THEN 10
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'november' THEN 11
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'desember' THEN 12
+                ELSE 99
+            END")
             ->paginate();
 
         $periods = DisbursementPeriod::query()->get(['id', 'period']);
@@ -218,7 +268,9 @@ class SubDivisionController extends Controller
                     $ppuf = $submission->ppuf;
                     if ($ppuf->author->user) {
                         $message = $role->role . ": $message";
-                        Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                        $role = $ppuf->author->role;
+                        $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
+                        Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                     }
                 });
             });
@@ -246,7 +298,9 @@ class SubDivisionController extends Controller
                 $ppuf = $submission->ppuf;
                 if ($ppuf->author->user) {
                     $message = $role->role . ": $message";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                    $role = $ppuf->author->role;
+                    $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
             return back()->with('failed', "Berhasil $action pengajuan");
@@ -265,7 +319,9 @@ class SubDivisionController extends Controller
                 $ppuf = $submission->ppuf;
                 if ($ppuf->author->user) {
                     $message = $role->role . ": $message";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                    $role = $ppuf->author->role;
+                    $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
             return back()->with('success', "Berhasil $action pengajuan");
@@ -294,7 +350,9 @@ class SubDivisionController extends Controller
                 $ppuf = $submission->ppuf;
                 if ($ppuf->author->user) {
                     $message = $role->role . ": $message";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                    $role = $ppuf->author->role;
+                    $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
 
@@ -324,6 +382,7 @@ class SubDivisionController extends Controller
                         'ppuf_number',
                         'activity_type',
                         'program_name',
+                        'date',
                     ], 'LIKE', "%$keyword%");
                 })
                     ->orWhereHas('ppuf', function (Builder $builder) use ($keyword) {
@@ -347,6 +406,21 @@ class SubDivisionController extends Controller
             ->when($status == 'need approve', function (Builder $query) use ($roleId) {
                 $query->where('role_id', $roleId);
             })
+            ->orderByRaw("CASE 
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'januari' THEN 1
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'februari' THEN 2
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'maret' THEN 3
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'april' THEN 4
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'mei' THEN 5
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'juni' THEN 6
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'juli' THEN 7
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'agustus' THEN 8
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'september' THEN 9
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'oktober' THEN 10
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'november' THEN 11
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'desember' THEN 12
+                ELSE 99
+            END")
             ->paginate();
 
         return view('submission.direktur-keuangan-lpj.index', compact('submissions', 'roleId'));
@@ -370,7 +444,9 @@ class SubDivisionController extends Controller
                 $ppuf = $submission->ppuf;
                 if ($ppuf->author->user) {
                     $message = $role->role . ": $message";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                    $role = $ppuf->author->role;
+                    $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
             return back()->with('failed', "Berhasil meminta untuk revisi pengajuan");
@@ -391,7 +467,9 @@ class SubDivisionController extends Controller
                 $ppuf = $submission->ppuf;
                 if ($ppuf->author->user) {
                     $message = $role->role . ": $message";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                    $role = $ppuf->author->role;
+                    $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
 

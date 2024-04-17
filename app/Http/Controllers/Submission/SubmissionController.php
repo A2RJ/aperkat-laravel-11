@@ -35,6 +35,7 @@ class SubmissionController extends Controller
                         'ppuf_number',
                         'activity_type',
                         'program_name',
+                        'date',
                     ], 'LIKE', "%$keyword%");
                 })
                     ->orWhereHas('ppuf', function (Builder $builder) use ($keyword) {
@@ -58,6 +59,21 @@ class SubmissionController extends Controller
             ->when($status == 'need approve', function (Builder $query) use ($roleId) {
                 $query->whereNot('role_id',  $roleId)->where('is_done', 0);
             })
+            ->orderByRaw("CASE 
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'januari' THEN 1
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'februari' THEN 2
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'maret' THEN 3
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'april' THEN 4
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'mei' THEN 5
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'juni' THEN 6
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'juli' THEN 7
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'agustus' THEN 8
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'september' THEN 9
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'oktober' THEN 10
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'november' THEN 11
+                WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'desember' THEN 12
+                ELSE 99
+            END")
             ->paginate();
 
         return view('submission.index', compact('submissions'));
@@ -81,10 +97,10 @@ class SubmissionController extends Controller
                 $query->where('message', 'LPJ telah disetujui');
             })
             ->count();
-        if ($count >= 2) {
+        if ($count >= 5) {
             return redirect()
                 ->route('submission.index')
-                ->with('failed', 'Anda tidak dapat melakukan pengajuan, segera lengkapi LPJ anda');
+                ->with('failed', 'Anda telah meng-upload 5 pengajuan, mohon segera lengkapi LPJ terlebih dahulu');
         }
         $ppufs = Ppuf::query()
             ->where('role_id', $role->id)
@@ -98,6 +114,23 @@ class SubmissionController extends Controller
     public function store(SubmissionRequest $request)
     {
         try {
+            $role = Auth::user()->strictRole;
+            $count = Submission::query()
+                ->whereHas('ppuf', function (Builder $query) use ($role) {
+                    $query->where('role_id', $role->id);
+                })
+                ->whereNotNull('is_disbursement_complete')
+                ->whereNull('is_done')
+                ->whereDoesntHave('status', function (Builder $query) {
+                    $query->where('message', 'LPJ telah disetujui');
+                })
+                ->count();
+            if ($count >= 5) {
+                return redirect()
+                    ->route('submission.index')
+                    ->with('failed', 'Anda telah meng-upload 5 pengajuan, mohon segera lengkapi LPJ terlebih dahulu');
+            }
+
             $form = $request->safe()->only([
                 'ppuf_id',
                 'iku1_id',
@@ -110,8 +143,6 @@ class SubmissionController extends Controller
                 'place',
                 'vendor',
             ]);
-            $ppuf = Ppuf::query()->where('id', $request->ppuf_id)->first();
-            $currentMonth = now()->format('m');
             $monthMap = [
                 'januari' => '01',
                 'februari' => '02',
@@ -127,6 +158,8 @@ class SubmissionController extends Controller
                 'desember' => '12',
             ];
 
+            $ppuf = Ppuf::query()->where('id', $request->ppuf_id)->first();
+            $currentMonth = now()->format('m');
             $ppufMonth = $monthMap[strtolower($ppuf->date)];
             $ppufMonth = Carbon::createFromFormat('m', $ppufMonth)->format('m');
 
@@ -170,7 +203,9 @@ class SubmissionController extends Controller
                 $ppuf = $submission->ppuf;
                 if ($ppuf->author->user) {
                     $message = $ppuf->author->role . ": $message";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                    $role = $ppuf->author->role;
+                    $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
+                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
             return redirect()->route('submission.index')->with('success', 'Berhasil menambahkan pengajuan');
@@ -283,7 +318,9 @@ class SubmissionController extends Controller
             $ppuf = $submission->ppuf;
             if ($ppuf->author->user) {
                 $message = $ppuf->author->role . ": $message";
-                Mail::to($ppuf->author->user->email)->send(new SendStatus($ppuf->ppuf_number, $message));
+                $role = $ppuf->author->role;
+                $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
+                Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
             }
         });
         return redirect()->route('submission.index')->with('success', 'Berhasil mengubah pengajuan');

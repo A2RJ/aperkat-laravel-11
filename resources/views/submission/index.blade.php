@@ -89,7 +89,7 @@
                                 <td>{{ $submission->ppuf->ppuf_number }}</td>
                                 <td>{{ $submission->ppuf->program_name }}</td>
                                 <td>{{ $submission->background }}</td>
-                                <td>{{ $submission->place }}, {{ $submission->date }}</td>
+                                <td>{{ ucfirst($submission->place) }}, {{ ucfirst($submission->ppuf->date) }}</td>
                                 <td>{{ $submission->budget }}</td>
                                 <td>
                                     <div class="d-flex">
@@ -98,7 +98,7 @@
                                         </a>
 
                                         @if ($submission->ppuf->author->id == Auth::user()->strictRole->id)
-                                        @if ($submission->status->last()->status == 0)
+                                        @if ($submission->status->last()->status == 0 && $submission->status->last()->role_id != 2)
                                         <a class="btn btn-sm btn-success mr-1 mb-1" href="{{ route('submission.edit', $submission->id) }}" target="_blank">
                                             <i class="fas fa-fw fa-edit"></i>
                                         </a>

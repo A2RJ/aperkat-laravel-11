@@ -170,7 +170,7 @@
                 @endif
 
                 <div class="form-row">
-                    <div class="col-12 col-lg-2 mb-3">
+                    <div class="col-12 col-lg-4 mb-3">
                         <label for="ppuf_id">Nomor PPUF</label>
                         <input type="text" class="form-control" value="{{ $submission->ppuf->ppuf_number }}">
                     </div>
@@ -178,13 +178,21 @@
                         <label for="ppuf_name">Nama Kegiatan</label>
                         <input type="text" class="form-control" value="{{ $submission->ppuf->program_name }}">
                     </div>
-                    <div class="col-12 col-lg-3 mb-3">
+                    <div class="col-12 col-lg-4 mb-3">
                         <label for="rab">RAB Kegiatan</label>
                         <input type="text" class="form-control" value="{{ $submission->ppuf->budget }}">
                     </div>
-                    <div class="col-12 col-lg-3 mb-3">
+                    <div class="col-12 col-lg-4 mb-3">
                         <label for="activity_type">Jenis Kegiatan</label>
                         <input type="text" class="form-control" value="{{ $submission->ppuf->activity_type }}">
+                    </div>
+                    <div class="col-12 col-lg-4 mb-3">
+                        <label for="place">Tempat Pelaksanaan</label>
+                        <input type="text" class="form-control" value="{{ $submission->place }}">
+                    </div>
+                    <div class="col-12 col-lg-4 mb-3">
+                        <label for="date">Waktu Pelaksanaan</label>
+                        <input type="text" class="form-control" value="{{ $submission->ppuf->date }}">
                     </div>
                     <div class="col-12 mb-3">
                         <label for="background">Latar Belakang</label>
@@ -218,17 +226,13 @@
                         <label for="vendor">Vendor</label>
                         <input type="text" class="form-control" value="{{ $submission->vendor }}">
                     </div>
-                    <div class="col-12 col-lg-3 mb-3">
-                        <label for="place">Tempat Pelaksanaan</label>
-                        <input type="text" class="form-control" value="{{ $submission->place }}">
-                    </div>
-                    <div class="col-12 col-lg-2 mb-3">
-                        <label for="date">Waktu Pelaksanaan</label>
-                        <input type="text" class="form-control" value="{{ $submission->date }}">
-                    </div>
-                    <div class="col-12 col-lg-3 mb-3">
-                        <label for="budget">RAB</label>
+                    <div class="col-12 col-lg-4 mb-3">
+                        <label for="budget">RAB Diajukan</label>
                         <input type="text" class="form-control" value="{{ $submission->budget }}">
+                    </div>
+                    <div class="col-12 col-lg-4 mb-3">
+                        <label for="budget">RAB Disetujui</label>
+                        <input type="text" class="form-control" value="{{ $submission->approved_budget }}">
                     </div>
                     <div class="form-group mb-3">
                         <label for="rab">Detail RAB</label>

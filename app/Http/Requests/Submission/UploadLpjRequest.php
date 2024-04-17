@@ -22,7 +22,7 @@ class UploadLpjRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'file' => 'required|mimes:png,jpg,jpeg|max:3072'
+            'file' => 'required|mimetypes:application/pdf|max:10240'
         ];
     }
 }

@@ -98,8 +98,9 @@
                                 </td>
                                 <td>{{ $submission->ppuf->ppuf_number }}</td>
                                 <td>{{ $submission->ppuf->program_name }}</td>
+                                <td>{{ ucfirst($submission->ppuf->date) }}</td>
                                 <td>{{ $submission->background }}</td>
-                                <td>{{ $submission->place }}, {{ $submission->date }}</td>
+                                <td>{{ ucfirst($submission->place) }}, {{ ucfirst($submission->ppuf->date) }}</td>
                                 <td>{{ $submission->budget }}</td>
                                 <td>{{ $submission->approved_budget }}</td>
                                 <td>{{ $submission->period?->period }}</td>
@@ -108,10 +109,12 @@
                                         <a class="btn btn-sm btn-success mr-1 mb-1" href="{{ route('submission.show', $submission->id) }}" target="_blank">
                                             <i class="fas fa-fw fa-info"></i>
                                         </a>
-                                        @if (!$submission->disbursement_period_id && $submission->role_id == $roleId)
+                                        @if (!$submission->disbursement_period_id)
+                                        @if ($submission->role_id == $roleId || $submission->role_id == 5)
                                         <a class="btn btn-sm btn-warning  mr-1 mb-1" href="#" data-toggle="modal" data-target="#editModal{{ $submission->id }}">
                                             <i class="fas fa-fw fa-edit"></i>
                                         </a>
+                                        @endif
                                         @endif
                                     </div>
                                 </td>
@@ -166,7 +169,7 @@
 
                         <div class="col-12 mb-3">
                             <label for="approved_budget">RAB disetujui</label>
-                            <input type="text" class="form-control @error('approved_budget') is-invalid @enderror" id="approved_budget" name="approved_budget" required value="{{ old('approved_budget') }}">
+                            <input type="text" class="form-control @error('approved_budget') is-invalid @enderror" id="approved_budget" name="approved_budget" required value="{{ old('approved_budget', $submission->budget) }}">
                             @error('approved_budget')
                             <div class="invalid-feedback">
                                 {{ $message }}
