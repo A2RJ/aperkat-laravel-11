@@ -33,7 +33,13 @@ class PpufController extends Controller
                         'program_name',
                         'place',
                         'date',
-                    ], 'LIKE', "%$keyword%");
+                    ], 'LIKE', "%$keyword%")
+                        ->orWhereHas('author', function (Builder $query) use ($keyword) {
+                            $query->where('role', 'LIKE', "%$keyword%")
+                                ->orWhereHas('parent', function (Builder $query) use ($keyword) {
+                                    $query->where('role', 'LIKE', "%$keyword%");
+                                });
+                        });
                 }
             )
             ->when(

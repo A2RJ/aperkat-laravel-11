@@ -38,10 +38,7 @@ class RoleController extends Controller
 
     public function destroy(Role $role)
     {
-        $role->update([
-            'parent_id' => NULL,
-            'user_id' =>  NULL
-        ]);
+        $role->delete();
         return redirect()->route('role.index')->with('success', 'Success delete role ' . $role->role);
     }
 }

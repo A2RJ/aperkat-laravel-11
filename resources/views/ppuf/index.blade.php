@@ -13,7 +13,7 @@
 
             <div class="card-body">
                 <div class="mb-4">
-                    @if (auth()->user()->wr2())
+                    @if (auth()->user()->wr2() || auth()->user()->superAdmin())
                     <a class="btn btn-sm btn-primary " href="{{ route('ppuf.create') }}">
                         <i class="fas fa-plus fa-sm text-white-50"></i>
                         Add PPUF
@@ -43,7 +43,7 @@
                     <form action="{{ url()->current() }}" method="get">
                         <div class="row">
                             <div class="col-sm ">
-                                <input class="form-control " type="number" id="year" name="year" value="{{ request('year') }}" placeholder="Tahun" />
+                                <input class="form-control " type="number" id="year" name="year" value="{{ request('year') }}" placeholder="Tahun Periode" />
                             </div>
                             <div class="col-sm ">
                                 <input class="form-control " type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" placeholder="Keyword">
@@ -92,7 +92,7 @@
                                         <a class="btn btn-sm btn-success mr-1 mb-1" href="{{ route('ppuf.edit', $ppuf->id) }}" target="_blank">
                                             <i class="fas fa-fw fa-edit"></i>
                                         </a>
-                                        @if (auth()->user()->wr2())
+                                        @if (auth()->user()->wr2() || auth()->user()->superAdmin())
                                         <form action="{{ route('ppuf.destroy', $ppuf->id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
