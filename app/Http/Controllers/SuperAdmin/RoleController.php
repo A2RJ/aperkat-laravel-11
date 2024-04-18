@@ -6,12 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Role\RoleRequest;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 
 class RoleController extends Controller
 {
     public function index()
     {
-        $roles = Role::query()->with(['user', 'children:parent_id,role', 'parent'])->paginate();
+        $keyword = request('keyword', NULL);
+        $roles = Role::query()
+            ->with(['user', 'children:parent_id,role', 'parent'])
+            ->when($keyword, function (Builder $query) use ($keyword) {
+                $query->where('role', 'LIKE', "%$keyword%");
+            })
+            ->paginate();
         $users = User::query()->get(['id', 'name']);
         $supervisors = Role::query()->get(['id', 'role']);
         return view('role.index', compact('roles', 'users', 'supervisors'));

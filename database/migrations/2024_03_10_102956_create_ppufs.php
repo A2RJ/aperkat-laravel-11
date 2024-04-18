@@ -22,12 +22,12 @@ return new class extends Migration
             $table->string('iku');
             $table->string('ppuf_number');
             $table->enum('activity_type', ['program', 'pengadaan', 'pemeliharaan', 'pengembangan']);
-            $table->string('program_name');
+            $table->text('program_name');
             $table->text('description');
             $table->string('place');
             $table->string('date');
             $table->string('budget');
-            $table->string('detail')->nullable();
+            $table->text('detail')->nullable();
             $table->timestamps();
             $table->softDeletesTz('deleted_at', precision: 0);
         });
