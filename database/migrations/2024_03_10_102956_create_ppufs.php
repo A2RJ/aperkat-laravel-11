@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('ppuf_number');
             $table->enum('activity_type', ['program', 'pengadaan', 'pemeliharaan', 'pengembangan']);
             $table->string('program_name');
-            $table->string('description');
+            $table->text('description');
             $table->string('place');
             $table->string('date');
             $table->string('budget');

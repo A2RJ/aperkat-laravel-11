@@ -55,8 +55,6 @@ return new class extends Migration
             $table->string('report_file')->nullable();
             $table->boolean('is_disbursement_complete')->default(false);
             $table->boolean('is_done')->default(false);
-            $table->timestamps();
-            $table->softDeletesTz('deleted_at', precision: 0);
         });
     }
 

@@ -18,6 +18,8 @@ return new class extends Migration
                 ->on('disbursement_periods')
                 ->cascadeOnUpdate()
                 ->nullOnDelete();
+            $table->timestamps();
+            $table->softDeletesTz('deleted_at', precision: 0);
         });
     }
 
@@ -27,6 +29,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('submissions', function (Blueprint $table) {
+            $table->dropColumn('created_at');
+            $table->dropColumn('updated_at');
+            $table->dropColumn('deleted_at');
             $table->dropColumn('disbursement_period_id');
         });
     }
