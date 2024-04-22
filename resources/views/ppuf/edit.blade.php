@@ -120,7 +120,7 @@
                         </div>
                         <div class="col-12 mb-3">
                             <label for="budget">RAB</label>
-                            <input type="text" class="form-control @error('budget') is-invalid @enderror" id="budget" name="budget" required value="{{ old('budget', $ppuf->budget) }}">
+                            <input type="text" class="form-control @error('budget') is-invalid @enderror" id="budget" name="budget" required value="{{ old('budget', $ppuf->budget_idr) }}">
                             @error('budget')
                             <div class="invalid-feedback">
                                 {{ $message }}

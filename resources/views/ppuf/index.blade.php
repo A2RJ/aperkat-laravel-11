@@ -86,7 +86,7 @@
                                 <td>{{ ucfirst($ppuf->activity_type) }}</td>
                                 <td>{{ $ppuf->program_name }}</td>
                                 <td>{{ $ppuf->place }}, {{ $ppuf->date }}</td>
-                                <td>{{ $ppuf->budget }}</td>
+                                <td>{{ $ppuf->budget_idr }}</td>
                                 <td>
                                     <div class="d-flex">
                                         <a class="btn btn-sm btn-success mr-1 mb-1" href="{{ route('ppuf.edit', $ppuf->id) }}" target="_blank">

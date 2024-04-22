@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- *
+ * 
  *
  * @property int $id
  * @property int|null $ppuf_id
@@ -64,6 +64,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Submission whereVendor($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Submission withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Submission withoutTrashed()
+ * @property array $budget_detail
+ * @property int|null $disbursement_period_id
+ * @property-read \App\Models\Role|null $approval
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Disbursement> $disbursements
+ * @property-read int|null $disbursements_count
+ * @property-read mixed $can_edit
+ * @property-read \App\Models\DisbursementPeriod|null $period
+ * @method static \Illuminate\Database\Eloquent\Builder|Submission whereBudgetDetail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Submission whereDisbursementPeriodId($value)
+ * @property-read mixed $approved_budget_idr
+ * @property-read mixed $budget_idr
  * @mixin \Eloquent
  */
 class Submission extends Model
@@ -91,16 +102,26 @@ class Submission extends Model
         'is_done'
     ];
 
-    protected $appends = ['can_edit'];
+    protected $appends = ['can_edit', 'budget_idr', 'approved_budget_idr'];
 
     protected $casts = [
         'budget_detail' => 'array',
     ];
 
+    public function getBudgetIdrAttribute()
+    {
+        return money($this->budget, 'IDR', true);
+    }
+
+    public function getApprovedBudgetIdrAttribute()
+    {
+        return money($this->budget, 'IDR', true);
+    }
+
     protected function budget(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => money($value, 'IDR', true),
+            get: fn (string $value) => $value,
         );
     }
 

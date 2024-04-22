@@ -179,7 +179,7 @@ class SubmissionController extends Controller
             if ($total > $rab) {
                 return redirect()
                     ->route('submission.create')
-                    ->with('failed', 'Jumlah RAB melebihi RAB pada PPUF ' . $ppuf->ppuf_number . ' yakni ' . $ppuf->budget)
+                    ->with('failed', 'Jumlah RAB melebihi RAB pada PPUF ' . $ppuf->ppuf_number . ' yakni ' . $ppuf->budget_idr)
                     ->withInput();
             }
 

@@ -53,7 +53,7 @@
                             <select class="w-100 border rounded custom-select" id="rabkegiatan" name="rabkegiatan">
                                 @foreach ($ppufs as $ppuf)
                                 <option value="{{ $ppuf->id }}" selected data-chained="{{ $ppuf->id }}">
-                                    {{ $ppuf->budget }}
+                                    {{ $ppuf->budget_idr }}
                                 </option>
                                 @endforeach
                             </select>

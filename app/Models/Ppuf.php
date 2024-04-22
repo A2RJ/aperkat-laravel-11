@@ -48,6 +48,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static \Illuminate\Database\Eloquent\Builder|Ppuf whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Ppuf withTrashed()
  * @method static \Illuminate\Database\Eloquent\Builder|Ppuf withoutTrashed()
+ * @property string $period
+ * @property-read mixed $budget_idr
+ * @method static \Illuminate\Database\Eloquent\Builder|Ppuf wherePeriod($value)
  * @mixin \Eloquent
  */
 class Ppuf extends Model
@@ -68,10 +71,17 @@ class Ppuf extends Model
         'detail',
     ];
 
+    protected $appends = ['budget_idr'];
+
+    public function getBudgetIdrAttribute()
+    {
+        return money($this->budget, 'IDR', true);
+    }
+
     protected function budget(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => money($value, 'IDR', true),
+            get: fn (string $value) => $value,
         );
     }
 
