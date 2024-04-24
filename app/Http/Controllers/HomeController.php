@@ -3,7 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ppuf;
-use DB;
+use App\Models\Submission;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -18,6 +19,12 @@ class HomeController extends Controller
 
     public function dashboard()
     {
+        // tampilkan submission berdasarakan period 
+        // tampilkan submission berdasarakan period pencairan 
+        $submisions = Submission::query()
+            ->orderBy('period')
+            ->get();
+
         $rkat = Ppuf::query()
             ->with('submissions')
             ->where('period', date('Y'))
@@ -35,24 +42,14 @@ class HomeController extends Controller
             return $rkat->submissions;
         })->pluck('approved_budget')->sum();
 
-        // $rkat = DB::table('ppufs')
-        //     ->where('period', date('Y'))
-        //     ->get();
-
-        // $totalRkat = $rkat->count();
-        // $totalRab = $rkat->sum('budget');
-
-        // $submissions = DB::table('submissions')
-        //     ->whereIn('ppuf_id', $rkat->pluck('id'))
-        //     ->get();
-
-        // $totalPengajuan = $submissions->count();
-        // $totalRabDiajukan = $submissions->sum('budget');
-        // $totalRabDisetujui = $submissions->sum('approved_budget');
+        $totalRoleMengajukan = User::whereHas('role', function ($query) {
+            $query->whereHas('ppuf.submissions');
+        })->count();
 
         $output = [
             'total_rkat' => $totalRkat,
             'total_rab' => $totalRab,
+            'total_user_mengajukan' => $totalRoleMengajukan,
             'total_pengajuan' => $totalPengajuan,
             'persentase_pengajuan' => ($totalPengajuan / $totalRkat) * 100,
             'total_rab_diajukan' => $totalRabDiajukan,

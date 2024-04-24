@@ -118,31 +118,31 @@ class User extends Authenticatable
 
     public function superAdmin()
     {
-        return 'Super Admin' == $this->roles();
+        return $this->strictRole->id == 1;
     }
     public function wr2()
     {
-        return 'Warek II Keuangan' == $this->roles();
+        return $this->strictRole->id == 5;
     }
 
     public function dirKeuangan()
     {
-        return 'Direktur Keuangan' == $this->roles();
+        return $this->strictRole->id == 6;
     }
 
     public function rektor()
     {
-        return 'Rektor' == $this->roles();
+        return $this->strictRole->id == 4;
     }
 
     public function dirKeuanganPencairan()
     {
-        return 'SUBDIR Bendahara/Pencairan' == $this->roles();
+        return $this->strictRole->id == 3;
     }
 
     public function dirKeuanganLpj()
     {
-        return 'SUBDIR LPJ dan Monev' == $this->roles();
+        return $this->strictRole->id == 2;
     }
 
     public function user()

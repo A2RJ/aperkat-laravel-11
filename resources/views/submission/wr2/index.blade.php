@@ -119,7 +119,7 @@
                                     @endif
                                 </td>
                                 <td>{{ $submission->ppuf->ppuf_number }}</td>
-                                <td>{{ $submission->ppuf->program_name }}</td>
+                                <td>{{ substr($submission->ppuf->program_name, 0, 50) }}</td>
                                 <td>{{ $submission->background }}</td>
                                 <td>{{ ucfirst($submission->place) }}, {{ ucfirst($submission->ppuf->date) }}</td>
                                 <td>{{ $submission->budget }}</td>
