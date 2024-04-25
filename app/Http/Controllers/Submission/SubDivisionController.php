@@ -481,4 +481,9 @@ class SubDivisionController extends Controller
     {
         return response()->download(storage_path('app/public/' . $submission->report_file));
     }
+
+    public function print(Submission $submission)
+    {
+        return view('submission.print.index')->with('submission', $submission);
+    }
 }
