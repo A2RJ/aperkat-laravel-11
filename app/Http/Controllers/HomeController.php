@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ppuf;
 use App\Models\Submission;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
@@ -19,10 +20,43 @@ class HomeController extends Controller
 
     public function dashboard()
     {
-        // tampilkan submission berdasarakan period 
-        // tampilkan submission berdasarakan period pencairan 
-        $submisions = Submission::query()
-            ->orderBy('period')
+        $months = [
+            'januari',
+            'februari',
+            'maret',
+            'april',
+            'mei',
+            'juni',
+            'juli',
+            'agustus',
+            'september',
+            'oktober',
+            'november',
+            'desember',
+        ];
+
+        $ppuf_month = [];
+
+        foreach ($months as $month) {
+            $ppuf_month[strtolower($month) . ' ' . date('Y')] = 0;
+        }
+        foreach ($months as $month) {
+            $ppuf_month[strtolower($month) . ' ' . (date('Y') + 1)] = 0;
+        }
+
+        $ppufs = Ppuf::whereIn('period', [date('Y'), date('Y') + 1])
+            ->orderByRaw("FIELD(`date`, '" . implode("','", $months) . "')")
+            ->get();
+
+        foreach ($ppufs as $ppuf) {
+            $key = strtolower($ppuf->date) . ' ' . $ppuf->period;
+            $ppuf_month[$key]++;
+        }
+
+        $user = User::query()
+            ->whereHas('role', function (Builder $query) {
+                $query->whereHas('ppuf');
+            })
             ->get();
 
         $rkat = Ppuf::query()
@@ -58,6 +92,6 @@ class HomeController extends Controller
             'persentase_sudah_disetujui' => ($totalRabDisetujui / $totalRabDiajukan) * 100,
         ];
 
-        return view('home', compact('output'));
+        return view('home', compact('output', 'user', 'ppuf_month'));
     }
 }
