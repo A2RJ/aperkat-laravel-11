@@ -89,7 +89,7 @@ class HomeController extends Controller
             'total_rab_diajukan' => $totalRabDiajukan,
             'persentase_rab_diajukan' => ($totalRabDiajukan / $totalRab) * 100,
             'total_rab_disetujui' => $totalRabDisetujui,
-            'persentase_sudah_disetujui' => ($totalRabDisetujui / $totalRabDiajukan) * 100,
+            'persentase_sudah_disetujui' => ($totalRabDiajukan != 0) ? ($totalRabDisetujui / $totalRabDiajukan) * 100 : 0,
         ];
 
         return view('home', compact('output', 'user', 'ppuf_month'));

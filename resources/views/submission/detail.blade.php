@@ -324,7 +324,7 @@
 
                     <div class="card-body p-4">
                         <div class="mb-4">
-                            <a href="#" class="btn btn-sm btn-primary mt-1">
+                            <a href="{{ route('submission.print', $submission->id) }}" target="_blank" class="btn btn-sm btn-primary mt-1">
                                 <i class="fas fa-download fa-sm text-white-50"></i> Print TOR
                             </a>
                             <a href="#" class="btn btn-sm btn-primary mt-1">
