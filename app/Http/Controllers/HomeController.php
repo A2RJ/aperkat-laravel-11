@@ -23,25 +23,65 @@ class HomeController extends Controller
         $monthsInNextYear = ['januari', 'februari'];
         $ppuf_month = [];
 
-        foreach ($monthsInThisYear as $month) {
-            $ppuf_month[strtolower($month) . ' ' . date('Y')] = 0;
-        }
-        foreach ($monthsInNextYear as $month) {
-            $ppuf_month[strtolower($month) . ' ' . (date('Y') + 1)] = 0;
-        }
+        $currentMonth = date('n');
+        $targetMonth = 3;
+        $year = date('Y');
+        $monthsInThisYear = collect($monthsInThisYear)
+            ->map(function ($month) use ($currentMonth, $targetMonth, $year) {
+                if ($currentMonth < $targetMonth) $year--;
+                return strtolower($month) . ' ' . $year;
+            })->toArray();
+        $monthsInNextYear = collect($monthsInNextYear)
+            ->map(function ($month) use ($currentMonth, $targetMonth, $year) {
+                if ($currentMonth >= $targetMonth) $year++;
+                return strtolower($month) . ' ' . $year;
+            })->toArray();
+        $monthsCollection = collect(array_merge($monthsInThisYear, $monthsInNextYear));
+
+        $monthsCollection->each(function ($month) use (&$ppuf_month) {
+            $ppuf_month[$month] = [
+                'count' => 0,
+                'budget' => 0,
+                'submissions' => 0,
+                'submissions_budget' => 0,
+                'approved_budget' => 0,
+                'data' => []
+            ];
+        });
 
         $ppufs = Ppuf::whereIn('period', [date('Y'), date('Y') + 1])
-            ->orderByRaw("FIELD(`date`, '" . implode("','", array_merge($monthsInNextYear, $monthsInThisYear)) . "')")
+            ->orderByRaw("FIELD(`date`, '" . $monthsCollection->implode("','") . "')")
             ->get();
 
-        foreach ($ppufs as $ppuf) {
+        $ppufs->each(function (Ppuf $ppuf) use (&$ppuf_month) {
             $key = strtolower($ppuf->date) . ' ' . $ppuf->period;
             if (array_key_exists($key, $ppuf_month)) {
-                $ppuf_month[$key]++;
+                $ppuf_month[$key]['count']++;
+                $ppuf_month[$key]['budget'] += intval($ppuf->budget);
+                $ppuf_month[$key]['submissions'] += count($ppuf->submissions);
+                $ppuf_month[$key]['submissions_budget'] += collect($ppuf->submissions)
+                    ->pluck('budget')
+                    ->each(fn ($item) => intval($item))
+                    ->sum();
+                $ppuf_month[$key]['approved_budget'] += collect($ppuf->submissions)
+                    ->pluck('approved_budget')
+                    ->each(fn ($item) => intval($item))
+                    ->sum();
+                $ppuf_month[$key]['data'][] = [
+                    'budget' => intval($ppuf->budget)
+                ];
             }
-        }
+        });
 
-        return $ppuf_month;
+        $chart = [];
+        foreach ($ppuf_month as $key => $value) {
+            $chart[] = [
+                'bulan' => $key,
+                'budget' => $value['approved_budget']
+            ];
+        }
+        $bulanChart = collect($chart)->pluck("bulan")->all();
+        $budgetChart = collect($chart)->pluck("budget")->all();
 
         $user = User::query()
             ->whereHas('role', fn (Builder $query) => $query->whereHas('ppuf'))
@@ -73,6 +113,6 @@ class HomeController extends Controller
             'persentase_sudah_disetujui' => ($totalRabDiajukan != 0) ? ($totalRabDisetujui / $totalRabDiajukan) * 100 : 0,
         ];
 
-        return view('home', compact('output', 'user', 'ppuf_month'));
+        return view('home', compact('output', 'user', 'ppuf_month', 'bulanChart', 'budgetChart'));
     }
 }
