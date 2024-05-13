@@ -103,7 +103,7 @@ class HomeController extends Controller
             ->get();
 
         $totalRkat = $rkat->count();
-        $totalRab = $rkat->pluck('budget')->each(fn ($item) => intval($item))->sum();
+        $totalRab = $rkat->pluck('budget')->map(fn ($item) => intval($item))->sum();
         $totalPengajuan = $rkat->sum(fn ($rkat) => $rkat->submissions->count());
         $totalRabDiajukan = $rkat->flatMap(fn ($rkat) => $rkat->submissions)->pluck('budget')->each(fn ($item) => intval($item))->sum();
         $totalRabDisetujui = $rkat->flatMap(fn ($rkat) => $rkat->submissions)->pluck('approved_budget')->each(fn ($item) => intval($item))->sum();
@@ -267,7 +267,7 @@ class HomeController extends Controller
             ->get();
 
         $totalRkat = $rkat->count();
-        $totalRab = $rkat->pluck('budget')->each(fn ($item) => intval($item))->sum();
+        $totalRab = $rkat->pluck('budget')->map(fn ($item) => intval($item))->sum();
         $totalPengajuan = $rkat->sum(fn ($rkat) => $rkat->submissions->count());
         $totalRabDiajukan = $rkat->flatMap(fn ($rkat) => $rkat->submissions)->pluck('budget')->each(fn ($item) => intval($item))->sum();
         $totalRabDisetujui = $rkat->flatMap(fn ($rkat) => $rkat->submissions)->pluck('approved_budget')->each(fn ($item) => intval($item))->sum();

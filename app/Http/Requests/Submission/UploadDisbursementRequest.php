@@ -24,7 +24,7 @@ class UploadDisbursementRequest extends FormRequest
         return [
             'submission_id' => 'required|exists:submissions,id',
             'budget' => 'required',
-            'file' => 'required|mimes:png,jpg,jpeg|max:3072'
+            'file' => 'required|file|max:10240'
         ];
     }
 }
