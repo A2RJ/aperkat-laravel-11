@@ -110,17 +110,36 @@ class HomeController extends Controller
 
         $totalRoleMengajukan = User::whereHas('role', fn ($query) => $query->whereHas('ppuf.submissions'))->count();
 
+        $totalRkat = $totalRkat ?? 0;
+        $totalRab = $totalRab ?? 0;
+        $totalPengajuan = $totalPengajuan ?? 0;
+        $totalRabDiajukan = $totalRabDiajukan ?? 0;
+        $totalRabDisetujui = $totalRabDisetujui ?? 0;
+        $totalRoleMengajukan = $totalRoleMengajukan ?? 0;
+
         $output = [
             'total_rkat' => $totalRkat,
             'total_rab' => $totalRab,
             'total_user_mengajukan' => $totalRoleMengajukan,
             'total_pengajuan' => $totalPengajuan,
-            'persentase_pengajuan' => round(($totalPengajuan / $totalRkat) * 100, 2),
+            'persentase_pengajuan' => 0.0,
             'total_rab_diajukan' => $totalRabDiajukan,
-            'persentase_rab_diajukan' => round(($totalRabDiajukan / $totalRab) * 100, 2),
+            'persentase_rab_diajukan' => 0.0,
             'total_rab_disetujui' => $totalRabDisetujui,
-            'persentase_sudah_disetujui' => ($totalRabDiajukan != 0) ? round(($totalRabDisetujui / $totalRabDiajukan) * 100, 2) : 0,
+            'persentase_sudah_disetujui' => 0.0,
         ];
+
+        if ($totalRkat != 0) {
+            $output['persentase_pengajuan'] = round(($totalPengajuan / $totalRkat) * 100, 2);
+        }
+
+        if ($totalRab != 0) {
+            $output['persentase_rab_diajukan'] = round(($totalRabDiajukan / $totalRab) * 100, 2);
+        }
+
+        if ($totalRabDiajukan != 0) {
+            $output['persentase_sudah_disetujui'] = round(($totalRabDisetujui / $totalRabDiajukan) * 100, 2);
+        }
 
         return view('home', compact('output', 'user', 'ppuf_month', 'bulanChart', 'budgetChart'));
     }
@@ -278,17 +297,36 @@ class HomeController extends Controller
                 ->whereHas('ppuf.submissions');
         })->count();
 
+        $totalRkat = $totalRkat ?? 0;
+        $totalRab = $totalRab ?? 0;
+        $totalPengajuan = $totalPengajuan ?? 0;
+        $totalRabDiajukan = $totalRabDiajukan ?? 0;
+        $totalRabDisetujui = $totalRabDisetujui ?? 0;
+        $totalRoleMengajukan = $totalRoleMengajukan ?? 0;
+
         $output = [
             'total_rkat' => $totalRkat,
             'total_rab' => $totalRab,
             'total_user_mengajukan' => $totalRoleMengajukan,
             'total_pengajuan' => $totalPengajuan,
-            'persentase_pengajuan' => round(($totalPengajuan / $totalRkat) * 100, 2),
+            'persentase_pengajuan' => 0.0,
             'total_rab_diajukan' => $totalRabDiajukan,
-            'persentase_rab_diajukan' => round(($totalRabDiajukan / $totalRab) * 100, 2),
+            'persentase_rab_diajukan' => 0.0,
             'total_rab_disetujui' => $totalRabDisetujui,
-            'persentase_sudah_disetujui' => ($totalRabDiajukan != 0) ? round(($totalRabDisetujui / $totalRabDiajukan) * 100, 2) : 0,
+            'persentase_sudah_disetujui' => 0.0,
         ];
+
+        if ($totalRkat != 0) {
+            $output['persentase_pengajuan'] = round(($totalPengajuan / $totalRkat) * 100, 2);
+        }
+
+        if ($totalRab != 0) {
+            $output['persentase_rab_diajukan'] = round(($totalRabDiajukan / $totalRab) * 100, 2);
+        }
+
+        if ($totalRabDiajukan != 0) {
+            $output['persentase_sudah_disetujui'] = round(($totalRabDisetujui / $totalRabDiajukan) * 100, 2);
+        }
 
         return view('home', compact('output', 'user', 'ppuf_month', 'bulanChart', 'budgetChart'));
     }
