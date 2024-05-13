@@ -122,7 +122,7 @@ class User extends Authenticatable
     }
     public function wr2()
     {
-        return $this->strictRole->id == 5;
+        return $this->strictRole->id == 5 || $this->superAdmin();
     }
 
     public function dirKeuangan()

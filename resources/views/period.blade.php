@@ -8,22 +8,10 @@
         <div class="card shadow">
             <!-- Card Header - Dropdown -->
             <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                <h6 class="m-0 font-weight-bold text-primary">Daftar Pengajuan Sub Divisi</h6>
+                <h6 class="m-0 font-weight-bold text-primary">Daftar Pengajuan Pada Bulan {{ ucfirst($period) }}</h6>
             </div>
 
             <div class="card-body p-4">
-                @if (session()->has('success'))
-                <div class="alert alert-success">
-                    {{ session()->get('success') }}.
-                </div>
-                @endif
-
-                @if (session()->has('failed'))
-                <div class="alert alert-danger">
-                    {{ session()->get('failed') }}.
-                </div>
-                @endif
-
                 <div class="mb-4">
                     <form action="{{ url()->current() }}" method="get">
                         <div class="row">
@@ -39,12 +27,6 @@
                                         Selesai
                                     </option>
                                 </select>
-                            </div>
-                            <div class="col-sm ">
-                                <input class="form-control " type="date" id="start" name="start" value="{{ request('start') }}" />
-                            </div>
-                            <div class="col-sm ">
-                                <input class="form-control " type="date" id="end" name="end" value="{{ request('end') }}" />
                             </div>
                             <div class="col-sm ">
                                 <input class="form-control " type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" placeholder="Keyword">

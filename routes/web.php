@@ -22,6 +22,9 @@ Route::middleware('auth')->group(function () {
     Route::controller(HomeController::class)->group(function () {
         Route::get('/', 'home')->name('home')->withoutMiddleware('auth');
         Route::get('dashboard', 'dashboard')->name('dashboard');
+        Route::get('user-dashboard', 'userDashboard')->name('user.dashboard');
+        Route::get('period/{period}', 'period')->name('ppuf.period');
+        Route::get('user-period/{period}', 'userPeriod')->name('user.period');
     });
 
     Route::resource('user', UserController::class)->except(['create', 'store'])->middleware('super-admin');

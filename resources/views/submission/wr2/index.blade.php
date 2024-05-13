@@ -100,8 +100,7 @@
                                 <th scope="col">Nama Kegiatan</th>
                                 <th scope="col">Latar Belakang</th>
                                 <th scope="col">Tempat dan Waktu</th>
-                                <th scope="col">RAB diajukan</th>
-                                <th scope="col">RAB disetujui</th>
+                                <th scope="col">RAB diajukan (RAB disetujui)</th>
                                 <th scope="col">Periode</th>
                                 <th scope="col">Action</th>
                             </tr>
@@ -120,10 +119,9 @@
                                 </td>
                                 <td>{{ $submission->ppuf->ppuf_number }}</td>
                                 <td>{{ substr($submission->ppuf->program_name, 0, 50) }}</td>
-                                <td>{{ $submission->background }}</td>
+                                <td>{{ substr($submission->background, 0, 50) }}</td>
                                 <td>{{ ucfirst($submission->place) }}, {{ ucfirst($submission->ppuf->date) }}</td>
-                                <td>{{ $submission->budget }}</td>
-                                <td>{{ $submission->approved_budget }}</td>
+                                <td>{{ $submission->budget }} ({{ $submission->approved_budget }})</td>
                                 <td>{{ $submission->period?->period }}</td>
                                 <td>
                                     <div class="d-flex">

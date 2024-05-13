@@ -11,7 +11,6 @@
 
 <!-- Content Row -->
 <div class="row">
-
     <div class="col-xl-4 col-md-6 mb-4">
         <div class="card border-left-primary shadow h-100 py-2">
             <div class="card-body">
@@ -163,9 +162,8 @@
                                 <th>Jumlah PPUF</th>
                                 <th>RAB PPUF</th>
                                 <th>Jumlah Pengajuan</th>
-                                <th>RAB Pengajuan</th>
+                                <th>RAB Diajukan</th>
                                 <th>RAB Disetujui</th>
-                                <th>Persentase Diajukan</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -175,9 +173,8 @@
                                 <th>Jumlah PPUF</th>
                                 <th>RAB PPUF</th>
                                 <th>Jumlah Pengajuan</th>
-                                <th>RAB Pengajuan</th>
+                                <th>RAB Diajukan</th>
                                 <th>RAB Disetujui</th>
-                                <th>Persentase Diajukan</th>
                                 <th>Aksi</th>
                             </tr>
                         </tfoot>
@@ -187,11 +184,21 @@
                                 <td>{{ ucfirst($key) }}</td>
                                 <td>{{ $ppuf['count'] }}</td>
                                 <td>{{ money($ppuf['budget'], 'IDR', true) }}</td>
-                                <td>{{ $ppuf['submissions'] }}</td>
-                                <td>{{ money($ppuf['submissions_budget'], 'IDR', true) }}</td>
-                                <td>{{ money($ppuf['approved_budget'], 'IDR', true) }}</td>
-                                <td>{{ round(($ppuf['submissions'] / $ppuf['count']) * 100, 2) }}%</td>
-                                <td></td>
+                                <td>
+                                    {{ $ppuf['submissions'] }} (
+                                    {{ ($ppuf['count'] != 0 && $ppuf['submissions'] != 0) ? round(($ppuf['submissions'] / $ppuf['count']) * 100, 2) : 0 }}%)
+                                </td>
+                                <td>
+                                    {{ money($ppuf['submissions_budget'], 'IDR', true) }} (
+                                    {{ ($ppuf['budget'] != 0) ? round(($ppuf['approved_budget'] / $ppuf['budget']) * 100, 2) : 0 }}%)
+                                </td>
+                                <td>
+                                    {{ money($ppuf['approved_budget'], 'IDR', true) }} (
+                                    {{ ($ppuf['submissions_budget'] != 0 && $ppuf['approved_budget'] != 0) ? round(($ppuf['approved_budget'] / $ppuf['submissions_budget']) * 100, 2) : 0 }}%)
+                                </td>
+                                <td>
+                                    <a class="btn btn-primary" href="{{ route('ppuf.period', $key) }}" target="_blank" role="button">Detail</a>
+                                </td>
                             </tr>
                             @endforeach
                         </tbody>

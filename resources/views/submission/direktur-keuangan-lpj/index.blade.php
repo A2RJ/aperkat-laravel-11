@@ -78,8 +78,7 @@
                                 <th scope="col">Nama Kegiatan</th>
                                 <th scope="col">Latar Belakang</th>
                                 <th scope="col">Tempat dan Waktu</th>
-                                <th scope="col">RAB Diajukan</th>
-                                <th scope="col">RAB Disetujui</th>
+                                <th scope="col">RAB Diajukan (RAB Disetujui)</th>
                                 <th scope="col">Periode Pencairan</th>
                                 <th scope="col">Bukti Pencairan</th>
                                 <th scope="col">File LPJ</th>
@@ -100,10 +99,9 @@
                                 </td>
                                 <td>{{ $submission->ppuf->ppuf_number }}</td>
                                 <td>{{ substr($submission->ppuf->program_name, 0, 50) }}</td>
-                                <td>{{ $submission->background }}</td>
+                                <td>{{ substr($submission->background, 0, 50) }}</td>
                                 <td>{{ ucfirst($submission->place) }}, {{ ucfirst($submission->ppuf->date) }}</td>
-                                <td>{{ $submission->budget }}</td>
-                                <td>{{ $submission->approved_budget }}</td>
+                                <td>{{ $submission->budget }} ({{ $submission->approved_budget }})</td>
                                 <td>{{ $submission->period?->period }}</td>
                                 <td>
                                     <ul class="tw-list-disc ml-3 ">
