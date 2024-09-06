@@ -44,6 +44,16 @@
                                 @enderror
                             </div>
                             <div class="col-12 col-lg-6 mb-3">
+                                <label for="period">Tahun Perode (Misal: 2024)</label>
+                                <input type="number" class="form-control @error('period') is-invalid @enderror"
+                                    id="period" name="period" required value="{{ old('period') }}">
+                                @error('period')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+                            <div class="col-12 col-lg-6 mb-3">
                                 <label for="program_name">Nama Program</label>
                                <textarea class="form-control @error('program_name') is-invalid @enderror" id="program_name" name="program_name"
                                     required>{{ old('program_name') }}</textarea>

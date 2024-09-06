@@ -3,7 +3,8 @@
     "type": "module",
     "scripts": {
         "dev": "vite",
-        "build": "vite build"
+        "build": "vite build",
+        "start": "concurrently \"npm run dev\" \"php artisan serve\""
     },
     "devDependencies": {
         "autoprefixer": "^10.4.18",
@@ -14,6 +15,7 @@
         "vite": "^5.0"
     },
     "dependencies": {
-        "bootstrap-select": "^1.13.18"
+        "bootstrap-select": "^1.13.18",
+        "concurrently": "^8.2.2"
     }
 }

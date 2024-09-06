@@ -1,0 +1,8 @@
+
+protected $connection = 'nonrkat';
+
+php artisan migrate --database=nonrkat
+
+DB::connection('nonrkat')->table('some_table')->get();
+
+https://medium.com/@mrcyna/automate-laravel-multi-db-migrations-dd7b3dba7f5e

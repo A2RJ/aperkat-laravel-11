@@ -24,6 +24,7 @@ class PpufRequest extends FormRequest
         return [
             'role_id' => 'required|exists:roles,id',
             'ppuf_number' => 'required',
+            'period' => 'required',
             'iku' => 'required',
             'activity_type' => 'required|in:program,pengadaan,pemeliharaan,pengembangan',
             'program_name' => 'required',

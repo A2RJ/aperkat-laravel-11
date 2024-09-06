@@ -1,3 +1,9 @@
+# APERKAT
+
+## TODO: NEXT UPDATE
+- [ ] Non RKAT tanpa ppuf
+- [ ] 
+
 - STEP PER STEP
 [ ] User
     - ppuf
@@ -33,7 +39,7 @@
     - pengajuan semua sub divisi
     - terima dan revisi lpj
     
-## PROGRESS
+## NOTE
 - ok - Bulan pada form pengajuan otomatis dari RKAT dan tidak bisa diajukan jika sudah lewat bulan
 - ok - validasi pengjuan pada tipe program
 - ok - validasi 5 slot upload
