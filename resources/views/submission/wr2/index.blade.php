@@ -13,29 +13,30 @@
 
             <div class="card-body p-4">
                 @if (session()->has('success'))
-                <div class="alert alert-success">
-                    {{ session()->get('success') }}.
-                </div>
+                    <div class="alert alert-success">
+                        {{ session()->get('success') }}.
+                    </div>
                 @endif
 
                 <div id="successMessage" class="alert alert-success" style="display: none;">
-                    Pengajuan pada periode terpilih berhasil diterima. Halaman akan dimuat ulang dalam <span id="countdown"></span>.
+                    Pengajuan pada periode terpilih berhasil diterima. Halaman akan dimuat ulang dalam <span
+                        id="countdown"></span>.
                 </div>
 
                 @if (session()->has('failed'))
-                <div class="alert alert-danger">
-                    {{ session()->get('failed') }}.
-                </div>
+                    <div class="alert alert-danger">
+                        {{ session()->get('failed') }}.
+                    </div>
                 @endif
 
                 @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
                 @endif
 
                 <div class="mb-4">
@@ -55,33 +56,39 @@
                                 </select>
                             </div>
                             <div class="col-sm ">
-                                <input class="form-control " type="date" id="start" name="start" value="{{ request('start') }}" />
+                                <input class="form-control " type="date" id="start" name="start"
+                                    value="{{ request('start') }}" />
                             </div>
                             <div class="col-sm ">
-                                <input class="form-control " type="date" id="end" name="end" value="{{ request('end') }}" />
+                                <input class="form-control " type="date" id="end" name="end"
+                                    value="{{ request('end') }}" />
                             </div>
                             <div class="col-sm ">
-                                <input class="form-control " type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" placeholder="Keyword">
+                                <input class="form-control " type="text" id="keyword" name="keyword"
+                                    value="{{ request('keyword') }}" placeholder="Keyword">
                             </div>
                         </div>
 
                         <div class="row mt-2">
                             <div class="col-sm">
-                                <select class="w-100 border rounded selectpicker" id="period" name="period" data-live-search="true">
+                                <select class="w-100 border rounded selectpicker" id="period" name="period"
+                                    data-live-search="true">
                                     <option value="">Pilih Periode</option>
                                     @foreach ($periods as $period)
-                                    <option value="{{ $period->id }}" {{ request('period') == $period->id ? 'selected' : '' }}>{{ $period->period }}</option>
+                                        <option value="{{ $period->id }}" {{ request('period') == $period->id ? 'selected' : '' }}>{{ $period->period }}</option>
                                     @endforeach
                                 </select>
                             </div>
                             @if (request('period') && request('status') == 'need approve')
-                            <div class="col-sm">
-                                <button id="approveSubmission" class="btn bg-success btn-success">Terima pengajuan</button>
-                            </div>
+                                <div class="col-sm">
+                                    <button id="approveSubmission" class="btn bg-success btn-success">Terima
+                                        pengajuan</button>
+                                </div>
                             @endif
                             <div class="col-sm">
                                 <button class="btn bg-primary btn-primary " type="submit">Filter</button>
-                                <a href="{{ url()->current() }}"><button class="btn bg-warning btn-warning" type="button">Clear</button></a>
+                                <a href="{{ url()->current() }}"><button class="btn bg-warning btn-warning"
+                                        type="button">Clear</button></a>
                             </div>
                             <div class="col-sm">
                             </div>
@@ -107,35 +114,37 @@
                         </thead>
                         <tbody>
                             @foreach ($submissions as $submission)
-                            <tr>
-                                <th scope="row">{{ $loop->iteration + $submissions->firstItem() - 1 }}</th>
-                                <td>{{ $submission->ppuf->author->role }}</td>
-                                <td class="{{$submission->status->last()->status ? 'text-success ': 'text-warning ' }}">
-                                    @if ($submission->status->last()->message == 'LPJ telah disetujui')
-                                    Selesai
-                                    @else
-                                    {{ $submission->status->last()->role->role }}: {{ substr($submission->status->last()->message, 0, 10) }}...
-                                    @endif
-                                </td>
-                                <td>{{ $submission->ppuf->ppuf_number }}</td>
-                                <td>{{ substr($submission->ppuf->program_name, 0, 50) }}</td>
-                                <td>{{ substr($submission->background, 0, 50) }}</td>
-                                <td>{{ ucfirst($submission->place) }}, {{ ucfirst($submission->ppuf->date) }}</td>
-                                <td>{{ $submission->budget }} ({{ $submission->approved_budget }})</td>
-                                <td>{{ $submission->period?->period }}</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a class="btn btn-sm btn-success mr-1 mb-1" href="{{ route('submission.show', $submission->id) }}" target="_blank">
-                                            <i class="fas fa-fw fa-info"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <th scope="row">{{ $loop->iteration + $submissions->firstItem() - 1 }}</th>
+                                    <td>{{ $submission->ppuf->author->role }}</td>
+                                    <td class="{{$submission->status->last()->status ? 'text-success ' : 'text-warning ' }}">
+                                        @if ($submission->status->last()->message == 'LPJ telah disetujui')
+                                            Selesai
+                                        @else
+                                            {{ $submission->status->last()->role->role }}:
+                                            {{ substr($submission->status->last()->message, 0, 10) }}...
+                                        @endif
+                                    </td>
+                                    <td>{{ $submission->ppuf->ppuf_number }}</td>
+                                    <td>{{ substr($submission->ppuf->program_name, 0, 50) }}</td>
+                                    <td>{{ substr($submission->background, 0, 50) }}</td>
+                                    <td>{{ ucfirst($submission->place) }}, {{ ucfirst($submission->ppuf->date) }}</td>
+                                    <td>{{ $submission->budget }} ({{ $submission->approved_budget }})</td>
+                                    <td>{{ $submission->period?->period }}</td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <a class="btn btn-sm btn-success mr-1 mb-1"
+                                                href="{{ route('submission.show', $submission->id) }}" target="_blank">
+                                                <i class="fas fa-fw fa-info"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
                     <div class="float-right ">
-                        {{ $submissions->links() }}
+                        {{ $submissions->appends(request()->query())->links() }}
                     </div>
                 </div>
             </div>
@@ -147,10 +156,10 @@
 @section('scriptjs')
 <script src="/sb-admin-2/vendor/bootstrap-select/bootstrap-select.min.js"></script>
 <script type="text/javascript" charset="utf-8">
-    $(function() {
+    $(function () {
         $('.selectpicker').selectpicker()
 
-        $('#approveSubmission').click(function(e) {
+        $('#approveSubmission').click(function (e) {
             e.preventDefault();
             var period = "{{ request('period') }}";
 
@@ -164,14 +173,14 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 },
-                success: function(response) {
+                success: function (response) {
                     $('#successMessage').show();
 
                     var secondsLeft = 5; // Set countdown awal 5 detik
                     updateCountdown(secondsLeft); // Tampilkan countdown awal
 
                     // Jalankan countdown
-                    var countdownInterval = setInterval(function() {
+                    var countdownInterval = setInterval(function () {
                         secondsLeft--; // Kurangi detik yang tersisa
                         updateCountdown(secondsLeft); // Tampilkan countdown yang diperbarui
 

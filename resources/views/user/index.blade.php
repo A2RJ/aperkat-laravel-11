@@ -17,11 +17,13 @@
                     <form action="{{ url()->current() }}" method="get">
                         <div class="row">
                             <div class="col-sm ">
-                                <input class="form-control " type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" placeholder="Keyword">
+                                <input class="form-control " type="text" id="keyword" name="keyword"
+                                    value="{{ request('keyword') }}" placeholder="Keyword">
                             </div>
                             <div class="col-sm">
                                 <button class="btn bg-primary btn-primary px-4" type="submit">Filter</button>
-                                <a href="{{ url()->current() }}"><button class="btn bg-warning btn-warning px-4" type="button">Clear</button></a>
+                                <a href="{{ url()->current() }}"><button class="btn bg-warning btn-warning px-4"
+                                        type="button">Clear</button></a>
                             </div>
                         </div>
                     </form>
@@ -40,22 +42,22 @@
                         </thead>
                         <tbody>
                             @foreach ($users as $user)
-                            <tr>
-                                <th scope="row">{{ $loop->iteration + $users->firstItem() - 1 }}</th>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->whatsapp }}</td>
-                                <td>
-                                    <button class="btn bg-danger btn-sm btn-danger" type="button">
-                                        <i class="fas fa-fw fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <th scope="row">{{ $loop->iteration + $users->firstItem() - 1 }}</th>
+                                    <td>{{ $user->name }}</td>
+                                    <td>{{ $user->email }}</td>
+                                    <td>{{ $user->whatsapp }}</td>
+                                    <td>
+                                        <button class="btn bg-danger btn-sm btn-danger" type="button">
+                                            <i class="fas fa-fw fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
                     <div class="float-right ">
-                        {{ $users->links() }}
+                        {{ $users->appends(request()->query())->links() }}
                     </div>
                 </div>
             </div>

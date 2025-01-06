@@ -13,15 +13,15 @@
 
             <div class="card-body p-4">
                 @if (session()->has('success'))
-                <div class="alert alert-success">
-                    {{ session()->get('success') }}.
-                </div>
+                    <div class="alert alert-success">
+                        {{ session()->get('success') }}.
+                    </div>
                 @endif
 
                 @if (session()->has('failed'))
-                <div class="alert alert-danger">
-                    {{ session()->get('failed') }}.
-                </div>
+                    <div class="alert alert-danger">
+                        {{ session()->get('failed') }}.
+                    </div>
                 @endif
 
                 <div class="mb-4">
@@ -41,17 +41,21 @@
                                 </select>
                             </div>
                             <div class="col-sm ">
-                                <input class="form-control " type="date" id="start" name="start" value="{{ request('start') }}" />
+                                <input class="form-control " type="date" id="start" name="start"
+                                    value="{{ request('start') }}" />
                             </div>
                             <div class="col-sm ">
-                                <input class="form-control " type="date" id="end" name="end" value="{{ request('end') }}" />
+                                <input class="form-control " type="date" id="end" name="end"
+                                    value="{{ request('end') }}" />
                             </div>
                             <div class="col-sm ">
-                                <input class="form-control " type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" placeholder="Keyword">
+                                <input class="form-control " type="text" id="keyword" name="keyword"
+                                    value="{{ request('keyword') }}" placeholder="Keyword">
                             </div>
                             <div class="col-sm">
                                 <button class="btn bg-primary btn-primary px-4" type="submit">Filter</button>
-                                <a href="{{ url()->current() }}"><button class="btn bg-warning btn-warning px-4" type="button">Clear</button></a>
+                                <a href="{{ url()->current() }}"><button class="btn bg-warning btn-warning px-4"
+                                        type="button">Clear</button></a>
                             </div>
                         </div>
                     </form>
@@ -75,35 +79,37 @@
                         </thead>
                         <tbody>
                             @foreach ($submissions as $submission)
-                            <tr>
-                                <th scope="row">{{ $loop->iteration + $submissions->firstItem() - 1 }}</th>
-                                <td>{{ $submission->ppuf->author->role }}</td>
-                                <td class="{{$submission->status->last()->status ? 'text-success ': 'text-warning ' }}">
-                                    @if ($submission->status->last()->message == 'LPJ telah disetujui')
-                                    Selesai
-                                    @else
-                                    {{ $submission->status->last()->role->role }}: {{ substr($submission->status->last()->message, 0, 10) }}...
-                                    @endif
-                                </td>
-                                <td>{{ $submission->ppuf->ppuf_number }}</td>
-                                <td>{{ substr($submission->ppuf->program_name, 0, 50) }}</td>
-                                <td>{{ substr($submission->background, 0, 50) }}</td>
-                                <td>{{ ucfirst($submission->place) }}, {{ ucfirst($submission->ppuf->date) }}</td>
-                                <td>{{ $submission->budget }} ({{ $submission->approved_budget }})</td>
-                                <td>{{ $submission->period?->period }}</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a class="btn btn-sm btn-success mr-1 mb-1" href="{{ route('submission.show', $submission->id) }}" target="_blank">
-                                            <i class="fas fa-fw fa-info"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
+                                <tr>
+                                    <th scope="row">{{ $loop->iteration + $submissions->firstItem() - 1 }}</th>
+                                    <td>{{ $submission->ppuf->author->role }}</td>
+                                    <td class="{{$submission->status->last()->status ? 'text-success ' : 'text-warning ' }}">
+                                        @if ($submission->status->last()->message == 'LPJ telah disetujui')
+                                            Selesai
+                                        @else
+                                            {{ $submission->status->last()->role->role }}:
+                                            {{ substr($submission->status->last()->message, 0, 10) }}...
+                                        @endif
+                                    </td>
+                                    <td>{{ $submission->ppuf->ppuf_number }}</td>
+                                    <td>{{ substr($submission->ppuf->program_name, 0, 50) }}</td>
+                                    <td>{{ substr($submission->background, 0, 50) }}</td>
+                                    <td>{{ ucfirst($submission->place) }}, {{ ucfirst($submission->ppuf->date) }}</td>
+                                    <td>{{ $submission->budget }} ({{ $submission->approved_budget }})</td>
+                                    <td>{{ $submission->period?->period }}</td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <a class="btn btn-sm btn-success mr-1 mb-1"
+                                                href="{{ route('submission.show', $submission->id) }}" target="_blank">
+                                                <i class="fas fa-fw fa-info"></i>
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
                     <div class="float-right ">
-                        {{ $submissions->links() }}
+                        {{ $submissions->appends(request()->query())->links() }}
                     </div>
                 </div>
             </div>

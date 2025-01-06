@@ -9,10 +9,10 @@ use App\Http\Requests\Submission\UploadLpjRequest;
 use App\Mail\SendStatus;
 use App\Models\DisbursementPeriod;
 use App\Models\Submission;
-use Auth;
-use DB;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Mail;
 
 class SubDivisionController extends Controller
@@ -452,7 +452,7 @@ class SubDivisionController extends Controller
             return back()->with('failed', "Berhasil meminta untuk revisi pengajuan");
         } elseif ($action == 'terima') {
 
-            DB::transaction(function () use ($submission,  $role) {
+            DB::transaction(function () use ($submission, $role) {
                 $submission->update([
                     'role_id' => $role->parent->id,
                     'is_done' => true,

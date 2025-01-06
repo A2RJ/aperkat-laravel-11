@@ -13,25 +13,25 @@
 
             <div class="card-body p-4">
                 @if (session()->has('success'))
-                <div class="alert alert-success">
-                    {{ session()->get('success') }}.
-                </div>
+                    <div class="alert alert-success">
+                        {{ session()->get('success') }}.
+                    </div>
                 @endif
 
                 @if (session()->has('failed'))
-                <div class="alert alert-danger">
-                    {{ session()->get('failed') }}.
-                </div>
+                    <div class="alert alert-danger">
+                        {{ session()->get('failed') }}.
+                    </div>
                 @endif
 
                 @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
                 @endif
 
                 <div class="mb-4">
@@ -51,17 +51,21 @@
                                 </select>
                             </div>
                             <div class="col-sm ">
-                                <input class="form-control " type="date" id="start" name="start" value="{{ request('start') }}" />
+                                <input class="form-control " type="date" id="start" name="start"
+                                    value="{{ request('start') }}" />
                             </div>
                             <div class="col-sm ">
-                                <input class="form-control " type="date" id="end" name="end" value="{{ request('end') }}" />
+                                <input class="form-control " type="date" id="end" name="end"
+                                    value="{{ request('end') }}" />
                             </div>
                             <div class="col-sm ">
-                                <input class="form-control " type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" placeholder="Keyword">
+                                <input class="form-control " type="text" id="keyword" name="keyword"
+                                    value="{{ request('keyword') }}" placeholder="Keyword">
                             </div>
                             <div class="col-sm">
                                 <button class="btn bg-primary btn-primary px-4" type="submit">Filter</button>
-                                <a href="{{ url()->current() }}"><button class="btn bg-warning btn-warning px-4" type="button">Clear</button></a>
+                                <a href="{{ url()->current() }}"><button class="btn bg-warning btn-warning px-4"
+                                        type="button">Clear</button></a>
                             </div>
                         </div>
                     </form>
@@ -87,60 +91,66 @@
                         </thead>
                         <tbody>
                             @foreach ($submissions as $submission)
-                            <tr>
-                                <th scope="row">{{ $loop->iteration + $submissions->firstItem() - 1 }}</th>
-                                <td>{{ $submission->ppuf->author->role }}</td>
-                                <td class="{{$submission->status->last()->status ? 'text-success ': 'text-warning ' }}">
-                                    @if ($submission->status->last()->message == 'LPJ telah disetujui')
-                                    Selesai
-                                    @else
-                                    {{ $submission->status->last()->role->role }}: {{ substr($submission->status->last()->message, 0, 10) }}...
-                                    @endif
-                                </td>
-                                <td>{{ $submission->ppuf->ppuf_number }}</td>
-                                <td>{{ substr($submission->ppuf->program_name, 0, 50) }}</td>
-                                <td>{{ substr($submission->background, 0, 50) }}</td>
-                                <td>{{ ucfirst($submission->place) }}, {{ ucfirst($submission->ppuf->date) }}</td>
-                                <td>{{ $submission->budget }} ({{ $submission->approved_budget }})</td>
-                                <td>{{ $submission->period?->period }}</td>
-                                <td>
-                                    <ul class="tw-list-disc ml-3 ">
-                                        @foreach ($submission->disbursements as $disbursement)
-                                        <li>
-                                            <a href="{{ route('pencairan.show', $disbursement->id) }}" target="_blank">
-                                                {{ $disbursement->budget }}
-                                            </a>
-                                        </li>
-                                        @endforeach
-                                    </ul>
-                                </td>
-                                <td>
-                                    @if ($submission->report_file)
-                                    <u>
-                                        <a class="text-primary" href="{{ route('submission.download-lpj', $submission->id) }}" target="_blank">
-                                            File LPJ
-                                        </a>
-                                    </u>
-                                    @endif
-                                </td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a class="btn btn-sm btn-info  mr-1 mb-1" href="{{ route('submission.show', $submission->id) }}" target="_blank">
-                                            <i class="fas fa-fw fa-info"></i>
-                                        </a>
-                                        @if ($submission->role_id == $roleId)
-                                        <a class="btn btn-sm btn-primary mr-1 mb-1" href="#" data-toggle="modal" data-target="#editModal{{ $submission->id }}">
-                                            <i class="fas fa-fw fa-check"></i>
-                                        </a>
+                                <tr>
+                                    <th scope="row">{{ $loop->iteration + $submissions->firstItem() - 1 }}</th>
+                                    <td>{{ $submission->ppuf->author->role }}</td>
+                                    <td
+                                        class="{{$submission->status->last()->status ? 'text-success ' : 'text-warning ' }}">
+                                        @if ($submission->status->last()->message == 'LPJ telah disetujui')
+                                            Selesai
+                                        @else
+                                            {{ $submission->status->last()->role->role }}:
+                                            {{ substr($submission->status->last()->message, 0, 10) }}...
                                         @endif
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td>{{ $submission->ppuf->ppuf_number }}</td>
+                                    <td>{{ substr($submission->ppuf->program_name, 0, 50) }}</td>
+                                    <td>{{ substr($submission->background, 0, 50) }}</td>
+                                    <td>{{ ucfirst($submission->place) }}, {{ ucfirst($submission->ppuf->date) }}</td>
+                                    <td>{{ $submission->budget }} ({{ $submission->approved_budget }})</td>
+                                    <td>{{ $submission->period?->period }}</td>
+                                    <td>
+                                        <ul class="tw-list-disc ml-3 ">
+                                            @foreach ($submission->disbursements as $disbursement)
+                                                <li>
+                                                    <a href="{{ route('pencairan.show', $disbursement->id) }}" target="_blank">
+                                                        {{ $disbursement->budget }}
+                                                    </a>
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        @if ($submission->report_file)
+                                            <u>
+                                                <a class="text-primary"
+                                                    href="{{ route('submission.download-lpj', $submission->id) }}"
+                                                    target="_blank">
+                                                    File LPJ
+                                                </a>
+                                            </u>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <a class="btn btn-sm btn-info  mr-1 mb-1"
+                                                href="{{ route('submission.show', $submission->id) }}" target="_blank">
+                                                <i class="fas fa-fw fa-info"></i>
+                                            </a>
+                                            @if ($submission->role_id == $roleId)
+                                                <a class="btn btn-sm btn-primary mr-1 mb-1" href="#" data-toggle="modal"
+                                                    data-target="#editModal{{ $submission->id }}">
+                                                    <i class="fas fa-fw fa-check"></i>
+                                                </a>
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
                     <div class="float-right ">
-                        {{ $submissions->links() }}
+                        {{ $submissions->appends(request()->query())->appends(request()->query())->links() }}
                     </div>
                 </div>
             </div>
@@ -149,48 +159,53 @@
 </div>
 
 @foreach ($submissions as $submission)
-<div class="modal fade" id="editModal{{ $submission->id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Form LPJ {{ $submission->ppuf->author->role }} -
-                    {{ $submission->ppuf->ppuf_number }}
-                </h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form id="submissionForm" action="{{ route('submission.aksi-lpj', ['submission' => $submission->id]) }}" method="post">
-                    @csrf
-                    <div class="form-row">
-                        <div class="col-12 mb-3">
-                            <textarea id="note" name="note" class="form-control" required placeholder="Tambahkan catatan untuk pengajuan ini"></textarea>
+    <div class="modal fade" id="editModal{{ $submission->id }}" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Form LPJ {{ $submission->ppuf->author->role }} -
+                        {{ $submission->ppuf->ppuf_number }}
+                    </h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="submissionForm" action="{{ route('submission.aksi-lpj', ['submission' => $submission->id]) }}"
+                        method="post">
+                        @csrf
+                        <div class="form-row">
+                            <div class="col-12 mb-3">
+                                <textarea id="note" name="note" class="form-control" required
+                                    placeholder="Tambahkan catatan untuk pengajuan ini"></textarea>
+                            </div>
+                            <div class="col-12 d-flex justify-content-end">
+                                <input id="actionInput" type="hidden" name="action" value="">
+                                <button id="revisiButton" type="button"
+                                    class="btn btn-sm bg-danger btn-danger mr-2">Revisi</button>
+                                <button id="terimaButton" type="button" class="btn btn-sm bg-primary btn-primary">Terima
+                                    Pengajuan</button>
+                            </div>
                         </div>
-                        <div class="col-12 d-flex justify-content-end">
-                            <input id="actionInput" type="hidden" name="action" value="">
-                            <button id="revisiButton" type="button" class="btn btn-sm bg-danger btn-danger mr-2">Revisi</button>
-                            <button id="terimaButton" type="button" class="btn btn-sm bg-primary btn-primary">Terima Pengajuan</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 @endforeach
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         var forms = document.querySelectorAll('#submissionForm');
 
-        forms.forEach(function(form) {
-            form.querySelector('#revisiButton').addEventListener('click', function() {
+        forms.forEach(function (form) {
+            form.querySelector('#revisiButton').addEventListener('click', function () {
                 form.querySelector('#actionInput').value = 'revisi';
                 form.submit();
             });
 
-            form.querySelector('#terimaButton').addEventListener('click', function() {
+            form.querySelector('#terimaButton').addEventListener('click', function () {
                 form.querySelector('#actionInput').value = 'terima';
                 form.submit();
             });

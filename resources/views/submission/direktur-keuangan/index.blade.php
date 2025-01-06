@@ -13,25 +13,25 @@
 
             <div class="card-body p-4">
                 @if (session()->has('success'))
-                <div class="alert alert-success">
-                    {{ session()->get('success') }}.
-                </div>
+                    <div class="alert alert-success">
+                        {{ session()->get('success') }}.
+                    </div>
                 @endif
 
                 @if (session()->has('failed'))
-                <div class="alert alert-danger">
-                    {{ session()->get('failed') }}.
-                </div>
+                    <div class="alert alert-danger">
+                        {{ session()->get('failed') }}.
+                    </div>
                 @endif
 
                 @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
                 @endif
 
                 <div class="mb-4">
@@ -51,17 +51,21 @@
                                 </select>
                             </div>
                             <div class="col-sm ">
-                                <input class="form-control " type="date" id="start" name="start" value="{{ request('start') }}" />
+                                <input class="form-control " type="date" id="start" name="start"
+                                    value="{{ request('start') }}" />
                             </div>
                             <div class="col-sm ">
-                                <input class="form-control " type="date" id="end" name="end" value="{{ request('end') }}" />
+                                <input class="form-control " type="date" id="end" name="end"
+                                    value="{{ request('end') }}" />
                             </div>
                             <div class="col-sm ">
-                                <input class="form-control " type="text" id="keyword" name="keyword" value="{{ request('keyword') }}" placeholder="Keyword">
+                                <input class="form-control " type="text" id="keyword" name="keyword"
+                                    value="{{ request('keyword') }}" placeholder="Keyword">
                             </div>
                             <div class="col-sm">
                                 <button class="btn bg-primary btn-primary px-4" type="submit">Filter</button>
-                                <a href="{{ url()->current() }}"><button class="btn bg-warning btn-warning px-4" type="button">Clear</button></a>
+                                <a href="{{ url()->current() }}"><button class="btn bg-warning btn-warning px-4"
+                                        type="button">Clear</button></a>
                             </div>
                         </div>
                     </form>
@@ -85,42 +89,45 @@
                         </thead>
                         <tbody>
                             @foreach ($submissions as $submission)
-                            <tr>
-                                <th scope="row">{{ $loop->iteration + $submissions->firstItem() - 1 }}</th>
-                                <td>{{ $submission->ppuf->author->role }}</td>
-                                <td class="{{$submission->status->last()->status ? 'text-success ': 'text-warning ' }}">
-                                    @if ($submission->status->last()->message == 'LPJ telah disetujui')
-                                    Selesai
-                                    @else
-                                    {{ $submission->status->last()->role->role }}: {{ substr($submission->status->last()->message, 0, 10) }}...
-                                    @endif
-                                </td>
-                                <td>{{ $submission->ppuf->ppuf_number }}</td>
-                                <td>{{ substr($submission->ppuf->program_name, 0, 50) }}</td>
-                                <td>{{ substr($submission->background, 0, 50) }}</td>
-                                <td>{{ ucfirst($submission->place) }}, {{ ucfirst($submission->ppuf->date) }}</td>
-                                <td>{{ $submission->budget }}</td>
-                                <td>{{ $submission->approved_budget }} ({{ $submission->period?->period }})</td>
-                                <td>
-                                    <div class="d-flex">
-                                        <a class="btn btn-sm btn-success mr-1 mb-1" href="{{ route('submission.show', $submission->id) }}" target="_blank">
-                                            <i class="fas fa-fw fa-info"></i>
-                                        </a>
-                                        @if (!$submission->disbursement_period_id)
-                                        @if ($submission->role_id == $roleId || $submission->role_id == 5)
-                                        <a class="btn btn-sm btn-warning  mr-1 mb-1" href="#" data-toggle="modal" data-target="#editModal{{ $submission->id }}">
-                                            <i class="fas fa-fw fa-edit"></i>
-                                        </a>
+                                <tr>
+                                    <th scope="row">{{ $loop->iteration + $submissions->firstItem() - 1 }}</th>
+                                    <td>{{ $submission->ppuf->author->role }}</td>
+                                    <td class="{{$submission->status->last()->status ? 'text-success ' : 'text-warning ' }}">
+                                        @if ($submission->status->last()->message == 'LPJ telah disetujui')
+                                            Selesai
+                                        @else
+                                            {{ $submission->status->last()->role->role }}:
+                                            {{ substr($submission->status->last()->message, 0, 10) }}...
                                         @endif
-                                        @endif
-                                    </div>
-                                </td>
-                            </tr>
+                                    </td>
+                                    <td>{{ $submission->ppuf->ppuf_number }}</td>
+                                    <td>{{ substr($submission->ppuf->program_name, 0, 50) }}</td>
+                                    <td>{{ substr($submission->background, 0, 50) }}</td>
+                                    <td>{{ ucfirst($submission->place) }}, {{ ucfirst($submission->ppuf->date) }}</td>
+                                    <td>{{ $submission->budget }}</td>
+                                    <td>{{ $submission->approved_budget }} ({{ $submission->period?->period }})</td>
+                                    <td>
+                                        <div class="d-flex">
+                                            <a class="btn btn-sm btn-success mr-1 mb-1"
+                                                href="{{ route('submission.show', $submission->id) }}" target="_blank">
+                                                <i class="fas fa-fw fa-info"></i>
+                                            </a>
+                                            @if (!$submission->disbursement_period_id)
+                                                @if ($submission->role_id == $roleId || $submission->role_id == 5)
+                                                    <a class="btn btn-sm btn-warning  mr-1 mb-1" href="#" data-toggle="modal"
+                                                        data-target="#editModal{{ $submission->id }}">
+                                                        <i class="fas fa-fw fa-edit"></i>
+                                                    </a>
+                                                @endif
+                                            @endif
+                                        </div>
+                                    </td>
+                                </tr>
                             @endforeach
                         </tbody>
                     </table>
                     <div class="float-right ">
-                        {{ $submissions->links() }}
+                        {{ $submissions->appends(request()->query())->links() }}
                     </div>
                 </div>
             </div>
@@ -131,66 +138,73 @@
 
 {{-- Edit modal --}}
 @foreach ($submissions as $submission)
-<div class="modal fade" id="editModal{{ $submission->id }}" tabindex="-1" period="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" period="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Form Periode Pencairan</h5>
-                <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">×</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <form action="{{ route('submission.period', ['submission' => $submission->id]) }}" method="post">
-                    @csrf
-                    <div class="form-row">
-                        <div class="col-12 mb-3">
-                            <label for="submission_id">Detail PPUF</label>
-                            <input type="text" class="form-control" id="submission_id" name="submission_id" value="{{ $submission->ppuf->author->role }} - {{ $submission->ppuf->ppuf_number }} - {{ $submission->budget }}" disabled>
-                        </div>
-
-                        <div class="col-12 mb-3 d-flex flex-column">
-                            <label for="period_id">Periode</label>
-                            <select class="w-100 border rounded selectpicker @error('period_id') is-invalid @enderror" id="period_id" name="period_id" data-live-search="true" required>
-                                <option value="">Pilih Periode</option>
-                                @foreach ($periods as $period)
-                                <option value="{{ $period->id }}">{{ $period->period }}</option>
-                                @endforeach
-                            </select>
-                            @error('period_id')
-                            <div class="invalid-feedback">
-                                {{ $message }}
+    <div class="modal fade" id="editModal{{ $submission->id }}" tabindex="-1" period="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" period="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Form Periode Pencairan</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('submission.period', ['submission' => $submission->id]) }}" method="post">
+                        @csrf
+                        <div class="form-row">
+                            <div class="col-12 mb-3">
+                                <label for="submission_id">Detail PPUF</label>
+                                <input type="text" class="form-control" id="submission_id" name="submission_id"
+                                    value="{{ $submission->ppuf->author->role }} - {{ $submission->ppuf->ppuf_number }} - {{ $submission->budget }}"
+                                    disabled>
                             </div>
-                            @enderror
-                        </div>
 
-                        <div class="col-12 mb-3">
-                            <label for="approved_budget">RAB disetujui</label>
-                            <input type="text" class="form-control @error('approved_budget') is-invalid @enderror" id="approved_budget" name="approved_budget" required value="{{ old('approved_budget', $submission->budget) }}">
-                            @error('approved_budget')
-                            <div class="invalid-feedback">
-                                {{ $message }}
+                            <div class="col-12 mb-3 d-flex flex-column">
+                                <label for="period_id">Periode</label>
+                                <select class="w-100 border rounded selectpicker @error('period_id') is-invalid @enderror"
+                                    id="period_id" name="period_id" data-live-search="true" required>
+                                    <option value="">Pilih Periode</option>
+                                    @foreach ($periods as $period)
+                                        <option value="{{ $period->id }}">{{ $period->period }}</option>
+                                    @endforeach
+                                </select>
+                                @error('period_id')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
                             </div>
-                            @enderror
+
+                            <div class="col-12 mb-3">
+                                <label for="approved_budget">RAB disetujui</label>
+                                <input type="text" class="form-control @error('approved_budget') is-invalid @enderror"
+                                    id="approved_budget" name="approved_budget" required
+                                    value="{{ old('approved_budget', $submission->budget) }}">
+                                @error('approved_budget')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
                         </div>
-                    </div>
-                    <div class="d-flex justify-content-between text-white ">
-                        <button class="btn btn-sm bg-secondary btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-sm bg-primary btn-primary">Save</button>
-                    </div>
-                </form>
+                        <div class="d-flex justify-content-between text-white ">
+                            <button class="btn btn-sm bg-secondary btn-secondary" type="button"
+                                data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-sm bg-primary btn-primary">Save</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 @endforeach
 
 <script type="text/javascript">
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         var rupiahElements = document.querySelectorAll('#approved_budget');
 
-        rupiahElements.forEach(function(element) {
-            element.addEventListener('keyup', function(e) {
+        rupiahElements.forEach(function (element) {
+            element.addEventListener('keyup', function (e) {
                 element.value = formatRupiah(this.value, 'Rp. ');
             });
         });
@@ -218,7 +232,7 @@
 @section('scriptjs')
 <script src="/sb-admin-2/vendor/bootstrap-select/bootstrap-select.min.js"></script>
 <script type="text/javascript" charset="utf-8">
-    $(function() {
+    $(function () {
         $('.selectpicker').selectpicker()
     });
 </script>
