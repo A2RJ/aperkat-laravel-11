@@ -1,8 +1,8 @@
 # APERKAT
 
 ## TODO: NEXT UPDATE
-- [ ] Non RKAT tanpa ppuf
-- [ ] 
+- [ ] Bagaimana gunakan role and permission dengan spatie dengan parent 
+- [ ] Gunakan whenLoad
 
 - STEP PER STEP
 [ ] User
