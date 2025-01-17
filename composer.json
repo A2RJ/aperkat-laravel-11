@@ -12,7 +12,8 @@
         "laravel/pulse": "^1.0@beta",
         "laravel/socialite": "^5.12",
         "laravel/tinker": "^2.9",
-        "rap2hpoutre/fast-excel": "^5.4"
+        "rap2hpoutre/fast-excel": "^5.4",
+        "spatie/laravel-permission": "^6.10"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^3.12",
