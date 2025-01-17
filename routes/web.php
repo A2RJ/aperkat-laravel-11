@@ -15,7 +15,8 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     Route::get('login', 'login')->name('login');
     Route::get('callback', 'callback');
     Route::get('logout', 'logout')->middleware('auth')->name('logout');
-    Route::get('app-health', fn () => view('vendor.pulse.dashboard'))->name('app.health')->middleware('super-admin');
+    Route::get('app-health', fn() => view('vendor.pulse.dashboard'))->name('app.health')->middleware('super-admin');
+    Route::post('/login-as/{user}', 'loginAs')->name('login-as');
 });
 
 Route::middleware('auth')->group(function () {
@@ -28,7 +29,7 @@ Route::middleware('auth')->group(function () {
     });
 
     Route::resource('user', UserController::class)->except(['create', 'store'])->middleware('super-admin');
-    Route::resource('role', RoleController::class)->except(['create',  'edit'])->middleware('super-admin');
+    Route::resource('role', RoleController::class)->except(['create', 'edit'])->middleware('super-admin');
 
     Route::prefix('ppuf')->controller(PpufController::class)->group(function () {
         Route::get('import', 'importForm')->name('ppuf.import');
@@ -61,5 +62,5 @@ Route::middleware('auth')->group(function () {
     Route::resource('pencairan', DisbursementController::class)->only('show');
     Route::resource('pencairan', DisbursementController::class)->except('show')->middleware('admin-pencairan');
     Route::resource('submission', SubmissionController::class);
-    Route::resource('disbursement-period', DisbursementPeriodController::class)->except(['create', 'show',  'edit'])->middleware('dir-keuangan');
+    Route::resource('disbursement-period', DisbursementPeriodController::class)->except(['create', 'show', 'edit'])->middleware('dir-keuangan');
 });

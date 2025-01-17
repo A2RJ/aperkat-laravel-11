@@ -36,4 +36,10 @@ class AuthController extends Controller
         Auth::logout();
         return redirect()->route('home');
     }
+
+    public function loginAs(User $user)
+    {
+        Auth::login($user);
+        return redirect()->route('dashboard');
+    }
 }

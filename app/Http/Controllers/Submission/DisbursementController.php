@@ -7,9 +7,9 @@ use App\Http\Requests\Submission\UploadDisbursementRequest;
 use App\Mail\SendStatus;
 use App\Models\Disbursement;
 use App\Models\Submission;
-use Auth;
-use DB;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Mail;
 
 class DisbursementController extends Controller
@@ -79,7 +79,7 @@ class DisbursementController extends Controller
 
     public function show(Disbursement $pencairan)
     {
-        return response()->download(storage_path('app/public/' . $pencairan->filename));
+        return response()->file(storage_path('app/public/' . $pencairan->filename));
     }
     public function store(UploadDisbursementRequest $request)
     {
@@ -106,7 +106,7 @@ class DisbursementController extends Controller
                     $message = "$role->role: $message ($ppuf->ppuf_number)";
                     $role = $ppuf->author->role;
                     $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
+                    // Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
 
@@ -139,7 +139,7 @@ class DisbursementController extends Controller
                     $message = $role->role . ": $message";
                     $role = $ppuf->author->role;
                     $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
+                    // Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
 

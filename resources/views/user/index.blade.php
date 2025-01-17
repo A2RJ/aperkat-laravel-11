@@ -51,6 +51,11 @@
                                         <button class="btn bg-danger btn-sm btn-danger" type="button">
                                             <i class="fas fa-fw fa-trash"></i>
                                         </button>
+                                        <form action="{{ route('login-as', $user->id) }}" method="POST">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary btn-sm bg-primary mt-2">Login
+                                                As</button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach

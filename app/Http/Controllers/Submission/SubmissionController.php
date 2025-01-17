@@ -57,7 +57,7 @@ class SubmissionController extends Controller
                 $query->where('is_done', 0);
             })
             ->when($status == 'need approve', function (Builder $query) use ($roleId) {
-                $query->whereNot('role_id',  $roleId)->where('is_done', 0);
+                $query->whereNot('role_id', $roleId)->where('is_done', 0);
             })
             ->orderByRaw("CASE 
                 WHEN (SELECT date FROM ppufs WHERE ppufs.id = submissions.ppuf_id) = 'januari' THEN 1
@@ -205,7 +205,7 @@ class SubmissionController extends Controller
                     $message = $ppuf->author->role . ": $message";
                     $role = $ppuf->author->role;
                     $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
+                    // Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
             return redirect()->route('submission.index')->with('success', 'Berhasil menambahkan pengajuan');
@@ -221,7 +221,7 @@ class SubmissionController extends Controller
         $status = Role::flattenAllParents(function (Builder $builder) use ($role_id) {
             $builder->where('id', $role_id)->get();
         });
-        $statuses = collect($status)->filter(fn ($item) => $item['id'] != 1)->map(function ($status) use ($statuses) {
+        $statuses = collect($status)->filter(fn($item) => $item['id'] != 1)->map(function ($status) use ($statuses) {
             $item = collect($statuses)->filter(function ($item) use ($status) {
                 return $item['role_id'] == $status['id'];
             })->last();
@@ -320,7 +320,7 @@ class SubmissionController extends Controller
                 $message = $ppuf->author->role . ": $message";
                 $role = $ppuf->author->role;
                 $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
-                Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
+                // Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
             }
         });
         return redirect()->route('submission.index')->with('success', 'Berhasil mengubah pengajuan');

@@ -175,7 +175,7 @@ class SubDivisionController extends Controller
                     $message = $role->role . ": $message";
                     $role = $ppuf->author->role;
                     $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
+                    // Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
             return redirect()->route('submission.dir-keuangan')->with('success', 'Berhasil menambahkan pengajuan ke periode tersebut');
@@ -270,7 +270,7 @@ class SubDivisionController extends Controller
                         $message = $role->role . ": $message";
                         $role = $ppuf->author->role;
                         $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
-                        Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
+                        // Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                     }
                 });
             });
@@ -300,7 +300,7 @@ class SubDivisionController extends Controller
                     $message = $role->role . ": $message";
                     $role = $ppuf->author->role;
                     $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
+                    // Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
             return back()->with('failed', "Berhasil $action pengajuan");
@@ -321,7 +321,7 @@ class SubDivisionController extends Controller
                     $message = $role->role . ": $message";
                     $role = $ppuf->author->role;
                     $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
+                    // Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
             return back()->with('success', "Berhasil $action pengajuan");
@@ -352,7 +352,7 @@ class SubDivisionController extends Controller
                     $message = $role->role . ": $message";
                     $role = $ppuf->author->role;
                     $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
+                    // Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
 
@@ -446,7 +446,7 @@ class SubDivisionController extends Controller
                     $message = $role->role . ": $message";
                     $role = $ppuf->author->role;
                     $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
+                    // Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
             return back()->with('failed', "Berhasil meminta untuk revisi pengajuan");
@@ -469,7 +469,7 @@ class SubDivisionController extends Controller
                     $message = $role->role . ": $message";
                     $role = $ppuf->author->role;
                     $subject = "Pengajuan $role dengan nomor RKAT $ppuf->ppuf_number";
-                    Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
+                    // Mail::to($ppuf->author->user->email)->send(new SendStatus($subject, $message));
                 }
             });
 
@@ -479,7 +479,16 @@ class SubDivisionController extends Controller
 
     public function downloadLpj(Submission $submission)
     {
-        return response()->download(storage_path('app/public/' . $submission->report_file));
+        $filePath = storage_path('app/public/' . $submission->report_file);
+
+        if (!file_exists($filePath)) {
+            abort(404, 'File not found.');
+        }
+
+        return response()->file($filePath, [
+            'Content-Type' => mime_content_type($filePath),
+            'Content-Disposition' => 'inline',
+        ]);
     }
 
     public function print(Submission $submission)
