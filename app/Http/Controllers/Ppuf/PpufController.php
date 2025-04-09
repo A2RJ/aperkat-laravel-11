@@ -7,19 +7,20 @@ use App\Http\Requests\Ppuf\ImportRequest;
 use App\Http\Requests\Ppuf\PpufRequest;
 use App\Models\Ppuf;
 use App\Models\Role;
-use Auth;
-use Crypt;
 use Exception;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class PpufController extends Controller
 {
     public function index()
     {
         $keyword = request('keyword', NULL);
-        $year = request('year', NULL);
+        $year = (int) request('year', date('Y'));
         $user = Auth::user();
         $childrenIds = collect($user->hasSubDivision(false))->pluck('id')->toArray();
 
@@ -42,12 +43,19 @@ class PpufController extends Controller
                         });
                 }
             )
-            ->when(
-                $year,
-                function (Builder $query) use ($year) {
-                    $query->where('period', 'LIKE', "%$year%");
-                }
-            )
+            ->when($year, function (Builder $query) use ($year) {
+                $start1 = Carbon::create($year, 4, 1)->startOfDay();
+                $end1 = Carbon::create($year, 12, 31)->endOfDay();
+
+                $start2 = Carbon::create($year + 1, 1, 1)->startOfDay();
+                $end2 = Carbon::create($year + 1, 3, 31)->endOfDay();
+
+                $query->where('period', 'LIKE', "%$year%")
+                    ->where(function ($q) use ($start1, $end1, $start2, $end2) {
+                        $q->whereBetween('created_at', [$start1, $end1])
+                            ->orWhereBetween('created_at', [$start2, $end2]);
+                    });
+            })
             ->when(
                 !isset($user->strictRole->children),
                 function (Builder $query) use ($user) {
@@ -223,7 +231,5 @@ class PpufController extends Controller
             throw $e;
         };
     }
-    public function export()
-    {
-    }
+    public function export() {}
 }
