@@ -1,10 +1,9 @@
 # APERKAT
 
 ## TODO: NEXT UPDATE
-- [ ] Non RKAT tanpa ppuf
-- [ ] 
+- Ubah semua table agar ada filter tahun 
 
-- STEP PER STEP
+- USER MANUAL
 [ ] User
     - ppuf
     - ubah pengajuan saat direvisi dengan cara ambil semua status dan check status terakhir, jika status.status = false maka tombol ubah tampil
