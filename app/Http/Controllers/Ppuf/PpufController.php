@@ -145,73 +145,84 @@ class PpufController extends Controller
         try {
             $role_id = $request->role_id;
             $period = $request->period;
+            $sheetNumber = $request->sheet_number ?? 1; // Default ke sheet pertama (0-based index)
+            $sheetNumber = (int) $sheetNumber;
+            if ($sheetNumber < 1) {
+                throw new Exception("Sheet number tidak valid");
+            }
+            $sheetNumber = $sheetNumber - 1;
+
             $role = Role::query()->find($role_id);
-            $ppufs = (new FastExcel())->import($request->file('file'))->map(function ($item, $index) use ($period, $role_id) {
-                $index = $index + 1;
 
-                $ppuf_number = $item['Nomor PPUF'];
-                if (!$ppuf_number) {
-                    throw new Exception("Nomor PPUF tidak boleh kosong pada baris ke " . $index);
-                }
+            $ppufs = (new FastExcel())
+                ->sheet($sheetNumber) // Menambahkan pemilihan sheet
+                ->import($request->file('file'))
+                ->map(function ($item, $index) use ($period, $role_id) {
+                    $index = $index + 1;
 
-                $iku = $item['Indikator Kinerja Utama'];
-                if (!$iku) {
-                    throw new Exception("Indikator Kinerja Utama tidak boleh kosong pada baris ke " . $index);
-                }
+                    $ppuf_number = $item['Nomor PPUF'];
+                    if (!$ppuf_number) {
+                        throw new Exception("Nomor PPUF tidak boleh kosong pada baris ke " . $index);
+                    }
 
-                $activity_type = $item['Jenis Kegiatan'];
-                $activity_type = strtolower(str_replace(' ', '', $activity_type));
-                if (!$activity_type) {
-                    throw new Exception("Jenis Kegiatan tidak boleh kosong pada baris ke " . $index);
-                }
-                if (!in_array($activity_type, ['program', 'pengadaan', 'pemeliharaan', 'pengembangan'])) {
-                    throw new Exception("Jenis Kegiatan tidak valid pada baris ke " . $index);
-                }
+                    $iku = $item['Indikator Kinerja Utama'];
+                    if (!$iku) {
+                        throw new Exception("Indikator Kinerja Utama tidak boleh kosong pada baris ke " . $index);
+                    }
 
-                $program_name = $item['Nama Program / Kegiatan'];
-                if (!$program_name) {
-                    throw new Exception("Nama Program / Kegiatan tidak boleh kosong pada baris ke " . $index);
-                }
+                    $activity_type = $item['Jenis Kegiatan'];
+                    $activity_type = strtolower(str_replace(' ', '', $activity_type));
+                    if (!$activity_type) {
+                        throw new Exception("Jenis Kegiatan tidak boleh kosong pada baris ke " . $index);
+                    }
+                    if (!in_array($activity_type, ['program', 'pengadaan', 'pemeliharaan', 'pengembangan'])) {
+                        throw new Exception("Jenis Kegiatan tidak valid pada baris ke " . $index);
+                    }
 
-                $deskripsi = $item['Deskripsi'];
-                if (!$deskripsi) {
-                    throw new Exception("Deskripsi tidak boleh kosong pada baris ke " . $index);
-                }
+                    $program_name = $item['Nama Program / Kegiatan'];
+                    if (!$program_name) {
+                        throw new Exception("Nama Program / Kegiatan tidak boleh kosong pada baris ke " . $index);
+                    }
 
-                $place = $item['Tempat Pelaksanaan'];
-                if (!$place) {
-                    throw new Exception("Tempat Pelaksanaan tidak boleh kosong pada baris ke " . $index);
-                }
+                    $deskripsi = $item['Deskripsi'];
+                    if (!$deskripsi) {
+                        throw new Exception("Deskripsi tidak boleh kosong pada baris ke " . $index);
+                    }
 
-                $date = $item['Waktu Pelaksanaan'];
-                $date = strtolower(str_replace(' ', '', $date));
-                if (!$date) {
-                    throw new Exception("Waktu Pelaksanaan tidak boleh kosong pada baris ke " . $index);
-                }
-                if (!in_array($date, ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'])) {
-                    throw new Exception("Waktu Pelaksanaan tidak valid pada baris ke " . $index);
-                }
+                    $place = $item['Tempat Pelaksanaan'];
+                    if (!$place) {
+                        throw new Exception("Tempat Pelaksanaan tidak boleh kosong pada baris ke " . $index);
+                    }
 
-                $rab = preg_replace('/\D/', '', $item['RAB']);
+                    $date = $item['Waktu Pelaksanaan'];
+                    $date = strtolower(str_replace(' ', '', $date));
+                    if (!$date) {
+                        throw new Exception("Waktu Pelaksanaan tidak boleh kosong pada baris ke " . $index);
+                    }
+                    if (!in_array($date, ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'])) {
+                        throw new Exception("Waktu Pelaksanaan tidak valid pada baris ke " . $index);
+                    }
 
-                if (!$rab || intval($rab) === 0) {
-                    return null;
-                }
+                    $rab = preg_replace('/\D/', '', $item['RAB']);
 
-                return [
-                    'role_id' => $role_id,
-                    'ppuf_number' => $ppuf_number,
-                    'iku' => $iku,
-                    'activity_type' => $activity_type,
-                    'program_name' => $program_name,
-                    'description' => $deskripsi,
-                    'place' => $place,
-                    'date' => $date,
-                    'period' => $period,
-                    'budget' => $rab,
-                    'detail' => $item['Keterangan (Opsional)'],
-                ];
-            })->filter();
+                    if (!$rab || intval($rab) === 0) {
+                        return null;
+                    }
+
+                    return [
+                        'role_id' => $role_id,
+                        'ppuf_number' => $ppuf_number,
+                        'iku' => $iku,
+                        'activity_type' => $activity_type,
+                        'program_name' => $program_name,
+                        'description' => $deskripsi,
+                        'place' => $place,
+                        'date' => $date,
+                        'period' => $period,
+                        'budget' => $rab,
+                        'detail' => $item['Keterangan (Opsional)'],
+                    ];
+                })->filter();
 
             $ppufs = collect($ppufs)->uniqueStrict('ppuf_number');
             $token = Crypt::encrypt($ppufs);
