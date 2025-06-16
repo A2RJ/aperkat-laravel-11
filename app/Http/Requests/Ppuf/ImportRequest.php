@@ -24,7 +24,8 @@ class ImportRequest extends FormRequest
         return [
             'role_id' => 'required|exists:roles,id',
             'period' => 'required|numeric',
-            'file' => 'required|file|mimes:xlsx'
+            'file' => 'required|file|mimes:xlsx',
+            'sheet_number' => 'required|numeric',
         ];
     }
 
