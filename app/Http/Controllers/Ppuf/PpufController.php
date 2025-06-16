@@ -7,19 +7,20 @@ use App\Http\Requests\Ppuf\ImportRequest;
 use App\Http\Requests\Ppuf\PpufRequest;
 use App\Models\Ppuf;
 use App\Models\Role;
-use Auth;
-use Crypt;
 use Exception;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder;
 use Rap2hpoutre\FastExcel\FastExcel;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
 
 class PpufController extends Controller
 {
     public function index()
     {
         $keyword = request('keyword', NULL);
-        $year = request('year', NULL);
+        $year = (int) request('year', date('Y'));
         $user = Auth::user();
         $childrenIds = collect($user->hasSubDivision(false))->pluck('id')->toArray();
 
@@ -42,12 +43,19 @@ class PpufController extends Controller
                         });
                 }
             )
-            ->when(
-                $year,
-                function (Builder $query) use ($year) {
-                    $query->where('period', 'LIKE', "%$year%");
-                }
-            )
+            ->when($year, function (Builder $query) use ($year) {
+                $start1 = Carbon::create($year, 4, 1)->startOfDay();
+                $end1 = Carbon::create($year, 12, 31)->endOfDay();
+
+                $start2 = Carbon::create($year + 1, 1, 1)->startOfDay();
+                $end2 = Carbon::create($year + 1, 3, 31)->endOfDay();
+
+                $query->where('period', 'LIKE', "%$year%")
+                    ->where(function ($q) use ($start1, $end1, $start2, $end2) {
+                        $q->whereBetween('created_at', [$start1, $end1])
+                            ->orWhereBetween('created_at', [$start2, $end2]);
+                    });
+            })
             ->when(
                 !isset($user->strictRole->children),
                 function (Builder $query) use ($user) {
@@ -138,8 +146,13 @@ class PpufController extends Controller
             $role_id = $request->role_id;
             $period = $request->period;
             $role = Role::query()->find($role_id);
-            // return (new FastExcel())->import($request->file('file'));
-            $ppufs = (new FastExcel())->import($request->file('file'))->map(function ($item, $index) use ($period, $role_id) {
+            $sheetNumber = $request->sheet_number ?? 1;
+            $sheetNumber = (int) $sheetNumber;
+            if ($sheetNumber < 1) {
+                throw new Exception("Sheet number tidak valid");
+            }
+
+            $ppufs = (new FastExcel())->sheet($sheetNumber)->import($request->file('file'))->map(function ($item, $index) use ($period, $role_id) {
                 $index = $index + 1;
 
                 $ppuf_number = $item['Nomor PPUF'];
@@ -178,9 +191,10 @@ class PpufController extends Controller
                 if (!in_array($date, ['januari', 'februari', 'maret', 'april', 'mei', 'juni', 'juli', 'agustus', 'september', 'oktober', 'november', 'desember'])) {
                     throw new Exception("Waktu Pelaksanaan tidak valid pada baris ke " . $index);
                 }
-                $rab = $item['RAB'];
-                if (!$rab) {
-                    throw new Exception("RAB tidak boleh kosong pada baris ke " . $index);
+
+                $rab = preg_replace('/\D/', '', $item['RAB']);
+                if (!$rab || intval($rab) === 0) {
+                    return null;
                 }
 
                 return [
@@ -196,7 +210,7 @@ class PpufController extends Controller
                     'budget' => $rab,
                     'detail' => $item['Keterangan (Opsional)'],
                 ];
-            });
+            })->filter();
 
             $ppufs = collect($ppufs)->uniqueStrict('ppuf_number');
             $token = Crypt::encrypt($ppufs);
@@ -223,7 +237,5 @@ class PpufController extends Controller
             throw $e;
         };
     }
-    public function export()
-    {
-    }
+    public function export() {}
 }
